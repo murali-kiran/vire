@@ -1,0 +1,1 @@
+create table profiles(id bigint primary key, user_id bigint, name varchar(191));
