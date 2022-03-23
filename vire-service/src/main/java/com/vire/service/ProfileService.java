@@ -2,7 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.ProfileRequest;
 import com.vire.model.response.ProfileResponse;
-import com.vire.repository.ProfileRepotory;
+import com.vire.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +12,43 @@ import java.util.stream.Collectors;
 @Service
 public class ProfileService {
 
-    @Autowired
-    ProfileRepotory ProfileRepotory;
+  @Autowired ProfileRepository ProfileRepository;
 
-    public ProfileResponse createProfile(final ProfileRequest request) {
+  public ProfileResponse createProfile(final ProfileRequest request) {
 
-        var dto = request.toDto();
+    return ProfileResponse.fromDto(ProfileRepository.createProfile(request.toDto()));
+  }
 
-        return ProfileResponse.fromDto(ProfileRepotory.createProfile(dto));
-    }
+  public ProfileResponse updateProfile(final ProfileRequest request) {
 
-    public List<ProfileResponse> getProfiles() {
+    return ProfileResponse.fromDto(ProfileRepository.updateProfile(request.toDto()));
+  }
 
-        return ProfileRepotory.getAllProfiles().stream()
-                .map(dto -> ProfileResponse.fromDto(dto))
-                .collect(Collectors.toList());
-    }
+  public ProfileResponse deleteProfile(final Long profileId) {
+
+    return ProfileRepository.deleteProfile(profileId)
+        .map(dto -> ProfileResponse.fromDto(dto))
+        .get();
+  }
+
+  public List<ProfileResponse> retrieveAllProfiles() {
+
+    return ProfileRepository.retrieveAllProfiles().stream()
+        .map(dto -> ProfileResponse.fromDto(dto))
+        .collect(Collectors.toList());
+  }
+
+  public ProfileResponse retrieveProfileById(final Long profileId) {
+
+    return ProfileRepository.retrieveProfileById(profileId)
+        .map(dto -> ProfileResponse.fromDto(dto))
+        .get();
+  }
+
+  public List<ProfileResponse> searchProfiles(final String searchString) {
+
+    return ProfileRepository.searchProfiles(searchString).stream()
+        .map(dto -> ProfileResponse.fromDto(dto))
+        .collect(Collectors.toList());
+  }
 }
