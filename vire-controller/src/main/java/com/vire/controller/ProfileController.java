@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(VireConstants.PROFILE_REQUEST_PATH_API)
@@ -30,7 +31,8 @@ public class ProfileController {
   @DeleteMapping("/{profileid}")
   public ResponseEntity<ProfileResponse> deleteProfile(
       @PathVariable(value = "profileid") Long profileId) {
-    return new ResponseEntity<>(profileService.deleteProfile(profileId), HttpStatus.OK);
+    Optional<ProfileResponse> profileResponse = profileService.deleteProfile(profileId);
+    return profileResponse.isPresent() ? new ResponseEntity<>(profileResponse.get(), HttpStatus.OK): new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping
@@ -39,9 +41,9 @@ public class ProfileController {
   }
 
   @GetMapping("/{profileid}")
-  public ResponseEntity<ProfileResponse> retrieveProfileById(
-      @PathVariable(value = "profileid") Long profileId) {
-    return new ResponseEntity<>(profileService.retrieveProfileById(profileId), HttpStatus.OK);
+  public ResponseEntity<ProfileResponse> retrieveProfileById(@PathVariable(value = "profileid") Long profileId) {
+    Optional<ProfileResponse> profileResponse = profileService.retrieveProfileById(profileId);
+    return profileResponse.isPresent() ? new ResponseEntity<>(profileResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping("search")

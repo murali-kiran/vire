@@ -2,43 +2,72 @@ package com.vire.dao;
 
 import com.vire.dto.ProfileDto;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "profiles")
+@Table(name = "profile")
 @Data
 public class ProfileDao {
-    @Id
-    @Column(name = "id")
-    private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Id
+    @Column(name = "profile_id")
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
+    //@Column(name = "user_id", nullable = false)
+    //private Long userId;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "email_id", nullable = false)
+    private String emailId;
+
+    @Column(name = "mobile_number", nullable = false)
+    private String mobileNumber;
+
+    @Column(name = "aadhar", nullable = false)
+    private String aadhar;
+
+    @Column(name = "is_aadhar_verified", nullable = false)
+    private String isAadharVerified;
+
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private PersonalProfileDao personalProfile;
+
     public ProfileDto toDto() {
-        var dto = new ProfileDto();
-
-        dto.setId(this.getId());
-        dto.setUserId(this.getUserId());
-        dto.setName(this.getName());
-
-        return dto;
+       return new ModelMapper().map(this,ProfileDto.class);
     }
 
     public static ProfileDao fromDto(final ProfileDto dto) {
-        var dao = new ProfileDao();
 
-        dao.setId(dto.getId());
-        dao.setUserId(dto.getUserId());
-        dao.setName(dto.getName());
+        ProfileDao profileDao = new ProfileDao();
+        profileDao.setId(dto.getId());
+        profileDao.setAadhar(dto.getAadhar());
+        profileDao.setName(dto.getName());
+        profileDao.setEmailId(dto.getEmailId());
+        profileDao.setIsAadharVerified(dto.getIsAadharVerified());
+        //profileDao.setUserId(dto.getUserId());
+        profileDao.setPassword(dto.getPassword());
+        profileDao.setMobileNumber(dto.getMobileNumber());
 
-        return dao;
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        PersonalProfileDao personalProfileDao = modelMapper.map(dto.getPersonalProfile(),PersonalProfileDao.class);
+
+        profileDao.setPersonalProfile(personalProfileDao);
+        personalProfileDao.setProfile(profileDao);
+
+       /* modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return modelMapper.map(dto,ProfileDao.class);*/
+
+        return profileDao;
     }
 }

@@ -1,22 +1,23 @@
 package com.vire.model.request;
 
+import com.vire.dto.PersonalProfileDto;
 import com.vire.dto.ProfileDto;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 
 @Data
 public class ProfileRequest {
 
     private Long id;
-    private Long userId;
     private String name;
+    private String password;
+    private String emailId;
+    private String mobileNumber;
+    private String aadhar;
+    private String isAadharVerified;
+    private PersonalProfileRequest personalProfile;
 
     public ProfileDto toDto() {
-        var dto = new ProfileDto();
-
-        dto.setId(this.getId());
-        dto.setUserId(this.getUserId());
-        dto.setName(this.getName());
-
-        return dto;
+        return  new ModelMapper().map(this,ProfileDto.class);
     }
 }
