@@ -1,11 +1,13 @@
 package com.vire.repository;
 
+import com.vire.dao.AddressDao;
 import com.vire.dao.ProfileDao;
 import com.vire.dto.ProfileDto;
 import com.vire.repository.search.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +17,13 @@ import java.util.stream.Collectors;
 public class ProfileRepository {
 
   @Autowired ProfileRepositoryJpa profileRepositoryJpa;
+  @Autowired AddressRepositoryJpa addressRepositoryJpa;
 
+  @Transactional
   public ProfileDto createProfile(final ProfileDto profileDto) {
-
+    AddressDao addressDao = AddressDao.fromDto(profileDto.getPersonalProfile().getPermanentAddress());
+    addressRepositoryJpa.save(addressDao);
+    ProfileDao profileDao = ProfileDao.fromDto(profileDto);
     return profileRepositoryJpa.save(ProfileDao.fromDto(profileDto)).toDto();
   }
 
@@ -35,13 +41,11 @@ public class ProfileRepository {
   public Optional<ProfileDto> deleteProfile(final Long profileId) {
 
     var optionalProfile = retrieveProfileById(profileId);
-
     if (optionalProfile.isPresent()) {
       profileRepositoryJpa.deleteById(profileId);
     } else {
-      throw new RuntimeException("Profile Object not exists in DB");
+      return Optional.empty();
     }
-
     return optionalProfile;
   }
 
