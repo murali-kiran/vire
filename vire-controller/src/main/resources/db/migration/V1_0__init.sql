@@ -1,5 +1,55 @@
-create table profiles(id bigint primary key, user_id bigint, name varchar(191));
+CREATE TABLE `profile` (
+  `profile_id` bigint(20) NOT NULL,
+  `aadhar` varchar(255) NOT NULL,
+  `email_id` varchar(255) NOT NULL,
+  `is_aadhar_verified` varchar(255) NOT NULL,
+  `mobile_number` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`profile_id`)
+);
 
+CREATE TABLE `personal_profile` (
+  `profile_id` bigint(20) NOT NULL,
+  `blood_donate_willingness` varchar(255) NOT NULL,
+  `blood_group` varchar(255) DEFAULT NULL,
+  `designation` varchar(255) DEFAULT NULL,
+  `field_profession_business` varchar(255) DEFAULT NULL,
+  `graduation_board` varchar(255) DEFAULT NULL,
+  `graduation_college_name` varchar(255) DEFAULT NULL,
+  `intermediate_board` varchar(255) DEFAULT NULL,
+  `intermediate_college_name` varchar(255) DEFAULT NULL,
+  `organization_location` varchar(255) DEFAULT NULL,
+  `organization_name` varchar(255) DEFAULT NULL,
+  `post_graduation_board` varchar(255) DEFAULT NULL,
+  `post_graduation_college_name` varchar(255) DEFAULT NULL,
+  `school_board` varchar(255) DEFAULT NULL,
+  `school_name` varchar(255) DEFAULT NULL,
+  `work_status` varchar(255) DEFAULT NULL,
+  `permanent_address_id` bigint(20) NOT NULL,
+  `present_address_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`profile_id`),
+  KEY `FK6n4yyaqurm4qp7f3bwext0t2s` (`permanent_address_id`),
+  KEY `FKinx549xb8wcekbx4bfnccpuen` (`present_address_id`)
+);
+
+CREATE TABLE `personal_profile_interest` (
+  `personal_profile_interest_id` bigint(20) NOT NULL,
+  `interest` varchar(255) NOT NULL,
+  `personal_profile_profile_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`personal_profile_interest_id`),
+  KEY `FK6kapbkiomr2hu1cc4oalre13t` (`personal_profile_profile_id`)
+);
+
+CREATE TABLE `address` (
+  `address_id` bigint(20) NOT NULL,
+  `village_town_city` varchar(255) NOT NULL,
+  `district` varchar(255) NOT NULL,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `state` varchar(255) NOT NULL,
+  PRIMARY KEY (`address_id`)
+);
 
 CREATE TABLE t_social (
      id BIGINT NOT NULL AUTO_INCREMENT,

@@ -19,6 +19,9 @@ public class PersonalProfileInterestDao {
     @Column(name = "interest", nullable = false)
     private String interest;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PersonalProfileDao personalProfile;
+
     public PersonalProfileInterestDto toDto() {
         return new ModelMapper().map(this,PersonalProfileInterestDto.class);
     }
