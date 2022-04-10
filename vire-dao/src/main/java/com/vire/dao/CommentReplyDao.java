@@ -1,7 +1,6 @@
 package com.vire.dao;
 
-import com.vire.dto.SocialPostCommentDto;
-import com.vire.dto.SocialPostCommentReplyDto;
+import com.vire.dto.CommentReplyDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_social_post_comment_reply")
 @Data
-public class SocialPostCommentReplyDao {
+public class CommentReplyDao {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
@@ -26,8 +25,8 @@ public class SocialPostCommentReplyDao {
     @Column(name = "reply_time", nullable = false)
     private Long replyTime;
 
-    public SocialPostCommentReplyDto toDto(){
-        var dto = new SocialPostCommentReplyDto();
+    public CommentReplyDto toDto(){
+        var dto = new CommentReplyDto();
         dto.setId(this.getId());
         dto.setCommentReplierProfileId(this.getCommentReplierProfileId());
         dto.setReply(this.getReply());
@@ -36,8 +35,8 @@ public class SocialPostCommentReplyDao {
         return dto;
     }
 
-    public static SocialPostCommentReplyDao fromDto(SocialPostCommentReplyDto dto){
-        var dao = new SocialPostCommentReplyDao();
+    public static CommentReplyDao fromDto(CommentReplyDto dto){
+        var dao = new CommentReplyDao();
         dao.setId(dto.getId());
         dao.setCommentReplierProfileId(dto.getCommentReplierProfileId());
         dao.setReply(dto.getReply());

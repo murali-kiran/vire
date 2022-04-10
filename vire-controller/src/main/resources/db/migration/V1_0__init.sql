@@ -15,11 +15,13 @@ CREATE TABLE t_social (
      updated_time BIGINT NOT NULL,
      PRIMARY KEY (id)
 );
-CREATE TABLE t_social_post_sent (
-     id BIGINT NOT NULL AUTO_INCREMENT,
+CREATE TABLE t_social_post_send_to (
+     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	 type VARCHAR(191),
      value VARCHAR(191),
-	 PRIMARY KEY (id)
+     social_id BIGINT,
+     CONSTRAINT fk_t_social FOREIGN KEY (social_id)
+     REFERENCES t_social(id)
 );
 CREATE TABLE t_social_post_chat (
      id BIGINT NOT NULL AUTO_INCREMENT,

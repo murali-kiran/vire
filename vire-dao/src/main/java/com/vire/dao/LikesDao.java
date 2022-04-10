@@ -1,7 +1,6 @@
 package com.vire.dao;
 
-import com.vire.dto.SocialPostCommentReplyDto;
-import com.vire.dto.SocialPostLikeDto;
+import com.vire.dto.LikesDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_social_post_like")
 @Data
-public class SocialPostLikeDao {
+public class LikesDao {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
@@ -23,8 +22,8 @@ public class SocialPostLikeDao {
     @Column(name = "liked_time", nullable = false)
     private Long likedTime;
 
-    public SocialPostLikeDto toDto(){
-        var dto = new SocialPostLikeDto();
+    public LikesDto toDto(){
+        var dto = new LikesDto();
         dto.setId(this.getId());
         dto.setLikerProfileId(this.getLikerProfileId());
         dto.setSocialPostId(this.getSocialPostId());
@@ -32,12 +31,12 @@ public class SocialPostLikeDao {
         return dto;
     }
 
-    public static SocialPostLikeDao fromDto(SocialPostLikeDto dto){
-        var dao = new SocialPostLikeDao();
+    public static LikesDao fromDto(LikesDto dto){
+        var dao = new LikesDao();
         dao.setId(dto.getId());
-        dto.setLikerProfileId(dto.getLikerProfileId());
-        dto.setSocialPostId(dto.getSocialPostId());
-        dto.setLikedTime(dto.getLikedTime());
+        dao.setLikerProfileId(dto.getLikerProfileId());
+        dao.setSocialPostId(dto.getSocialPostId());
+        dao.setLikedTime(dto.getLikedTime());
         return dao;
     }
 }

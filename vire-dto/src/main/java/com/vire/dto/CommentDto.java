@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class SocialPostCommentDto implements Serializable {
+public class CommentDto implements Serializable {
     private  Long id;
     private  Long commenterProfileId;
     private  String comment;

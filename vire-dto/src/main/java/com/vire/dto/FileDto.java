@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.File;
 
 @Data
-public class SocialImageDto{
+public class FileDto{
     private Long socialImageId;
     private String mimeType;
     private String imagePath;

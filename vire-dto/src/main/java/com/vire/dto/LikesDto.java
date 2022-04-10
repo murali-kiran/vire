@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class SocialPostLikeDto implements Serializable {
+public class LikesDto implements Serializable {
     private  Long id;
     private  Long likerProfileId;
     private  Long socialPostId;

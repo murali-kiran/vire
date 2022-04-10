@@ -1,7 +1,6 @@
 package com.vire.dao;
 
-import com.vire.dto.SocialPostChatDto;
-import com.vire.dto.SocialPostCommentDto;
+import com.vire.dto.CommentDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_social_post_comment")
 @Data
-public class SocialPostCommentDao {
+public class CommentDao {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
@@ -26,8 +25,8 @@ public class SocialPostCommentDao {
     @Column(name = "comment_time", nullable = false)
     private Long commentTime;
 
-    public SocialPostCommentDto toDto(){
-        var dto = new SocialPostCommentDto();
+    public CommentDto toDto(){
+        var dto = new CommentDto();
         dto.setId(this.getId());
         dto.setCommenterProfileId(this.getCommenterProfileId());
         dto.setComment(this.getComment());
@@ -36,8 +35,8 @@ public class SocialPostCommentDao {
         return dto;
     }
 
-    public static SocialPostCommentDao fromDto(SocialPostCommentDto dto){
-        var dao = new SocialPostCommentDao();
+    public static CommentDao fromDto(CommentDto dto){
+        var dao = new CommentDao();
         dao.setId(dto.getId());
         dao.setCommenterProfileId(dto.getCommenterProfileId());
         dao.setComment(dto.getComment());

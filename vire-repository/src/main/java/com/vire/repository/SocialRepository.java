@@ -1,9 +1,9 @@
 package com.vire.repository;
 
 import com.vire.dao.SocialDao;
-import com.vire.dao.SocialImageDao;
+import com.vire.dao.SocialPostSendToDao;
 import com.vire.dto.SocialDto;
-import com.vire.dto.SocialImageDto;
+import com.vire.dto.SocialPostSendToDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,16 @@ public class SocialRepository {
 
     @Autowired
     SocialRepositoryJpa socialRepositoryJpa;
+    @Autowired
+    SocialPostSentRepository socialPostSentRepository;
 
     public SocialDto createSocial(final SocialDto socialDto) {
-        return socialRepositoryJpa.save(SocialDao.fromDto(socialDto)).toDto();
+        var socialDao = SocialDao.fromDto(socialDto);
+        //socialDao.getSendTo().get(0).getSocial().setSocialId(socialDao.getSocialId());
+        return socialRepositoryJpa.save(socialDao).toDto();
     }
     public SocialDto updateSocial(final SocialDto socialDto) {
-        var existingObject = socialRepositoryJpa.findById(socialDto.getId());
+        var existingObject = socialRepositoryJpa.findById(socialDto.getSocialId());
 
         if(existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");

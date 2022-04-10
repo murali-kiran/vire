@@ -1,48 +1,47 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
-import com.vire.model.request.SocialPostChatRequest;
-import com.vire.model.response.SocialPostChatResponse;
-import com.vire.service.SocialPostChatService;
+import com.vire.model.request.FileRequest;
+import com.vire.model.response.FileResponse;
+import com.vire.model.response.SocialResponse;
+import com.vire.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(VireConstants.CHAT_REQUEST_PATH_API)
-public class SocialPostChatController {
+@RequestMapping(VireConstants.FILE_REQUEST_PATH_API)
+public class FileController {
 
     @Autowired
-    SocialPostChatService socialPostChatService;
+    FileService fileService;
+    @Value("${image.path}")
+    private String imagePath;
 
-    @PostMapping("/create")
-    public ResponseEntity<SocialPostChatResponse> create(@RequestBody SocialPostChatRequest request){
-        return new ResponseEntity<>(socialPostChatService.create(request), HttpStatus.CREATED);
+
+    @PostMapping(value = "/uploadFile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<FileResponse> create(@RequestPart("file") MultipartFile file){
+        FileRequest request = new FileRequest();
+        String filePath = fileService.storeFile(file, imagePath);
+        request.setImageSize(file.getSize());
+        request.setMimeType(file.getContentType());
+        request.setImagePath(filePath);
+        return new ResponseEntity<>(fileService.uploadFile(request), HttpStatus.CREATED);
     }
-    @PostMapping("/update")
-    public ResponseEntity<SocialPostChatResponse> update(@RequestBody SocialPostChatRequest request){
-        return new ResponseEntity<>(socialPostChatService.update(request), HttpStatus.CREATED);
+    @DeleteMapping("/{fileid}")
+    public ResponseEntity<FileResponse> delete(
+            @PathVariable(value = "fileid") Long chatId) {
+        return new ResponseEntity<>(fileService.deleteFile(chatId), HttpStatus.OK);
+    }
+    @GetMapping("/{fileid}")
+    public ResponseEntity<FileResponse> retrieveById(@PathVariable Long fileId){
+        return new ResponseEntity<FileResponse>(fileService.retrieveById(fileId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{chatid}")
-    public ResponseEntity<SocialPostChatResponse> delete(
-            @PathVariable(value = "chatid") Long chatId) {
-        return new ResponseEntity<>(socialPostChatService.delete(chatId), HttpStatus.OK);
-    }
-    @GetMapping("/all")
-    public ResponseEntity<List<SocialPostChatResponse>> retrieveAll(){
-        return new ResponseEntity<>(socialPostChatService.getAll(), HttpStatus.OK);
-    }
-    @GetMapping("/{chatid}")
-    public ResponseEntity<SocialPostChatResponse> retrieveById(@PathVariable Long chatId){
-        return new ResponseEntity<SocialPostChatResponse>(socialPostChatService.retrieveById(chatId), HttpStatus.OK);
-    }
-    @GetMapping("search")
-    public ResponseEntity<List<SocialPostChatResponse>> search(
-            @RequestParam(value = "search") String searchString) {
-        return new ResponseEntity<>(socialPostChatService.search(searchString), HttpStatus.OK);
-    }
 }

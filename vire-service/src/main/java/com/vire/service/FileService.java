@@ -2,11 +2,8 @@ package com.vire.service;
 
 import com.vire.exception.FileStorageException;
 import com.vire.model.request.FileRequest;
-import com.vire.model.request.SocialRequest;
 import com.vire.model.response.FileResponse;
-import com.vire.model.response.SocialResponse;
-import com.vire.repository.SocialImageRepository;
-import com.vire.repository.SocialRepository;
+import com.vire.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,68 +18,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class SocialService {
+public class FileService {
 
     @Autowired
-    SocialRepository socialRepo;
+    FileRepository fileRepository;
 
-    @Autowired
-    SocialImageRepository socialImageRepo;
-
-    public SocialResponse createSocial(final SocialRequest request) {
+    public FileResponse uploadFile(final FileRequest request) {
 
         var dto = request.toDto();
 
-        return SocialResponse.fromDto(socialRepo.createSocial(dto));
+        return FileResponse.fromDto(fileRepository.uploadFile(dto));
     }
+    public FileResponse deleteFile(final Long socialId) {
 
-    public SocialResponse updateSocial(final SocialRequest request) {
-
-        var dto = request.toDto();
-
-        return SocialResponse.fromDto(socialRepo.updateSocial(dto));
-    }
-
-    public SocialResponse deleteSocialPost(final Long socialId) {
-
-        return socialRepo.deleteSocialPost(socialId)
-                .map(dto -> SocialResponse.fromDto(dto))
-                .get();
-    }
-    public List<SocialResponse> getSocials() {
-
-        return socialRepo.getAllSocials().stream()
-                .map(dto -> SocialResponse.fromDto(dto))
-                .collect(Collectors.toList());
-
-    }
-    public SocialResponse retrieveById(Long socialId) {
-
-        return socialRepo.retrieveById(socialId)
-                .map(dto -> SocialResponse.fromDto(dto))
+        return fileRepository.deleteFile(socialId)
+                .map(dto -> FileResponse.fromDto(dto))
                 .get();
     }
 
-    public List<SocialResponse> getPostsByCommunity(Long communityId) {
+    public FileResponse retrieveById(Long socialId) {
 
-        return socialRepo.getPostsByCommunity(communityId).stream()
-                .map(dto -> SocialResponse.fromDto(dto))
-                .collect(Collectors.toList());
-
-    }
-
-    public List<SocialResponse> search(final String searchString) {
-
-        return socialRepo.search(searchString).stream()
-                .map(dto -> SocialResponse.fromDto(dto))
-                .collect(Collectors.toList());
-    }
-
-    public FileResponse uploadImage(final FileRequest request) {
-
-        var dto = request.toDto();
-
-        return FileResponse.fromDto(socialImageRepo.uploadImage(dto));
+        return fileRepository.retrieveById(socialId)
+                .map(dto -> FileResponse.fromDto(dto))
+                .get();
     }
 
     public String storeFile(MultipartFile file, String filePath) {

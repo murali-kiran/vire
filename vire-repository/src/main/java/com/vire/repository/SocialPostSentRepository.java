@@ -1,7 +1,7 @@
 package com.vire.repository;
 
-import com.vire.dao.SocialPostSentDao;
-import com.vire.dto.SocialPostSentDto;
+import com.vire.dao.SocialPostSendToDao;
+import com.vire.dto.SocialPostSendToDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,44 +16,38 @@ public class SocialPostSentRepository {
     @Autowired
     SocialPostSentRepositoryJpa socialPostSentRepositoryJpa;
 
-    public SocialPostSentDto createSent(final SocialPostSentDto socialPostSentDto) {
-        return socialPostSentRepositoryJpa.save(SocialPostSentDao.fromDto(socialPostSentDto)).toDto();
+    public SocialPostSendToDto save(final SocialPostSendToDto socialPostSendToDto) {
+        return socialPostSentRepositoryJpa.save(SocialPostSendToDao.fromDto(socialPostSendToDto)).toDto();
     }
-    public SocialPostSentDto updateSent(final SocialPostSentDto socialPostSentDto) {
-        var existingObject = socialPostSentRepositoryJpa.findById(socialPostSentDto.getId());
+    public SocialPostSendToDto update(final SocialPostSendToDto socialPostSendToDto) {
+        var existingObject = socialPostSentRepositoryJpa.findById(socialPostSendToDto.getSendToId());
 
         if(existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
 
-        return socialPostSentRepositoryJpa.save(SocialPostSentDao.fromDto(socialPostSentDto)).toDto();
+        return socialPostSentRepositoryJpa.save(SocialPostSendToDao.fromDto(socialPostSendToDto)).toDto();
     }
 
-    public Optional<SocialPostSentDto> deleteSents(final Long socialPostCommentId) {
+    public Optional<SocialPostSendToDto> deleteSent(final Long sentId) {
 
-        var optionalSocialComment = retrieveById(socialPostCommentId);
+        var optionalSocialComment = retrieveById(sentId);
         if (optionalSocialComment.isPresent()) {
-            socialPostSentRepositoryJpa.deleteById(socialPostCommentId);
+            socialPostSentRepositoryJpa.deleteById(sentId);
         } else {
-            throw new RuntimeException("Social Post Object not exists in DB");
+            throw new RuntimeException("Social Post sent Object not exists in DB");
         }
 
         return optionalSocialComment;
     }
-    public List<SocialPostSentDto> getAllSents() {
 
-        return socialPostSentRepositoryJpa.findAll()
-                .stream()
-                .map(dao -> dao.toDto())
-                .collect(Collectors.toList());
-    }
-    public Optional<SocialPostSentDto> retrieveById(Long commentId) {
+    public Optional<SocialPostSendToDto> retrieveById(Long commentId) {
 
         return socialPostSentRepositoryJpa.findById(commentId).map(dao -> dao.toDto());
     }
-    public List<SocialPostSentDto> search(final String searchString) {
+    public List<SocialPostSendToDto> searchSent(final String searchString) {
 
-        var spec = new CustomSpecificationResolver<SocialPostSentDao>(searchString).resolve();
+        var spec = new CustomSpecificationResolver<SocialPostSendToDao>(searchString).resolve();
 
         return socialPostSentRepositoryJpa.findAll(spec).stream().map(dao -> dao.toDto()).collect(Collectors.toList());
     }

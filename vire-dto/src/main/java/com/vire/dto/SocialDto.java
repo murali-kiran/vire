@@ -3,10 +3,11 @@ package com.vire.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class SocialDto{
-    private  Long id;
+    private  Long socialId;
     private  Long userId;
     private  Long categoryId;
     private  String type;
@@ -17,4 +18,5 @@ public class SocialDto{
     private  String imagePath;
     private  Long createdTime;
     private  Long updatedTime;
+    private  List<SocialPostSendToDto> sendTo;
 }

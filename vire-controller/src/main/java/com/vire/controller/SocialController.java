@@ -1,9 +1,9 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
-import com.vire.model.request.SocialImageRequest;
+import com.vire.model.request.FileRequest;
 import com.vire.model.request.SocialRequest;
-import com.vire.model.response.SocialImageResponse;
+import com.vire.model.response.FileResponse;
 import com.vire.model.response.SocialResponse;
 import com.vire.service.SocialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,6 @@ public class SocialController {
 
     @Autowired
     SocialService socialService;
-    @Value("${image.path}")
-    private String imagePath;
 
     @PostMapping("/create")
     public ResponseEntity<SocialResponse> create(@RequestBody SocialRequest request){
@@ -56,13 +54,5 @@ public class SocialController {
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(socialService.search(searchString), HttpStatus.OK);
     }
-    @PostMapping(value = "/uploadImage", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<SocialImageResponse> create(@RequestPart("file") MultipartFile file){
-        SocialImageRequest request = new SocialImageRequest();
-        String filePath = socialService.storeFile(file, imagePath);
-        request.setImageSize(file.getSize());
-        request.setMimeType(file.getContentType());
-        request.setImagePath(filePath);
-        return new ResponseEntity<>(socialService.uploadImage(request), HttpStatus.CREATED);
-    }
+
 }

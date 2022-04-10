@@ -1,9 +1,12 @@
 package com.vire.dao;
 
+import com.vire.dto.PersonalProfileDto;
 import com.vire.dto.SocialDto;
 import lombok.Data;
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
+import org.modelmapper.ModelMapper;
+
+import javax.persistence.*;
+import java.util.List;
 
 @javax.persistence.Table(name = "t_social")
 @Entity
@@ -12,7 +15,8 @@ public class SocialDao {
     @javax.persistence.Id
 
     @javax.persistence.Column(name = "id", nullable = false)
-    private Long id;
+    private Long socialId;
+
 
     @javax.persistence.Column(name = "user_id", nullable = false)
     private Long userId;
@@ -44,36 +48,14 @@ public class SocialDao {
     @javax.persistence.Column(name = "updated_time", nullable = false)
     private Long updatedTime;
 
+    @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)
+    private List<SocialPostSendToDao> sendTo;
+
     public SocialDto toDto() {
-        var dto = new SocialDto();
-        dto.setId(this.getId());
-        dto.setUserId(this.getUserId());
-        dto.setCategoryId(this.getCategoryId());
-        dto.setType(this.getType());
-        dto.setSubject(this.getSubject());
-        dto.setDescription(this.getDescription());
-        dto.setContact(this.getContact());
-        dto.setAlternateContact(this.getAlternateContact());
-        dto.setImagePath(this.getImagePath());
-        dto.setCreatedTime(this.getCreatedTime());
-        dto.setUpdatedTime(this.getUpdatedTime());
-        return dto;
+        return new ModelMapper().map(this,SocialDto.class);
     }
+
     public static SocialDao fromDto(final SocialDto dto) {
-        var dao = new SocialDao();
-
-        dao.setId(dto.getId());
-        dao.setUserId(dto.getUserId());
-        dao.setCategoryId(dto.getCategoryId());
-        dao.setType(dto.getType());
-        dao.setSubject(dto.getSubject());
-        dao.setDescription(dto.getDescription());
-        dao.setContact(dto.getContact());
-        dao.setAlternateContact(dto.getAlternateContact());
-        dao.setImagePath(dto.getImagePath());
-        dao.setCreatedTime(dto.getCreatedTime());
-        dao.setUpdatedTime(dto.getUpdatedTime());
-
-        return dao;
+        return new ModelMapper().map(dto, SocialDao.class);
     }
 }
