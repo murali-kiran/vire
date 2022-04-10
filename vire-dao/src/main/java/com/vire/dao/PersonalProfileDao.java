@@ -73,9 +73,9 @@ public class PersonalProfileDao {
     @JoinColumn(name = "permanent_address_id")
     private AddressDao permanentAddress;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    @JoinColumn(name = "profile_id")
-    private List<PersonalProfileInterestDao> interests;//
+    @OneToMany(mappedBy = "personalProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JoinColumn(name = "profile_id")
+    private List<PersonalProfileInterestDao> interests;
 
     @OneToOne
     @MapsId
