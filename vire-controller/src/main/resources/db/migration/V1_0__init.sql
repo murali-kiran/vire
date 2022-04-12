@@ -51,6 +51,16 @@ CREATE TABLE `address` (
   PRIMARY KEY (`address_id`)
 );
 
+CREATE TABLE `firm_profile` (
+  `profile_id` bigint(20) NOT NULL,
+  `field_of_business` varchar(255) NOT NULL,
+  `firm_address` varchar(255) DEFAULT NULL,
+  `product_or_service` varchar(255) NOT NULL,
+  `firm_address_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`profile_id`),
+  KEY `FKf9ha5jt97f0xm1oklxe5cyn1n` (`firm_address_id`)
+);
+
 CREATE TABLE t_social (
      id BIGINT NOT NULL AUTO_INCREMENT,
 	 user_id BIGINT NOT NULL,
