@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class AddressResponse {
+    private Long addressId;
     private String cityTownVillage;
     private String district;
     private String state;

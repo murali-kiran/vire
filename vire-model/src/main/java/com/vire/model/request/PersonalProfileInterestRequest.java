@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class PersonalProfileInterestRequest {
 
-    private Long id;
+    private Long interestId;
     private String interest;
 }

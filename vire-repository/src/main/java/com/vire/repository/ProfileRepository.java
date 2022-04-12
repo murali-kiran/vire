@@ -21,7 +21,14 @@ public class ProfileRepository {
 
   @Transactional
   public ProfileDto createProfile(final ProfileDto profileDto) {
-    AddressDao addressDao = AddressDao.fromDto(profileDto.getPersonalProfile().getPermanentAddress());
+    AddressDao addressDao = null;
+
+    if(profileDto.getPersonalProfile()!=null) {
+      addressDao = AddressDao.fromDto(profileDto.getPersonalProfile().getPermanentAddress());
+    } else {
+      addressDao = AddressDao.fromDto(profileDto.getFirmProfile().getAddress());
+    }
+
     addressRepositoryJpa.save(addressDao);
     ProfileDao profileDao = ProfileDao.fromDto(profileDto);
     return profileRepositoryJpa.save(ProfileDao.fromDto(profileDto)).toDto();
@@ -29,7 +36,7 @@ public class ProfileRepository {
 
   public ProfileDto updateProfile(final ProfileDto profileDto) {
 
-    var optionalProfile = retrieveProfileById(profileDto.getId());
+    var optionalProfile = retrieveProfileById(profileDto.getProfileId());
 
     if (optionalProfile.isPresent()) {
       return profileRepositoryJpa.save(ProfileDao.fromDto(profileDto)).toDto();

@@ -16,7 +16,7 @@ public class AddressDao {
 
     @Id
     @Column(name = "address_id")
-    private Long id;
+    private Long addressId;
 
     @Column(name = "village_town_city", nullable = false)
     private String cityTownVillage;

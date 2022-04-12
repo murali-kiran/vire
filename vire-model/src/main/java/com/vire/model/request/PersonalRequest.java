@@ -1,14 +1,13 @@
 package com.vire.model.request;
 
-import com.vire.dto.PersonalProfileDto;
 import com.vire.dto.ProfileDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 @Data
-public class ProfileRequest {
+public class PersonalRequest {
 
-    private Long id;
+    private Long profileId;
     private String name;
     private String password;
     private String emailId;

@@ -14,7 +14,7 @@ public class PersonalProfileInterestDao {
     @Id
     @GeneratedValue
     @Column(name = "personal_profile_interest_id")
-    private Long id;
+    private Long interestId;
 
     @Column(name = "interest", nullable = false)
     private String interest;

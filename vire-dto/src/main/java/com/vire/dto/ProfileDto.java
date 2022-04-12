@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProfileDto {
-    private Long id;
+    private Long profileId;
     private String name;
     private Long userId;
     private String password;
@@ -12,5 +12,7 @@ public class ProfileDto {
     private String mobileNumber;
     private String aadhar;
     private String isAadharVerified;
+    //private Boolean isPersonalProfile;
     private PersonalProfileDto personalProfile;
+    private FirmProfileDto firmProfile;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class PersonalProfileResponse {
 
-    private Long id;
+    private Long personalProfileId;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;

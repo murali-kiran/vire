@@ -1,8 +1,9 @@
 package com.vire.service;
 
-import com.vire.dto.ProfileDto;
-import com.vire.model.request.ProfileRequest;
-import com.vire.model.response.ProfileResponse;
+import com.vire.model.request.FirmRequest;
+import com.vire.model.request.PersonalRequest;
+import com.vire.model.response.FirmResponse;
+import com.vire.model.response.PersonalResponse;
 import com.vire.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,32 +17,48 @@ public class ProfileService {
 
   @Autowired ProfileRepository ProfileRepository;
 
-  public ProfileResponse createProfile(final ProfileRequest request) {
-    return ProfileResponse.fromDto(ProfileRepository.createProfile(request.toDto()));
+  public FirmResponse createFirmProfile(final FirmRequest request) {
+    return FirmResponse.fromDto(ProfileRepository.createProfile(request.toDto()));
   }
 
-  public ProfileResponse updateProfile(final ProfileRequest request) {
-    return ProfileResponse.fromDto(ProfileRepository.updateProfile(request.toDto()));
+  public PersonalResponse createPersonalProfile(final PersonalRequest request) {
+    return PersonalResponse.fromDto(ProfileRepository.createProfile(request.toDto()));
   }
 
-  public Optional<ProfileResponse> deleteProfile(final Long profileId) {
-      return ProfileRepository.deleteProfile(profileId).map(dto -> ProfileResponse.fromDto(dto));
+  public PersonalResponse updatePersonalProfile(final PersonalRequest request) {
+    return PersonalResponse.fromDto(ProfileRepository.updateProfile(request.toDto()));
   }
 
-  public List<ProfileResponse> retrieveAllProfiles() {
+  public FirmResponse updateFirmProfile(final FirmRequest request) {
+    return FirmResponse.fromDto(ProfileRepository.updateProfile(request.toDto()));
+  }
+
+  public Optional<PersonalResponse> deletePersonalProfile(final Long profileId) {
+      return ProfileRepository.deleteProfile(profileId).map(dto -> PersonalResponse.fromDto(dto));
+  }
+
+  public Optional<FirmResponse> deleteFirmProfile(final Long profileId) {
+    return ProfileRepository.deleteProfile(profileId).map(dto -> FirmResponse.fromDto(dto));
+  }
+
+  public List<PersonalResponse> retrieveAllProfiles() {
 
     return ProfileRepository.retrieveAllProfiles().stream()
-        .map(dto -> ProfileResponse.fromDto(dto))
+        .map(dto -> PersonalResponse.fromDto(dto))
         .collect(Collectors.toList());
   }
 
-  public Optional<ProfileResponse> retrieveProfileById(final Long profileId) {
-     return ProfileRepository.retrieveProfileById(profileId).map(dto -> ProfileResponse.fromDto(dto));
+  public Optional<PersonalResponse> retrievePersonalProfileById(final Long profileId) {
+     return ProfileRepository.retrieveProfileById(profileId).map(dto -> PersonalResponse.fromDto(dto));
   }
 
-  public List<ProfileResponse> searchProfiles(final String searchString) {
+  public Optional<FirmResponse> retrieveFirmProfileById(final Long profileId) {
+    return ProfileRepository.retrieveProfileById(profileId).map(dto -> FirmResponse.fromDto(dto));
+  }
+
+  public List<PersonalResponse> searchProfiles(final String searchString) {
     return ProfileRepository.searchProfiles(searchString).stream()
-        .map(dto -> ProfileResponse.fromDto(dto))
+        .map(dto -> PersonalResponse.fromDto(dto))
         .collect(Collectors.toList());
   }
 }

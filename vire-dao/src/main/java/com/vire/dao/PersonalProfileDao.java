@@ -16,7 +16,7 @@ public class PersonalProfileDao {
 
     @Id
     @Column(name = "profile_id")
-    private Long id;
+    private Long personalProfileId;
 
     @Column(name = "school_board", nullable = true)
     private String schoolBoard;
