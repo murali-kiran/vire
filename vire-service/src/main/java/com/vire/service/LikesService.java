@@ -3,6 +3,7 @@ package com.vire.service;
 import com.vire.model.request.LikesRequest;
 import com.vire.model.response.LikesResponse;
 import com.vire.repository.LikesRepository;
+import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class LikesService {
+    @Autowired
+    Snowflake snowflake;
 
     @Autowired
     LikesRepository likesRepository;
@@ -18,7 +21,7 @@ public class LikesService {
     public LikesResponse createLike(final LikesRequest request) {
 
         var dto = request.toDto();
-
+        dto.setId(snowflake.nextId());
         return LikesResponse.fromDto(likesRepository.createLike(dto));
     }
 

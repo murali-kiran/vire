@@ -3,6 +3,7 @@ package com.vire.service;
 import com.vire.model.request.SocialPostChatRequest;
 import com.vire.model.response.SocialPostChatResponse;
 import com.vire.repository.SocialPostChatRepository;
+import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +14,15 @@ import java.util.stream.Collectors;
 public class SocialPostChatService {
 
     @Autowired
+    Snowflake snowflake;
+
+    @Autowired
     SocialPostChatRepository socialPostChatRepo;
 
     public SocialPostChatResponse create(final SocialPostChatRequest request) {
 
         var dto = request.toDto();
+        dto.setId(snowflake.nextId());
 
         return SocialPostChatResponse.fromDto(socialPostChatRepo.create(dto));
     }
@@ -35,6 +40,7 @@ public class SocialPostChatService {
                 .map(dto -> SocialPostChatResponse.fromDto(dto))
                 .get();
     }
+
     public List<SocialPostChatResponse> getAll() {
 
         return socialPostChatRepo.getAll().stream()
@@ -42,6 +48,7 @@ public class SocialPostChatService {
                 .collect(Collectors.toList());
 
     }
+
     public SocialPostChatResponse retrieveById(Long chatId) {
 
         return socialPostChatRepo.retrieveById(chatId)

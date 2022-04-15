@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Data
 public class FileDao {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "social_image_id", nullable = false)
     private Long socialImageId;
 

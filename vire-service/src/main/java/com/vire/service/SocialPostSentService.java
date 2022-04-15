@@ -3,6 +3,7 @@ package com.vire.service;
 import com.vire.model.request.SocialPostSentRequest;
 import com.vire.model.response.SocialPostSentResponse;
 import com.vire.repository.SocialPostSentRepository;
+import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class SocialPostSentService {
+    @Autowired
+    Snowflake snowflake;
 
     @Autowired
     SocialPostSentRepository socialPostSentRepository;
@@ -18,6 +21,7 @@ public class SocialPostSentService {
     public SocialPostSentResponse create(final SocialPostSentRequest request) {
 
         var dto = request.toDto();
+        dto.setSendToId(snowflake.nextId());
 
         return SocialPostSentResponse.fromDto(socialPostSentRepository.save(dto));
     }

@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "t_social_post_send_to")
 public class SocialPostSendToDao_old {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

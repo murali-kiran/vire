@@ -4,6 +4,7 @@ import com.vire.exception.FileStorageException;
 import com.vire.model.request.FileRequest;
 import com.vire.model.response.FileResponse;
 import com.vire.repository.FileRepository;
+import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class FileService {
+    @Autowired
+    Snowflake snowflake;
 
     @Autowired
     FileRepository fileRepository;
@@ -26,6 +29,7 @@ public class FileService {
     public FileResponse uploadFile(final FileRequest request) {
 
         var dto = request.toDto();
+        dto.setSocialImageId(snowflake.nextId());
 
         return FileResponse.fromDto(fileRepository.uploadFile(dto));
     }

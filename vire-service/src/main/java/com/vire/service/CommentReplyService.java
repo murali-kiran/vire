@@ -3,6 +3,7 @@ package com.vire.service;
 import com.vire.model.request.CommentReplyRequest;
 import com.vire.model.response.CommentReplyResponse;
 import com.vire.repository.CommentReplyRepository;
+import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentReplyService {
+    @Autowired
+    Snowflake snowflake;
 
     @Autowired
     CommentReplyRepository commentReplyRepository;
@@ -18,6 +21,7 @@ public class CommentReplyService {
     public CommentReplyResponse createReply(final CommentReplyRequest request) {
 
         var dto = request.toDto();
+        dto.setId(snowflake.nextId());
 
         return CommentReplyResponse.fromDto(commentReplyRepository.createReply(dto));
     }

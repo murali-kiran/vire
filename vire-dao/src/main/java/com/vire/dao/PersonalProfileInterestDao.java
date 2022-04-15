@@ -12,7 +12,6 @@ import javax.persistence.*;
 public class PersonalProfileInterestDao {
 
     @Id
-    @GeneratedValue
     @Column(name = "personal_profile_interest_id")
     private Long interestId;
 

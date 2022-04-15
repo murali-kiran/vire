@@ -5,6 +5,7 @@ import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.repository.ProfileRepository;
+import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
+  @Autowired
+  Snowflake snowflake;
 
   @Autowired ProfileRepository ProfileRepository;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
-    return FirmResponse.fromDto(ProfileRepository.createProfile(request.toDto()));
+    var dto = request.toDto();
+    dto.setProfileId(snowflake.nextId());
+    return FirmResponse.fromDto(ProfileRepository.createProfile(dto));
   }
 
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
