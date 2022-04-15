@@ -7,6 +7,8 @@ import com.vire.dto.SocialPostSendToDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +23,13 @@ public class SocialRepository {
 
     public SocialDto createSocial(final SocialDto socialDto) {
         var socialDao = SocialDao.fromDto(socialDto);
+
+        if (!CollectionUtils.isEmpty(socialDao.getSendTo())) {
+            for (var sendToDto : socialDao.getSendTo()) {
+                sendToDto.setSocial(socialDao);
+            }
+        }
+        socialDao.onPrePersist();
         //socialDao.getSendTo().get(0).getSocial().setSocialId(socialDao.getSocialId());
         return socialRepositoryJpa.save(socialDao).toDto();
     }

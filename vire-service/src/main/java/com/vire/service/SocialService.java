@@ -7,6 +7,7 @@ import com.vire.repository.SocialRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,12 @@ public class SocialService {
 
         var dto = request.toDto();
         dto.setSocialId(snowflake.nextId());
+
+        if (!CollectionUtils.isEmpty(dto.getSendTo())) {
+            for (var sendToDto : dto.getSendTo()) {
+                sendToDto.setSendToId(snowflake.nextId());
+            }
+        }
 
         return SocialResponse.fromDto(socialRepo.createSocial(dto));
     }
