@@ -43,7 +43,7 @@ create table personal_profile_interest (
   created_time bigint not null,
   updated_time bigint not null,
   primary key (personal_profile_interest_id),
-  constraint fk_personal_profile_interest foreign key (personal_profile_id) references profile(profile_id)
+  constraint fk_personal_profile_interest foreign key (personal_profile_id) references personal_profile(personal_profile_id)
 );
 
 create table address (
@@ -57,7 +57,6 @@ create table address (
   updated_time bigint not null,
   primary key (address_id)
 );
-
 create table firm_profile (
   firm_profile_id bigint(20) not null,
   field_of_business varchar(255) not null,

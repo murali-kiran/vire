@@ -2,6 +2,8 @@ package com.vire.dto;
 
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 public class AddressDto {
 
@@ -16,4 +18,8 @@ public class AddressDto {
     private Double latitude;
 
     private Double longitude;
+
+    public Long createdTime;
+
+    public Long updatedTime;
 }

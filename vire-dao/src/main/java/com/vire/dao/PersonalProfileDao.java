@@ -7,15 +7,16 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
 @Table(name = "personal_profile")
 @Data
-public class PersonalProfileDao {
+public class PersonalProfileDao  {
 
     @Id
-    @Column(name = "profile_id")
+    @Column(name = "personal_profile_id")
     private Long personalProfileId;
 
     @Column(name = "school_board", nullable = true)
@@ -65,11 +66,11 @@ public class PersonalProfileDao {
     @Enumerated(EnumType.STRING)
     private BloodDonateWillingness bloodDonateWillingness;//	Enum
 
-    @ManyToOne(fetch = FetchType.LAZY,optional=false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "present_address_id")
     private AddressDao presentAddress;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional=false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "permanent_address_id")
     private AddressDao permanentAddress;
 
@@ -79,11 +80,28 @@ public class PersonalProfileDao {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "personal_profile_id")
     private ProfileDao profile;
 
+    @Column(name = "created_time", nullable = false, updatable = false)
+    public Long createdTime;
+
+    @Column(name = "updated_time", nullable = false)
+    public Long updatedTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.setCreatedTime(Instant.now().toEpochMilli());
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
     public PersonalProfileDto toDto() {
-        return new ModelMapper().map(this,PersonalProfileDto.class);
+        return new ModelMapper().map(this, PersonalProfileDto.class);
     }
 
     public static PersonalProfileDao fromDto(final PersonalProfileDto dto) {

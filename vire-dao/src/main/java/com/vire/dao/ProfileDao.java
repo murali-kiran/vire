@@ -5,6 +5,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "profile")
@@ -17,9 +18,6 @@ public class ProfileDao {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    //@Column(name = "user_id", nullable = false)
-    //private Long userId;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -44,28 +42,25 @@ public class ProfileDao {
     @PrimaryKeyJoinColumn
     private FirmProfileDao firmProfile;
 
+    @Column(name = "created_time", nullable = false, updatable = false)
+    public Long createdTime;
+
+    @Column(name = "updated_time", nullable = false)
+    public Long updatedTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.setCreatedTime(Instant.now().toEpochMilli());
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
     public ProfileDto toDto() {
-
-    /*    ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(mapper->mapper.sk)
-        Condition<?, ?> isFirmProfile = new Condition<ProfileDao, ProfileDto>() {
-            public boolean applies(MappingContext<ProfileDao, ProfileDto> context) {
-                return context.getSource().getFirmProfile() != null;
-            }
-        };
-
-        modelMapper.addMappings(new PropertyMap<ProfileDao,ProfileDto >() {
-            @Override
-            protected void configure() {
-                when(isFirmProfile).map().setIsPersonalProfile(false);
-            }
-        });
-
-
-
-        return modelMapper.map;   */
-
-       return new ModelMapper().map(this,ProfileDto.class);
+        return new ModelMapper().map(this, ProfileDto.class);
     }
 
     public static ProfileDao fromDto(final ProfileDto dto) {
@@ -76,26 +71,21 @@ public class ProfileDao {
         profileDao.setName(dto.getName());
         profileDao.setEmailId(dto.getEmailId());
         profileDao.setIsAadharVerified(dto.getIsAadharVerified());
-        //profileDao.setUserId(dto.getUserId());
         profileDao.setPassword(dto.getPassword());
         profileDao.setMobileNumber(dto.getMobileNumber());
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
 
-        if(dto.getPersonalProfile()!=null) {
+        if (dto.getPersonalProfile() != null) {
             PersonalProfileDao personalProfileDao = modelMapper.map(dto.getPersonalProfile(), PersonalProfileDao.class);
             profileDao.setPersonalProfile(personalProfileDao);
             personalProfileDao.setProfile(profileDao);
-        }else{
+        } else {
             FirmProfileDao firmProfileDao = modelMapper.map(dto.getFirmProfile(), FirmProfileDao.class);
             profileDao.setFirmProfile(firmProfileDao);
             firmProfileDao.setProfile(profileDao);
         }
-
-       /* modelMapper.getConfiguration().setAmbiguityIgnored(true);
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper.map(dto,ProfileDao.class);*/
 
         return profileDao;
     }

@@ -4,13 +4,11 @@ import com.vire.dto.AddressDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
-@Table(name="address")
+@Table(name = "address")
 @Data
 public class AddressDao {
 
@@ -33,8 +31,25 @@ public class AddressDao {
     @Column(name = "longitude", nullable = true)
     private Double longitude;
 
+    @Column(name = "created_time", nullable = false, updatable = false)
+    public Long createdTime;
+
+    @Column(name = "updated_time", nullable = false)
+    public Long updatedTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.setCreatedTime(Instant.now().toEpochMilli());
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
     public AddressDto toDto() {
-        return new ModelMapper().map(this,AddressDto.class);
+        return new ModelMapper().map(this, AddressDto.class);
     }
 
     public static AddressDao fromDto(final AddressDto dto) {

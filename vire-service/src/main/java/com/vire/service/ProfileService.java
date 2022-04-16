@@ -8,6 +8,7 @@ import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +24,27 @@ public class ProfileService {
   public FirmResponse createFirmProfile(final FirmRequest request) {
     var dto = request.toDto();
     dto.setProfileId(snowflake.nextId());
+    dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
+    dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
     return FirmResponse.fromDto(ProfileRepository.createProfile(dto));
   }
 
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
-    return PersonalResponse.fromDto(ProfileRepository.createProfile(request.toDto()));
+    var dto = request.toDto();
+    dto.setProfileId(snowflake.nextId());
+
+    var personalProfileDto = dto.getPersonalProfile();
+    personalProfileDto.setPersonalProfileId(snowflake.nextId());
+    personalProfileDto.getPermanentAddress().setAddressId(snowflake.nextId());
+    personalProfileDto.getPresentAddress().setAddressId(snowflake.nextId());
+
+    if (!CollectionUtils.isEmpty(personalProfileDto.getInterests())) {
+      for (var interestDto : personalProfileDto.getInterests()) {
+        interestDto.setInterestId(snowflake.nextId());
+      }
+    }
+
+    return PersonalResponse.fromDto(ProfileRepository.createProfile(dto));
   }
 
   public PersonalResponse updatePersonalProfile(final PersonalRequest request) {
