@@ -21,6 +21,11 @@ public class ProfileRepository {
     ProfileRepositoryJpa profileRepositoryJpa;
     @Autowired
     AddressRepositoryJpa addressRepositoryJpa;
+    @Autowired
+    FirmProfileRepositoryJpa firmProfileRepositoryJpa;
+    @Autowired
+    PersonalProfileRepositoryJpa personalProfileRepositoryJpa;
+
 
     @Transactional
     public ProfileDto createProfile(final ProfileDto profileDto) {
@@ -117,8 +122,15 @@ public class ProfileRepository {
                 .collect(Collectors.toList());
     }
 
-    public Optional<ProfileDto> retrieveProfileById(final Long profileId) {
+    public boolean isPersonalProfileExists(final Long profileId){
+        return personalProfileRepositoryJpa.existsById(profileId);
+    }
 
+    public boolean isFirmProfileExists(final Long profileId){
+        return firmProfileRepositoryJpa.existsById(profileId);
+    }
+
+    public Optional<ProfileDto> retrieveProfileById(final Long profileId) {
         return profileRepositoryJpa.findById(profileId).map(dao -> dao.toDto());
     }
 

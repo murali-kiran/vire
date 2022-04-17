@@ -14,13 +14,9 @@ public class FirmResponse {
     private String mobileNumber;
     private String aadhar;
     private String isAadharVerified;
-    //private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
 
     public static FirmResponse fromDto(final ProfileDto dto) {
-        System.out.println("Profile ID :: "+dto.getProfileId());
-        System.out.println("Firm  profile ID :: "+dto.getFirmProfile().getFirmProfileId());
-        System.out.println("Address profile ID :: "+dto.getFirmProfile().getAddress().getAddressId());
         return new ModelMapper().map(dto, FirmResponse.class);
     }
 }
