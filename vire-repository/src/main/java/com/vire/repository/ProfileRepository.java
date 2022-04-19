@@ -140,4 +140,12 @@ public class ProfileRepository {
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
     }
+
+    public  Optional<ProfileDao> loginWithEmail(final String email, final String password){
+        return profileRepositoryJpa.findByEmailIdAndPassword(email,password);
+    }
+
+    public  Optional<ProfileDao> loginWithPhoneNumber(final String mobileNumber, final String password){
+        return profileRepositoryJpa.findByMobileNumberAndPassword(mobileNumber,password);
+    }
 }
