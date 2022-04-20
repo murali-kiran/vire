@@ -22,7 +22,9 @@ public class FileRepository {
 
     public FileDto uploadFile(final FileDto fileDto) {
         long time = System.currentTimeMillis();
-        var result = fileRepositoryJpa.save(FileDao.fromDto(fileDto)).toDto();
+        var fileDao = FileDao.fromDto(fileDto);
+        fileDao.onPrePersist();
+        var result = fileRepositoryJpa.save(fileDao).toDto();
         log.info("Save took :"+ (System.currentTimeMillis() - time) + " in ms");
         return result;
     }

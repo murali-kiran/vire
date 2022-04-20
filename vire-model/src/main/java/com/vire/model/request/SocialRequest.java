@@ -20,7 +20,7 @@ public class SocialRequest {
     private  String imagePath;
     private  Long createdTime;
     private  Long updatedTime;
-    private List<SocialPostSentRequest> sendTo;
+    private List<SocialSendToRequest> sendTo;
 
     public SocialDto toDto() {
         return  new ModelMapper().map(this,SocialDto.class);

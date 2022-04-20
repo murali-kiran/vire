@@ -1,12 +1,12 @@
 package com.vire.repository;
 
-import com.vire.dao.SocialPostSendToDao;
+import com.vire.dao.SocialSendToDao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SocialPostSentRepositoryJpa extends JpaRepository<SocialPostSendToDao, Long> ,
-        JpaSpecificationExecutor<SocialPostSendToDao> {
+public interface SocialPostSentRepositoryJpa extends JpaRepository<SocialSendToDao, Long> ,
+        JpaSpecificationExecutor<SocialSendToDao> {
 
 }

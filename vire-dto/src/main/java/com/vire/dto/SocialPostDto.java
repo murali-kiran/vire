@@ -1,15 +1,11 @@
-package com.vire.model.response;
+package com.vire.dto;
 
-import com.vire.dto.SocialDto;
-import com.vire.model.request.SocialPostSentRequest;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
 @Data
-public class SocialResponse {
-
+public class SocialPostDto {
     private  Long socialId;
     private  Long userId;
     private  Long categoryId;
@@ -21,9 +17,5 @@ public class SocialResponse {
     private  String imagePath;
     private  Long createdTime;
     private  Long updatedTime;
-    private List<SocialPostSentResponse> sendTo;
-
-    public static SocialResponse fromDto(final SocialDto dto) {
-        return new ModelMapper().map(dto,SocialResponse.class);
-    }
+    private  List<SocialSendToDto> sendTo;
 }

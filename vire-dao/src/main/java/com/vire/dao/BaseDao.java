@@ -11,10 +11,10 @@ import java.time.Instant;
 public abstract class BaseDao {
 
     @Column(name = "created_time", nullable = false , updatable = false)
-    private Long createdTime;
+    public Long createdTime;
 
     @Column(name = "updated_time", nullable = false)
-    private Long updatedTime;
+    public Long updatedTime;
 
     @PrePersist
     public void onPrePersist() {

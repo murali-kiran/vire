@@ -12,12 +12,14 @@ public class CommentReplyRequest implements Serializable {
     private  String reply;
     private  Long commentId;
     private  Long replyTime;
+    private Long socialId;
     public CommentReplyDto toDto(){
         var dto = new CommentReplyDto();
-        dto.setId(this.getId());
+        dto.setSocialPostCommentReplyId(this.getId());
         dto.setCommentReplierProfileId(this.getCommentReplierProfileId());
         dto.setReply(this.getReply());
         dto.setCommentId(this.getCommentId());
+        dto.setSocialId(this.socialId);
         dto.setReplyTime(this.getReplyTime());
         return dto;
     }

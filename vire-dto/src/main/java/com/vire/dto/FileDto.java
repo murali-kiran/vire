@@ -11,4 +11,6 @@ public class FileDto{
     private String imagePath;
     private Long imageSize;
     private File file;
+    private Long createdTime;
+    private Long updatedTime;
 }

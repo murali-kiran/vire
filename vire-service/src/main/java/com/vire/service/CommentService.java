@@ -21,7 +21,7 @@ public class CommentService {
     public CommentResponse createComment(final CommentRequest request) {
 
         var dto = request.toDto();
-        dto.setId(snowflake.nextId());
+        dto.setSocialPostCommentId(snowflake.nextId());
 
         return CommentResponse.fromDto(commentRepository.createComment(dto));
     }

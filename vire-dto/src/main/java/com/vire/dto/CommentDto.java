@@ -6,9 +6,11 @@ import java.io.Serializable;
 
 @Data
 public class CommentDto implements Serializable {
-    private  Long id;
+    private  Long socialPostCommentId;
     private  Long commenterProfileId;
     private  String comment;
-    private  Long socialPostId;
+    private  Long socialId;
     private  Long commentTime;
+    private Long createdTime;
+    private Long updatedTime;
 }

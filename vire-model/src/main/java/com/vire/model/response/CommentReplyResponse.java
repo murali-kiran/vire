@@ -12,13 +12,20 @@ public class CommentReplyResponse implements Serializable {
     private  String reply;
     private  Long commentId;
     private  Long replyTime;
+    private Long socialId;
+    private Long createdTime;
+    private Long updatedTime;
     public static CommentReplyResponse fromDto(CommentReplyDto dto){
         var response = new CommentReplyResponse();
-        response.setId(dto.getId());
+        response.setId(dto.getSocialPostCommentReplyId());
         response.setCommentReplierProfileId(dto.getCommentReplierProfileId());
         response.setReply(dto.getReply());
         response.setCommentId(dto.getCommentId());
         response.setReplyTime(dto.getReplyTime());
+        response.setSocialId(dto.getSocialId());
+        response.setCreatedTime(dto.getCreatedTime());
+        response.setUpdatedTime(dto.getUpdatedTime());
+
         return response;
     }
 }

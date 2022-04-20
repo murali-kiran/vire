@@ -17,16 +17,19 @@ public class CommentRepository {
     CommentRepositoryJpa commentRepositoryJpa;
 
     public CommentDto createComment(final CommentDto commentDto) {
-        return commentRepositoryJpa.save(CommentDao.fromDto(commentDto)).toDto();
+        var commentDao = CommentDao.fromDto(commentDto);
+        commentDao.onPrePersist();
+        return commentRepositoryJpa.save(commentDao).toDto();
     }
     public CommentDto updateComment(final CommentDto commentDto) {
-        var existingObject = commentRepositoryJpa.findById(commentDto.getId());
+        var existingObject = commentRepositoryJpa.findById(commentDto.getSocialPostCommentId());
 
         if(existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
-
-        return commentRepositoryJpa.save(CommentDao.fromDto(commentDto)).toDto();
+        var commentDao = CommentDao.fromDto(commentDto);
+        commentDao.onPreUpdate();
+        return commentRepositoryJpa.save(commentDao).toDto();
     }
 
     public Optional<CommentDto> deleteComment(final Long socialPostCommentId) {

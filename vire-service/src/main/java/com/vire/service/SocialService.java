@@ -1,14 +1,15 @@
 package com.vire.service;
 
+import com.vire.model.request.PersonalProfileInterestRequest;
 import com.vire.model.request.SocialRequest;
-import com.vire.model.response.SocialResponse;
-import com.vire.repository.FileRepository;
-import com.vire.repository.SocialRepository;
+import com.vire.model.response.*;
+import com.vire.repository.*;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,16 @@ public class SocialService {
     @Autowired
     FileRepository socialImageRepo;
 
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    CommentReplyService commentReplyService;
+    @Autowired
+    LikesService likesService;
+    @Autowired
+    ProfileService profileService;
+    @Autowired
+    SocialSendToService socialSendToService;
     public SocialResponse createSocial(final SocialRequest request) {
 
         var dto = request.toDto();
@@ -66,7 +77,19 @@ public class SocialService {
                 .map(dto -> SocialResponse.fromDto(dto))
                 .get();
     }
+    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
+        SocialPostResponse socialPostResponse =  socialRepo.retrieveById(socialId)
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .get();
+        List<CommentResponse> commentsList = commentService.searchComments("socialId:"+socialId);
+        List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:"+socialId);
+        List<LikesResponse> likesList = likesService.searchLikes("socialId:"+socialId);
+        socialPostResponse.setComments(commentsList);
+        socialPostResponse.setCommentsReply(commentReplyList);
+        socialPostResponse.setLikes(likesList);
 
+        return socialPostResponse;
+    }
     public List<SocialResponse> getPostsByCommunity(Long communityId) {
 
         return socialRepo.getPostsByCommunity(communityId).stream()
@@ -82,4 +105,41 @@ public class SocialService {
                 .collect(Collectors.toList());
     }
 
+    public List<SocialPostResponse> retrievePostsByProfileId(Long profileId) {
+
+        PersonalResponse personalResponse = profileService.retrievePersonalProfileById(profileId).get();
+        StringBuilder searchString = new StringBuilder();
+        if(personalResponse != null){
+           List<PersonalProfileInterestRequest> personalProfileInterestRequests = personalResponse.getPersonalProfile().getInterests();
+
+            for (PersonalProfileInterestRequest personalProfileInterestRequest : personalProfileInterestRequests) {
+                if(!searchString.isEmpty()) {
+                    searchString.append(" OR ");
+                }else{
+                    searchString.append(" type:")
+                            .append("INTERESTS")
+                            .append(" AND ( ");
+                }
+                searchString.append("( value:"+ personalProfileInterestRequest.getInterest()+" )");
+
+            }
+            searchString.append(" )");
+           // interests.deleteCharAt(interests.length()-1);
+        }
+        System.out.println("Search String::::"+searchString.toString());
+
+        String designation = personalResponse.getPersonalProfile().getDesignation();
+        String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
+        String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
+        //searchString.append(" ( ")
+        List<Long> uniqueSocials = socialSendToService.searchSent(searchString.toString()).stream()
+                .map(SocialSendToResponse::getSocialId)
+                .distinct()
+                .collect(Collectors.toList());
+        List<SocialPostResponse> socialPostResponses = new ArrayList<>();
+        for (Long socialId : uniqueSocials) {
+            socialPostResponses.add(retrieveSocialDetailsById(socialId));
+        }
+        return socialPostResponses;
+    }
 }

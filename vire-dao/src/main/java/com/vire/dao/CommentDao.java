@@ -4,14 +4,15 @@ import com.vire.dto.CommentDto;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "t_social_post_comment")
 @Data
-public class CommentDao {
+public class CommentDao extends BaseDao{
     @Id
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "social_post_comment_id", nullable = false)
+    private Long socialPostCommentId;
 
     @Column(name = "commenter_profile_id", nullable = false)
     private Long commenterProfileId;
@@ -19,29 +20,42 @@ public class CommentDao {
     @Column(name = "comment", length = 191)
     private String comment;
 
-    @Column(name = "social_post_id", nullable = false)
-    private Long socialPostId;
+    @Column(name = "social_id", nullable = false)
+    private Long socialId;
+    @Column(name = "created_time", nullable = false , updatable = false)
+    public Long createdTime;
 
-    @Column(name = "comment_time", nullable = false)
-    private Long commentTime;
+    @Column(name = "updated_time", nullable = false)
+    public Long updatedTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.setCreatedTime(Instant.now().toEpochMilli());
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
+
+//    @Column(name = "comment_time", nullable = false)
+//    private Long commentTime;
 
     public CommentDto toDto(){
         var dto = new CommentDto();
-        dto.setId(this.getId());
+        dto.setSocialPostCommentId(this.getSocialPostCommentId());
         dto.setCommenterProfileId(this.getCommenterProfileId());
         dto.setComment(this.getComment());
-        dto.setSocialPostId(this.getSocialPostId());
-        dto.setCommentTime(this.getCommentTime());
+        dto.setSocialId(this.getSocialId());
+        //dto.setCommentTime(this.getCommentTime());
+        dto.setCreatedTime(this.getCreatedTime());
+        dto.setUpdatedTime(this.getUpdatedTime());
         return dto;
     }
 
     public static CommentDao fromDto(CommentDto dto){
         var dao = new CommentDao();
-        dao.setId(dto.getId());
+        dao.setSocialPostCommentId(dto.getSocialPostCommentId());
         dao.setCommenterProfileId(dto.getCommenterProfileId());
         dao.setComment(dto.getComment());
-        dao.setSocialPostId(dto.getSocialPostId());
-        dao.setCommentTime(dto.getCommentTime());
+        dao.setSocialId(dto.getSocialId());
+        //dao.setCommentTime(dto.getCommentTime());
         return dao;
     }
 }

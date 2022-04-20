@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_social_image")
 @Data
-public class FileDao {
+public class FileDao extends BaseDao{
     @Id
     @Column(name = "social_image_id", nullable = false)
     private Long socialImageId;
@@ -28,6 +28,8 @@ public class FileDao {
         dto.setMimeType(this.getMimeType());
         dto.setImagePath(this.getImagePath());
         dto.setImageSize(this.getImageSize());
+        dto.setCreatedTime(this.getCreatedTime());
+        dto.setUpdatedTime(this.getUpdatedTime());
         return dto;
     }
     public static FileDao fromDto(final FileDto dto) {

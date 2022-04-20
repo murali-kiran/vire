@@ -11,14 +11,14 @@ public class CommentRequest implements Serializable {
     private  Long commenterProfileId;
     private  String comment;
     private  Long socialPostId;
-    private  Long commentTime;
+    //private  Long commentTime;
     public CommentDto toDto(){
         var dto = new CommentDto();
-        dto.setId(this.getId());
+        dto.setSocialPostCommentId(this.getId());
         dto.setCommenterProfileId(this.getCommenterProfileId());
         dto.setComment(this.getComment());
-        dto.setSocialPostId(this.getSocialPostId());
-        dto.setCommentTime(this.getCommentTime());
+        dto.setSocialId(this.getSocialPostId());
+        //dto.setCommentTime(this.getCommentTime());
         return dto;
     }
 }

@@ -1,17 +1,18 @@
 package com.vire.model.request;
 
-import com.vire.dto.SocialPostSendToDto;
+import com.vire.dto.SocialSendToDto;
+import com.vire.enumeration.SendToEnum;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class SocialPostSentRequest implements Serializable {
+public class SocialSendToRequest implements Serializable {
     private  Long sendToId;
-    private  String type;
+    private String type;
     private  String value;
-    public SocialPostSendToDto toDto(){
-        var dto = new SocialPostSendToDto();
+    public SocialSendToDto toDto(){
+        var dto = new SocialSendToDto();
         dto.setSendToId(this.getSendToId());
         dto.setType(this.getType());
         dto.setValue(this.getValue());

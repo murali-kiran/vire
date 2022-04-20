@@ -1,6 +1,7 @@
 package com.vire.repository;
 
 import com.vire.dao.LikesDao;
+import com.vire.dao.SocialDao;
 import com.vire.dto.LikesDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ public class LikesRepository {
     LikesRepositoryJpa likesRepositoryJpa;
 
     public LikesDto createLike(final LikesDto likesDto) {
-        return likesRepositoryJpa.save(LikesDao.fromDto(likesDto)).toDto();
+        var likesDao = LikesDao.fromDto(likesDto);
+        likesDao.onPrePersist();
+        return likesRepositoryJpa.save(likesDao).toDto();
     }
     public LikesDto updateLike(final LikesDto likesDto) {
         var existingObject = likesRepositoryJpa.findById(likesDto.getId());
@@ -25,8 +28,9 @@ public class LikesRepository {
         if(existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
-
-        return likesRepositoryJpa.save(LikesDao.fromDto(likesDto)).toDto();
+        var likesDao = LikesDao.fromDto(likesDto);
+        likesDao.onPreUpdate();
+        return likesRepositoryJpa.save(likesDao).toDto();
     }
 
     public Optional<LikesDto> deleteLike(final Long likeId) {

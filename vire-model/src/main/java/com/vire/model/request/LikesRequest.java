@@ -15,7 +15,7 @@ public class LikesRequest implements Serializable {
         var dto = new LikesDto();
         dto.setId(this.getId());
         dto.setLikerProfileId(this.getLikerProfileId());
-        dto.setSocialPostId(this.getSocialPostId());
+        dto.setSocialId(this.getSocialPostId());
         dto.setLikedTime(this.getLikedTime());
         return dto;
     }
