@@ -4,6 +4,7 @@ import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.PersonalResponse;
+import com.vire.model.response.ProfileResponse;
 import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +101,9 @@ public class ProfileService {
     return profileRepository.searchProfiles(searchString).stream()
         .map(dto -> PersonalResponse.fromDto(dto))
         .collect(Collectors.toList());
+  }
+
+  public Optional<ProfileResponse> retrieveProfileById(final Long profileId) {
+      return profileRepository.retrieveProfileById(profileId).map(dto -> ProfileResponse.fromDto(dto));
   }
 }

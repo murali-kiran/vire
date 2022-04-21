@@ -2,8 +2,7 @@ package com.vire.service;
 
 import com.vire.dao.ProfileDao;
 import com.vire.model.request.LoginRequest;
-import com.vire.model.response.FirmResponse;
-import com.vire.model.response.LoginResponse;
+import com.vire.model.response.ProfileResponse;
 import com.vire.repository.ProfileRepository;
 import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,10 @@ public class LoginService {
     @Autowired
     ProfileRepository profileRepository;
 
-    public Optional<LoginResponse> login(LoginRequest loginRequest) {
+    public Optional<ProfileResponse> login(LoginRequest loginRequest) {
 
         Optional<ProfileDao> profileDao = null;
-        Optional<LoginResponse> loginResponse = Optional.empty();
+        Optional<ProfileResponse> loginResponse = Optional.empty();
         if(Utility.isEmailValid(loginRequest.getEmailOrphonenumber())){
             profileDao =   profileRepository.loginWithEmail(loginRequest.getEmailOrphonenumber(),loginRequest.getPassword());
         }else if(Utility.isPhoneNumberValid(loginRequest.getEmailOrphonenumber())){
@@ -31,7 +30,7 @@ public class LoginService {
 
         if(profileDao.isPresent()){
             var profileId = profileDao.get().getProfileId();
-            loginResponse = profileRepository.retrieveProfileById(profileId).map(dto->LoginResponse.fromDto(dto));
+            loginResponse = profileRepository.retrieveProfileById(profileId).map(dto-> ProfileResponse.fromDto(dto));
         }
 
         return loginResponse;

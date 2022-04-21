@@ -5,7 +5,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 @Data
-public class LoginResponse {
+public class ProfileResponse {
 
     private Long profileId;
     private String name;
@@ -17,9 +17,9 @@ public class LoginResponse {
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
 
-    public static LoginResponse fromDto(final ProfileDto dto){
+    public static ProfileResponse fromDto(final ProfileDto dto){
 
-        var loginResponse = new LoginResponse();
+        var loginResponse = new ProfileResponse();
         loginResponse.setAadhar(dto.getAadhar());
         loginResponse.setEmailId(dto.getEmailId());
         loginResponse.setName(dto.getName());

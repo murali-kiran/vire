@@ -2,7 +2,7 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.request.LoginRequest;
-import com.vire.model.response.LoginResponse;
+import com.vire.model.response.ProfileResponse;
 import com.vire.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class LoginController {
     LoginService loginService;
 
     @PostMapping
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<ProfileResponse> login(@RequestBody LoginRequest loginRequest){
         var response = loginService.login(loginRequest);
         return response.isPresent() ? new ResponseEntity<>(response.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
     }

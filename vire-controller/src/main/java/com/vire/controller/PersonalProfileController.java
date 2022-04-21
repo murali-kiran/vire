@@ -19,22 +19,22 @@ public class PersonalProfileController {
     @Autowired
     ProfileService profileService;
 
-    @PostMapping(value="/create")
+    @PostMapping(value = "/create")
     public ResponseEntity<PersonalResponse> createPersonalProfile(@RequestBody PersonalRequest request) {
         return new ResponseEntity<>(profileService.createPersonalProfile(request), HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/update")
+    @PutMapping(value = "/update")
     public ResponseEntity<PersonalResponse> updatePersonalProfile(@RequestBody PersonalRequest request) {
         return new ResponseEntity<>(profileService.updatePersonalProfile(request), HttpStatus.OK);
     }
 
 
-    @DeleteMapping(value="delete/{profileid}")
+    @DeleteMapping(value = "delete/{profileid}")
     public ResponseEntity<PersonalResponse> deletePersonalProfile(
             @PathVariable(value = "profileid") Long profileId) {
         Optional<PersonalResponse> profileResponse = profileService.deletePersonalProfile(profileId);
-        return profileResponse.isPresent() ? new ResponseEntity<>(profileResponse.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return profileResponse.isPresent() ? new ResponseEntity<>(profileResponse.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /*@GetMapping
@@ -42,10 +42,14 @@ public class PersonalProfileController {
         return new ResponseEntity<>(profileService.retrieveAllProfiles(), HttpStatus.OK);
     }*/
 
-    @GetMapping(value="get/{profileid}")
+    @GetMapping(value = "get/{profileid}")
     public ResponseEntity<PersonalResponse> retrievePersonalProfileById(@PathVariable(value = "profileid") Long profileId) {
         Optional<PersonalResponse> profileResponse = profileService.retrievePersonalProfileById(profileId);
-        return profileResponse.isPresent() ? new ResponseEntity<>(profileResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
+        return profileResponse
+                .stream()
+                .map(profile -> new ResponseEntity<>(profile, HttpStatus.OK))
+                .findFirst()
+                .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/search")
