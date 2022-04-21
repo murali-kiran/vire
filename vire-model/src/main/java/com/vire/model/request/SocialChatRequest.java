@@ -1,12 +1,12 @@
 package com.vire.model.request;
 
-import com.vire.dto.SocialPostChatDto;
+import com.vire.dto.SocialChatDto;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class SocialPostChatRequest implements Serializable {
+public class SocialChatRequest implements Serializable {
     private  Long id;
     private  Long chatInitiatorProfileId;
     private  Long senderProfileId;
@@ -14,8 +14,8 @@ public class SocialPostChatRequest implements Serializable {
     private  Long socialPostId;
     private  Long chatTime;
 
-    public SocialPostChatDto toDto(){
-        var dto = new SocialPostChatDto();
+    public SocialChatDto toDto(){
+        var dto = new SocialChatDto();
         dto.setId(this.getId());
         dto.setChatInitiatorProfileId(this.getChatInitiatorProfileId());
         dto.setSenderProfileId(this.getSenderProfileId());

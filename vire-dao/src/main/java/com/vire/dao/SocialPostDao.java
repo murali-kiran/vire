@@ -8,37 +8,37 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@javax.persistence.Table(name = "t_social")
+@Table(name = "t_social")
 @Entity
 @Data
-public class SocialDao extends BaseDao{
-    @javax.persistence.Id
+public class SocialPostDao extends BaseDao{
+    @Id
 
-    @javax.persistence.Column(name = "social_id", nullable = false)
+    @Column(name = "social_id", nullable = false)
     private Long socialId;
 
-    @javax.persistence.Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @javax.persistence.Column(name = "category_id", nullable = false)
+    @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @javax.persistence.Column(name = "type", length = 191)
+    @Column(name = "type", length = 191)
     private String type;
 
-    @javax.persistence.Column(name = "subject", length = 191)
+    @Column(name = "subject", length = 191)
     private String subject;
 
-    @javax.persistence.Column(name = "description", length = 191)
+    @Column(name = "description", length = 191)
     private String description;
 
-    @javax.persistence.Column(name = "contact", length = 20)
+    @Column(name = "contact", length = 20)
     private String contact;
 
-    @javax.persistence.Column(name = "alternate_contact", length = 20)
+    @Column(name = "alternate_contact", length = 20)
     private String alternateContact;
 
-    @javax.persistence.Column(name = "image_path", length = 191)
+    @Column(name = "image_path", length = 191)
     private String imagePath;
 
     @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)
@@ -100,8 +100,8 @@ public class SocialDao extends BaseDao{
         return dto;
     }
 
-    public static SocialDao fromDto(final SocialDto dto) {
-        var dao = new SocialDao();
+    public static SocialPostDao fromDto(final SocialDto dto) {
+        var dao = new SocialPostDao();
 
         dao.setSocialId(dto.getSocialId());
         dao.setUserId(dto.getUserId());

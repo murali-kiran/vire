@@ -2,7 +2,6 @@ package com.vire.dto;
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -18,5 +17,5 @@ public class SocialDto{
     private  String imagePath;
     private  Long createdTime;
     private  Long updatedTime;
-    private  List<SocialPostSendToDto> sendTo;
+    private  List<SocialSendToDto> sendTo;
 }

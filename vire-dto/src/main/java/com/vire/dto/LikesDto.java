@@ -8,6 +8,8 @@ import java.io.Serializable;
 public class LikesDto implements Serializable {
     private  Long id;
     private  Long likerProfileId;
-    private  Long socialPostId;
+    private  Long socialId;
     private  Long likedTime;
+    private Long createdTime;
+    private Long updatedTime;
 }

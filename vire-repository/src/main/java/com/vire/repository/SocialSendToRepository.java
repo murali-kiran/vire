@@ -1,7 +1,7 @@
 package com.vire.repository;
 
-import com.vire.dao.SocialPostSendToDao;
-import com.vire.dto.SocialPostSendToDto;
+import com.vire.dao.SocialSendToDao;
+import com.vire.dto.SocialSendToDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,25 +11,27 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class SocialPostSentRepository {
+public class SocialSendToRepository {
 
     @Autowired
     SocialPostSentRepositoryJpa socialPostSentRepositoryJpa;
 
-    public SocialPostSendToDto save(final SocialPostSendToDto socialPostSendToDto) {
-        return socialPostSentRepositoryJpa.save(SocialPostSendToDao.fromDto(socialPostSendToDto)).toDto();
+    public SocialSendToDto save(final SocialSendToDto socialSendToDto) {
+        var socialSendToDao = SocialSendToDao.fromDto(socialSendToDto);
+        socialSendToDao.onPrePersist();
+        return socialPostSentRepositoryJpa.save(socialSendToDao).toDto();
     }
-    public SocialPostSendToDto update(final SocialPostSendToDto socialPostSendToDto) {
-        var existingObject = socialPostSentRepositoryJpa.findById(socialPostSendToDto.getSendToId());
+    public SocialSendToDto update(final SocialSendToDto socialSendToDto) {
+        var existingObject = socialPostSentRepositoryJpa.findById(socialSendToDto.getSendToId());
 
         if(existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
 
-        return socialPostSentRepositoryJpa.save(SocialPostSendToDao.fromDto(socialPostSendToDto)).toDto();
+        return socialPostSentRepositoryJpa.save(SocialSendToDao.fromDto(socialSendToDto)).toDto();
     }
 
-    public Optional<SocialPostSendToDto> deleteSent(final Long sentId) {
+    public Optional<SocialSendToDto> deleteSent(final Long sentId) {
 
         var optionalSocialComment = retrieveById(sentId);
         if (optionalSocialComment.isPresent()) {
@@ -41,13 +43,13 @@ public class SocialPostSentRepository {
         return optionalSocialComment;
     }
 
-    public Optional<SocialPostSendToDto> retrieveById(Long commentId) {
+    public Optional<SocialSendToDto> retrieveById(Long commentId) {
 
         return socialPostSentRepositoryJpa.findById(commentId).map(dao -> dao.toDto());
     }
-    public List<SocialPostSendToDto> searchSent(final String searchString) {
+    public List<SocialSendToDto> searchSent(final String searchString) {
 
-        var spec = new CustomSpecificationResolver<SocialPostSendToDao>(searchString).resolve();
+        var spec = new CustomSpecificationResolver<SocialSendToDao>(searchString).resolve();
 
         return socialPostSentRepositoryJpa.findAll(spec).stream().map(dao -> dao.toDto()).collect(Collectors.toList());
     }

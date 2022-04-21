@@ -1,9 +1,8 @@
 package com.vire.repository;
 
+import com.vire.dao.CommentDao;
 import com.vire.dao.CommentReplyDao;
-import com.vire.dao.SocialDao;
 import com.vire.dto.CommentReplyDto;
-import com.vire.dto.SocialDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,8 @@ public class CommentReplyRepository {
     CommentReplyReposJpa commentReplyReposJpa;
 
     public CommentReplyDto createReply(final CommentReplyDto commentReplyDto) {
+        var commentReplyDao = CommentReplyDao.fromDto(commentReplyDto);
+        commentReplyDao.onPrePersist();
         return commentReplyReposJpa.save(CommentReplyDao.fromDto(commentReplyDto)).toDto();
     }
 
@@ -27,13 +28,14 @@ public class CommentReplyRepository {
         return commentReplyReposJpa.findById(replyId).map(dao -> dao.toDto());
     }
     public CommentReplyDto updateReply(final CommentReplyDto commentReplyDto) {
-        var existingObject = commentReplyReposJpa.findById(commentReplyDto.getId());
+        var existingObject = commentReplyReposJpa.findById(commentReplyDto.getSocialPostCommentReplyId());
 
         if(existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
-
-        return commentReplyReposJpa.save(CommentReplyDao.fromDto(commentReplyDto)).toDto();
+        var commentReplyDao = CommentReplyDao.fromDto(commentReplyDto);
+        commentReplyDao.onPreUpdate();
+        return commentReplyReposJpa.save(commentReplyDao).toDto();
     }
 
     public Optional<CommentReplyDto> deleteReply(final Long socialPostReplyId) {

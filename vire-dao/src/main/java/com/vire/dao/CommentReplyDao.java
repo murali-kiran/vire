@@ -4,14 +4,15 @@ import com.vire.dto.CommentReplyDto;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "t_social_post_comment_reply")
 @Data
-public class CommentReplyDao {
+public class CommentReplyDao extends BaseDao{
     @Id
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "social_post_comment_reply_id", nullable = false)
+    private Long socialPostCommentReplyId;
 
     @Column(name = "comment_replier_profile_id", nullable = false)
     private Long commentReplierProfileId;
@@ -22,25 +23,43 @@ public class CommentReplyDao {
     @Column(name = "comment_id", nullable = false)
     private Long commentId;
 
+    @Column(name = "social_id", nullable = false)
+    private Long socialId;
+
     @Column(name = "reply_time", nullable = false)
     private Long replyTime;
+    @Column(name = "created_time", nullable = false , updatable = false)
+    public Long createdTime;
+
+    @Column(name = "updated_time", nullable = false)
+    public Long updatedTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.setCreatedTime(Instant.now().toEpochMilli());
+        this.setUpdatedTime(Instant.now().toEpochMilli());
+    }
 
     public CommentReplyDto toDto(){
         var dto = new CommentReplyDto();
-        dto.setId(this.getId());
+        dto.setSocialPostCommentReplyId(this.getSocialPostCommentReplyId());
         dto.setCommentReplierProfileId(this.getCommentReplierProfileId());
         dto.setReply(this.getReply());
         dto.setCommentId(this.getCommentId());
+        dto.setSocialId(this.getSocialId());
         dto.setReplyTime(this.getReplyTime());
+        dto.setCreatedTime(this.getCreatedTime());
+        dto.setUpdatedTime(this.getUpdatedTime());
         return dto;
     }
 
     public static CommentReplyDao fromDto(CommentReplyDto dto){
         var dao = new CommentReplyDao();
-        dao.setId(dto.getId());
+        dao.setSocialPostCommentReplyId(dto.getSocialPostCommentReplyId());
         dao.setCommentReplierProfileId(dto.getCommentReplierProfileId());
         dao.setReply(dto.getReply());
         dao.setCommentId(dto.getCommentId());
+        dao.setSocialId(dto.getSocialId());
         dao.setReplyTime(dto.getReplyTime());
         return dao;
     }
