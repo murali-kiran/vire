@@ -18,17 +18,17 @@ public class LikesController {
     @Autowired
     LikesService likesService;
 
-    @PostMapping("/createLike")
+    @PostMapping("/create")
     public ResponseEntity<LikesResponse> createLike(@RequestBody LikesRequest request){
         return new ResponseEntity<>(likesService.createLike(request), HttpStatus.CREATED);
     }
-    @PostMapping("/updateLike")
+    @PostMapping("/update")
     public ResponseEntity<LikesResponse> updateLike(@RequestBody LikesRequest request){
         return new ResponseEntity<>(likesService.updateLike(request), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{likeid}")
-    public ResponseEntity<LikesResponse> deleteLike(
+    public ResponseEntity<LikesResponse> delete(
             @PathVariable(value = "likeid") Long likeid) {
         return new ResponseEntity<>(likesService.deleteLike(likeid), HttpStatus.OK);
     }
@@ -37,8 +37,8 @@ public class LikesController {
     public ResponseEntity<LikesResponse> retrieveById(@PathVariable Long likeId){
         return new ResponseEntity<LikesResponse>(likesService.retrieveById(likeId), HttpStatus.OK);
     }
-    @GetMapping("searchLikes")
-    public ResponseEntity<List<LikesResponse>> searchLikes(
+    @GetMapping("search")
+    public ResponseEntity<List<LikesResponse>> search(
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(likesService.searchLikes(searchString), HttpStatus.OK);
     }

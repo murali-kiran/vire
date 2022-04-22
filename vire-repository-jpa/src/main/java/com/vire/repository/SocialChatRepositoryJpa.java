@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SocialPostChatRepositoryJpa extends JpaRepository<SocialChatDao, Long> ,
+public interface SocialChatRepositoryJpa extends JpaRepository<SocialChatDao, Long> ,
         JpaSpecificationExecutor<SocialChatDao> {
 
 }

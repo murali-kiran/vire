@@ -1,16 +1,14 @@
 package com.vire.repository;
 
 import com.vire.dao.SocialDao;
+import com.vire.dao.SocialSendToDao;
 import com.vire.dto.SocialDto;
 import com.vire.dto.SocialSendToDto;
 import com.vire.repository.search.CustomSpecificationResolver;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -19,12 +17,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class SocialRepository {
 
     @Autowired
     SocialRepositoryJpa socialRepositoryJpa;
     @Autowired
-    SocialSendToRepository socialSendToRepository;
+    SocialSendToRepositoryJpa socialSendToRepositoryJpa;
     @PersistenceContext
     private EntityManager entityManager;
     public SocialDto createSocial(final SocialDto socialDto) {
@@ -37,8 +36,7 @@ public class SocialRepository {
             }
         }
         socialDao.onPrePersist();
-        //socialDao.getSendTo().get(0).getSocial().setSocialId(socialDao.getSocialId());
-        System.out.println("sa:::" + socialDao);
+        log.info("social object:::" + socialDao);
         return socialRepositoryJpa.save(socialDao).toDto();
     }
 
@@ -48,8 +46,16 @@ public class SocialRepository {
         if (existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
+        var socialDao = SocialDao.fromDto(socialDto);
+        socialDao.onPreUpdate();
+        if (!CollectionUtils.isEmpty(socialDao.getSendTo())) {
+            for (var sendToDto : socialDao.getSendTo()) {
+                sendToDto.setSocial(socialDao);
+                sendToDto.onPreUpdate();
 
-        return socialRepositoryJpa.save(SocialDao.fromDto(socialDto)).toDto();
+            }
+        }
+        return socialRepositoryJpa.save(socialDao).toDto();
     }
 
     public Optional<SocialDto> deleteSocialPost(final Long socialId) {

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class SocialSendToRepository {
 
     @Autowired
-    SocialPostSentRepositoryJpa socialPostSentRepositoryJpa;
+    SocialSendToRepositoryJpa socialPostSentRepositoryJpa;
 
     public SocialSendToDto save(final SocialSendToDto socialSendToDto) {
         var socialSendToDao = SocialSendToDao.fromDto(socialSendToDto);

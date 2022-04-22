@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class SocialChatRepository {
 
     @Autowired
-    SocialPostChatRepositoryJpa socialPostChatRepositoryJpa;
+    SocialChatRepositoryJpa socialPostChatRepositoryJpa;
 
     public SocialChatDto create(final SocialChatDto socialChatDto) {
         var socialChatDao = SocialChatDao.fromDto(socialChatDto);

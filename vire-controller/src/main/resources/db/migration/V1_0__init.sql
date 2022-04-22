@@ -71,14 +71,14 @@ create table firm_profile (
 
 create table t_social (
      social_id bigint not null,
-	 user_id bigint not null,
+	 profile_id bigint not null,
 	 category_id bigint not null,
 	 type varchar(191),
      subject varchar(191),
 	 description varchar(191),
 	 contact varchar(20),
 	 alternate_contact varchar(20),
-	 image_path varchar(191),
+	 file_id varchar(191),
      created_time bigint not null,
      updated_time bigint not null,
      primary key (social_id)
@@ -140,14 +140,31 @@ create table t_social_post_like (
 	 primary key (social_post_like_id),
 	 constraint fk_t_social_post_like foreign key (social_id) references t_social(social_id)
 );
-create table t_social_image (
-  social_image_id bigint not null,
+create table t_file (
+  file_id bigint not null,
   mime_type varchar(45) not null,
-  image_path varchar(191) not null,
-  image_size bigint not null,
-  social_id bigint not null,
+  file_common_path varchar(191) not null,
+  file_size bigint not null,
   created_time bigint not null,
   updated_time bigint not null,
-  primary key (social_image_id),
-  constraint fk_t_social_image foreign key (social_id) references t_social(social_id)
+  primary key (file_id)
+  );
+create table t_feeds (
+     feed_id bigint not null,
+	 profile_id bigint not null,
+	 description varchar(191),
+	 image_id bigint not null,
+     created_time bigint not null,
+     updated_time bigint not null,
+     primary key (feed_id)
+);
+create table t_feeds_send_to (
+     t_feeds_send_to_id bigint not null,
+	 type varchar(191),
+     value varchar(191),
+     feed_id bigint not null,
+     created_time bigint not null,
+     updated_time bigint not null,
+     primary key (t_feeds_send_to_id),
+     constraint fk_t_feed_send_to foreign key (feed_id) references t_feeds(feed_id)
 );

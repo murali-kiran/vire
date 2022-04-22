@@ -18,26 +18,26 @@ public class SocialSendToController {
     @Autowired
     SocialSendToService socialSendToService;
 
-    @PostMapping("/createPostSent")
+    @PostMapping("/create")
     public ResponseEntity<SocialSendToResponse> createSent(@RequestBody SocialSendToRequest request){
         return new ResponseEntity<>(socialSendToService.create(request), HttpStatus.CREATED);
     }
-    @PostMapping("/updatePostPostSent")
+    @PostMapping("/update")
     public ResponseEntity<SocialSendToResponse> updateSent(@RequestBody SocialSendToRequest request){
         return new ResponseEntity<>(socialSendToService.update(request), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{postsentid}")
+    @DeleteMapping("/{sendtoid}")
     public ResponseEntity<SocialSendToResponse> deleteSent(
-            @PathVariable(value = "postsentid") Long sentId) {
+            @PathVariable(value = "sendtoid") Long sentId) {
         return new ResponseEntity<>(socialSendToService.deletePostSent(sentId), HttpStatus.OK);
     }
 
-    @GetMapping("/{postsentid}")
-    public ResponseEntity<SocialSendToResponse> retrieveById(@PathVariable(name="postsentid") Long postSentId){
+    @GetMapping("/{sendtoid}")
+    public ResponseEntity<SocialSendToResponse> retrieveById(@PathVariable(name="sendtoid") Long postSentId){
         return new ResponseEntity<SocialSendToResponse>(socialSendToService.retrieveById(postSentId), HttpStatus.OK);
     }
-    @GetMapping("searchpostsent")
+    @GetMapping("search")
     public ResponseEntity<List<SocialSendToResponse>> searchSent(
             @RequestParam(value = "searchpostsent") String searchString) {
         return new ResponseEntity<>(socialSendToService.searchSent(searchString), HttpStatus.OK);

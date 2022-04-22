@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 public class SocialResponse {
 
     private  Long socialId;
-    private  Long userId;
+    private  Long profileId;
     private  Long categoryId;
     private  String type;
     private  String subject;
     private  String description;
     private  String contact;
     private  String alternateContact;
-    private  String imagePath;
+    private  Long fileId;
     private  Long createdTime;
     private  Long updatedTime;
     private List<SocialSendToResponse> sendTo;
@@ -26,14 +26,14 @@ public class SocialResponse {
     public static SocialResponse fromDto(SocialDto dto){
         var response = new SocialResponse();
         response.setSocialId(dto.getSocialId());
-        response.setUserId(dto.getUserId());
+        response.setProfileId(dto.getProfileId());
         response.setCategoryId(dto.getCategoryId());
         response.setType(dto.getType());
         response.setSubject(dto.getSubject());
         response.setDescription(dto.getDescription());
         response.setContact(dto.getContact());
         response.setAlternateContact(dto.getAlternateContact());
-        response.setImagePath(dto.getImagePath());
+        response.setFileId(dto.getFileId());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getSendTo() != null && !dto.getSendTo().isEmpty()) {

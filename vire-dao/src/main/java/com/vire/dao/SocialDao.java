@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 @javax.persistence.Table(name = "t_social")
 @Entity
 @Data
-public class SocialDao extends BaseDao{
+public class SocialDao {
     @javax.persistence.Id
 
     @javax.persistence.Column(name = "social_id", nullable = false)
     private Long socialId;
 
-    @javax.persistence.Column(name = "user_id", nullable = false)
-    private Long userId;
+    @javax.persistence.Column(name = "profile_id", nullable = false)
+    private Long profileId;
 
     @javax.persistence.Column(name = "category_id", nullable = false)
     private Long categoryId;
@@ -38,8 +38,8 @@ public class SocialDao extends BaseDao{
     @javax.persistence.Column(name = "alternate_contact", length = 20)
     private String alternateContact;
 
-    @javax.persistence.Column(name = "image_path", length = 191)
-    private String imagePath;
+    @javax.persistence.Column(name = "file_id")
+    private Long fileId;
 
     @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)
     private List<SocialSendToDao> sendTo;
@@ -64,14 +64,14 @@ public class SocialDao extends BaseDao{
     public String toString() {
         return "SocialDao{" +
                 "socialId=" + socialId +
-                ", userId=" + userId +
+                ", profileId=" + profileId +
                 ", categoryId=" + categoryId +
                 ", type='" + type + '\'' +
                 ", subject='" + subject + '\'' +
                 ", description='" + description + '\'' +
                 ", contact='" + contact + '\'' +
                 ", alternateContact='" + alternateContact + '\'' +
-                ", imagePath='" + imagePath + '\'' +
+                ", fileId='" + fileId + '\'' +
                 ", sendTo=" + sendTo+
                 '}';
     }
@@ -79,14 +79,14 @@ public class SocialDao extends BaseDao{
     public SocialDto toDto() {
         var dto = new SocialDto();
         dto.setSocialId(this.getSocialId());
-        dto.setUserId(this.getUserId());
+        dto.setProfileId(this.getProfileId());
         dto.setCategoryId(this.getCategoryId());
         dto.setType(this.getType());
         dto.setSubject(this.getSubject());
         dto.setDescription(this.getDescription());
         dto.setContact(this.getContact());
         dto.setAlternateContact(this.getAlternateContact());
-        dto.setImagePath(this.getImagePath());
+        dto.setFileId(this.getFileId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -104,14 +104,14 @@ public class SocialDao extends BaseDao{
         var dao = new SocialDao();
 
         dao.setSocialId(dto.getSocialId());
-        dao.setUserId(dto.getUserId());
+        dao.setProfileId(dto.getProfileId());
         dao.setCategoryId(dto.getCategoryId());
         dao.setType(dto.getType());
         dao.setSubject(dto.getSubject());
         dao.setDescription(dto.getDescription());
         dao.setContact(dto.getContact());
         dao.setAlternateContact(dto.getAlternateContact());
-        dao.setImagePath(dto.getImagePath());
+        dao.setFileId(dto.getFileId());
         dao.setCreatedTime(dto.getCreatedTime());
         dao.setUpdatedTime(dto.getUpdatedTime());
 

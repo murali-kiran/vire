@@ -29,7 +29,7 @@ public class FileService {
     public FileResponse uploadFile(final FileRequest request) {
 
         var dto = request.toDto();
-        dto.setSocialImageId(snowflake.nextId());
+        dto.setFileId(snowflake.nextId());
 
         return FileResponse.fromDto(fileRepository.uploadFile(dto));
     }
@@ -47,7 +47,7 @@ public class FileService {
                 .get();
     }
 
-    public String storeFile(MultipartFile file, String filePath) {
+    public String storeFile(MultipartFile file, String filePath, String fileDirType) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         final Path fileStorageLocation;
@@ -57,11 +57,12 @@ public class FileService {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
             // Copy file to the target location (Replacing existing file with the same name)
-            Path pathDir = Paths.get(filePath).toAbsolutePath().normalize();
+            Path pathDir = Paths.get(filePath, fileDirType).toAbsolutePath().normalize();
             Files.createDirectories(pathDir);
             Path targetLocation = pathDir.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return targetLocation.toString();
+            String relativePath = Paths.get(fileDirType).resolve(fileName).toString();
+            return relativePath;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         } catch (Exception ex){

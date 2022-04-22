@@ -11,4 +11,6 @@ public class VireConstants {
     public final static String LIKE_REQUEST_PATH_API = SOCIAL_REQUEST_PATH_API+"/like";
     public final static String REPLY_REQUEST_PATH_API = SOCIAL_REQUEST_PATH_API+"/reply";
     public final static String COMMENT_REQUEST_PATH_API = SOCIAL_REQUEST_PATH_API+"/comment";
+    public final static String FEEDS_REQUEST_PATH_API = "/api/v1/feeds";
+    public final static String SEND_TO_REQUEST_PATH_API = FEEDS_REQUEST_PATH_API + "/sendto";
 }
