@@ -7,4 +7,6 @@ public class PersonalProfileInterestDto {
 
     private Long interestId;
     private String interest;
+
+
 }

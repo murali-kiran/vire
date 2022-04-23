@@ -109,9 +109,9 @@ public class SocialService {
         PersonalResponse personalResponse = profileService.retrievePersonalProfileById(profileId).get();
         StringBuilder searchString = new StringBuilder();
         if(personalResponse != null){
-           List<PersonalProfileInterestRequest> personalProfileInterestRequests = personalResponse.getPersonalProfile().getInterests();
+           List<PersonalProfileInterestResponse> personalProfileInterestResponses = personalResponse.getPersonalProfile().getInterests();
 
-            for (PersonalProfileInterestRequest personalProfileInterestRequest : personalProfileInterestRequests) {
+            for (PersonalProfileInterestResponse personalProfileInterestResponse : personalProfileInterestResponses) {
                 if(!searchString.isEmpty()) {
                     searchString.append(" OR ");
                 }else{
@@ -119,7 +119,7 @@ public class SocialService {
                             .append("INTERESTS")
                             .append(" AND ( ");
                 }
-                searchString.append("( value:"+ personalProfileInterestRequest.getInterest()+" )");
+                searchString.append("( value:"+ personalProfileInterestResponse.getInterest()+" )");
 
             }
             searchString.append(" )");

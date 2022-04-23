@@ -2,12 +2,11 @@ package com.vire.model.response;
 
 import com.vire.dto.ProfileDto;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
 
 @Data
 public class PersonalResponse {
 
-    private Long profileId;
+    private String profileId;
     private String name;
     private String password;
     private String emailId;
@@ -18,6 +17,18 @@ public class PersonalResponse {
     //private FirmProfileResponse firmProfile;
 
     public static PersonalResponse fromDto(final ProfileDto dto) {
-        return new ModelMapper().map(dto, PersonalResponse.class);
+
+        var personalResponse = new PersonalResponse();
+        personalResponse.setProfileId(dto.getProfileId().toString());
+        personalResponse.setName(dto.getName());
+        personalResponse.setPassword(dto.getPassword());
+        personalResponse.setEmailId(dto.getEmailId());
+        personalResponse.setMobileNumber(dto.getMobileNumber());
+        personalResponse.setAadhar(dto.getAadhar());
+        personalResponse.setIsAadharVerified(dto.getIsAadharVerified());
+        personalResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
+
+        return  personalResponse;
+        //return new ModelMapper().map(dto, PersonalResponse.class);
     }
 }
