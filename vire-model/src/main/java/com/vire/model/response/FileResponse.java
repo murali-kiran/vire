@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class FileResponse {
-    private Long fileId;
+    private String fileId;
     private String mimeType;
     private String fileCommonPath;
     private Long fileSize;
@@ -13,7 +13,7 @@ public class FileResponse {
     private Long updatedTime;
     public static FileResponse fromDto(final FileDto dto) {
         var response = new FileResponse();
-        response.setFileId(dto.getFileId());
+        response.setFileId(dto.getFileId().toString());
         response.setMimeType(dto.getMimeType());
         response.setFileCommonPath(dto.getFileCommonPath());
         response.setFileSize(dto.getFileSize());

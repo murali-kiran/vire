@@ -8,18 +8,18 @@ import java.io.Serializable;
 
 @Data
 public class FeedsSendToResponse implements Serializable {
-    private  Long feedsSendToId;
+    private String feedsSendToId;
     private String type;
-    private  String value;
-    private Long feedId;
+    private String value;
+    private String feedId;
     private Long createdTime;
     private Long updatedTime;
     public static FeedsSendToResponse fromDto(FeedsSendToDto dto){
         var response = new FeedsSendToResponse();
-        response.setFeedsSendToId(dto.getFeedsSendToId());
+        response.setFeedsSendToId(dto.getFeedsSendToId().toString());
         response.setType(dto.getType());
         response.setValue(dto.getValue());
-        response.setFeedId(dto.getFeedId());
+        response.setFeedId(dto.getFeedId().toString());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         return response;

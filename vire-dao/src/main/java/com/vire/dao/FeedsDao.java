@@ -23,8 +23,8 @@ public class FeedsDao {
     @Column(name = "description", length = 191)
     private String description;
 
-    @Column(name = "image_id", nullable = false)
-    private Long imageId;
+    @Column(name = "file_id", nullable = false)
+    private Long fileId;
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<FeedsSendToDao> feedsSendTo;
@@ -51,7 +51,7 @@ public class FeedsDao {
                 "feedId=" + feedId +
                 ", profileId=" + profileId +
                 ", description='" + description + '\'' +
-                ", imageId=" + imageId +
+                ", fileId=" + fileId +
                 ", feedsSendTo=" + feedsSendTo +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
@@ -63,7 +63,7 @@ public class FeedsDao {
         dto.setFeedId(this.getFeedId());
         dto.setProfileId(this.getProfileId());
         dto.setDescription(this.getDescription());
-        dto.setImageId(this.getImageId());
+        dto.setFileId(this.getFileId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -83,7 +83,7 @@ public class FeedsDao {
         dao.setFeedId(dto.getFeedId());
         dao.setProfileId(dto.getProfileId());
         dao.setDescription(dto.getDescription());
-        dao.setImageId(dto.getImageId());
+        dao.setFileId(dto.getFileId());
         dao.setCreatedTime(dto.getCreatedTime());
         dao.setUpdatedTime(dto.getUpdatedTime());
 

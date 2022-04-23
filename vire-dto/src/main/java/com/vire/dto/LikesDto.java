@@ -9,7 +9,6 @@ public class LikesDto implements Serializable {
     private  Long id;
     private  Long likerProfileId;
     private  Long socialId;
-    private  Long likedTime;
     private Long createdTime;
     private Long updatedTime;
 }

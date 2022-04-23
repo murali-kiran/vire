@@ -17,9 +17,6 @@ public class LikesDao extends BaseDao{
     @Column(name = "liker_profile_id", nullable = false)
     private Long likerProfileId;
 
-    @Column(name = "liked_time", nullable = false)
-    private Long likedTime;
-
     @Column(name = "social_id", nullable = false)
     private Long socialId;
     @Column(name = "created_time", nullable = false , updatable = false)
@@ -43,7 +40,6 @@ public class LikesDao extends BaseDao{
         var dto = new LikesDto();
         dto.setId(this.getSocialPostLikeId());
         dto.setLikerProfileId(this.getLikerProfileId());
-        dto.setLikedTime(this.getLikedTime());
         dto.setSocialId(this.getSocialId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
@@ -55,7 +51,6 @@ public class LikesDao extends BaseDao{
         dao.setSocialPostLikeId(dto.getId());
         dao.setLikerProfileId(dto.getLikerProfileId());
         dao.setSocialId(dto.getSocialId());
-        dao.setLikedTime(dto.getLikedTime());
         return dao;
     }
 }

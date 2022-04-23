@@ -34,16 +34,12 @@ public class CommentDao extends BaseDao{
         this.setUpdatedTime(Instant.now().toEpochMilli());
     }
 
-//    @Column(name = "comment_time", nullable = false)
-//    private Long commentTime;
-
     public CommentDto toDto(){
         var dto = new CommentDto();
         dto.setSocialPostCommentId(this.getSocialPostCommentId());
         dto.setCommenterProfileId(this.getCommenterProfileId());
         dto.setComment(this.getComment());
         dto.setSocialId(this.getSocialId());
-        //dto.setCommentTime(this.getCommentTime());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
         return dto;
@@ -55,7 +51,6 @@ public class CommentDao extends BaseDao{
         dao.setCommenterProfileId(dto.getCommenterProfileId());
         dao.setComment(dto.getComment());
         dao.setSocialId(dto.getSocialId());
-        //dao.setCommentTime(dto.getCommentTime());
         return dao;
     }
 }

@@ -87,7 +87,6 @@ public class SocialService {
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setCommentsReply(commentReplyList);
         socialPostResponse.setLikes(likesList);
-
         return socialPostResponse;
     }
     public List<SocialResponse> getPostsByCommunity(Long communityId) {
@@ -132,13 +131,13 @@ public class SocialService {
         String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
         String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
         //searchString.append(" ( ")
-        List<Long> uniqueSocials = socialSendToService.searchSent(searchString.toString()).stream()
+        List<String> uniqueSocials = socialSendToService.searchSent(searchString.toString()).stream()
                 .map(SocialSendToResponse::getSocialId)
                 .distinct()
                 .collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
-        for (Long socialId : uniqueSocials) {
-            socialPostResponses.add(retrieveSocialDetailsById(socialId));
+        for (String socialId : uniqueSocials) {
+            socialPostResponses.add(retrieveSocialDetailsById(Long.valueOf(socialId)));
         }
         return socialPostResponses;
     }

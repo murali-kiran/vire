@@ -11,7 +11,6 @@ public class SocialChatDto implements Serializable {
     private  Long senderProfileId;
     private  String message;
     private  Long socialPostId;
-    private  Long chatTime;
     private Long createdTime;
     private Long updatedTime;
 }

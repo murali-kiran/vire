@@ -12,20 +12,20 @@ import java.util.stream.Collectors;
 @Data
 public class FeedsResponse {
 
-    private Long feedId;
-    private Long profileId;
+    private String feedId;
+    private String profileId;
     private String description;
-    private Long imageId;
+    private String fileId;
     private List<FeedsSendToResponse> feedsSendTo;
     private  Long createdTime;
     private  Long updatedTime;
 
     public static FeedsResponse fromDto(FeedsDto dto){
         var response = new FeedsResponse();
-        response.setFeedId(dto.getFeedId());
-        response.setProfileId(dto.getProfileId());
+        response.setFeedId(dto.getFeedId().toString());
+        response.setProfileId(dto.getProfileId().toString());
         response.setDescription(dto.getDescription());
-        response.setImageId(dto.getImageId());
+        response.setFileId(dto.getFileId().toString());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getFeedsSendTo() != null && !dto.getFeedsSendTo().isEmpty()) {

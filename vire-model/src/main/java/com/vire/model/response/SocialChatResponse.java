@@ -7,22 +7,20 @@ import java.io.Serializable;
 
 @Data
 public class SocialChatResponse implements Serializable {
-    private  Long id;
-    private  Long chatInitiatorProfileId;
-    private  Long senderProfileId;
+    private  String id;
+    private  String chatInitiatorProfileId;
+    private  String senderProfileId;
     private  String message;
-    private  Long socialPostId;
-    private  Long chatTime;
+    private  String socialPostId;
     private Long createdTime;
     private Long updatedTime;
     public static SocialChatResponse fromDto(SocialChatDto dto){
         var response = new SocialChatResponse();
-        response.setId(dto.getId());
-        response.setChatInitiatorProfileId(dto.getChatInitiatorProfileId());
-        response.setSenderProfileId(dto.getSenderProfileId());
+        response.setId(dto.getId().toString());
+        response.setChatInitiatorProfileId(dto.getChatInitiatorProfileId().toString());
+        response.setSenderProfileId(dto.getSenderProfileId().toString());
         response.setMessage(dto.getMessage());
-        response.setChatTime(dto.getChatTime());
-        response.setSocialPostId(dto.getSocialPostId());
+        response.setSocialPostId(dto.getSocialPostId().toString());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         return response;

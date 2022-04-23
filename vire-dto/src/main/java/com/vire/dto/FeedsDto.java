@@ -9,7 +9,7 @@ public class FeedsDto {
     private Long feedId;
     private Long profileId;
     private String description;
-    private Long imageId;
+    private Long fileId;
     private List<FeedsSendToDto> feedsSendTo;
     private  Long createdTime;
     private  Long updatedTime;

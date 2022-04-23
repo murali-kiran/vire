@@ -126,14 +126,15 @@ public class FeedsService {
         String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
         String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
         //searchString.append(" ( ")
-        List<Long> uniqueFeeds = feedsSendToService.searchSent(searchString.toString()).stream()
+       /* List<Long> uniqueFeeds = feedsSendToService.searchSent(searchString.toString()).stream()
                 .map(FeedsSendToResponse::getFeedId)
                 .distinct()
                 .collect(Collectors.toList());
         List<FeedsResponse> feedsResponses = new ArrayList<>();
         for (Long feedsId : uniqueFeeds) {
             feedsResponses.add(retrieveFeedsDetailsById(feedsId));
-        }
+        }*/
+        List<FeedsResponse> feedsResponses = new ArrayList<>();
         return feedsResponses;
     }
 }

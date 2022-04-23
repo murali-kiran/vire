@@ -1,5 +1,8 @@
 package com.vire.service;
-
+//
+//import com.amazonaws.AmazonServiceException;
+//import com.amazonaws.services.s3.AmazonS3;
+//import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.vire.exception.FileStorageException;
 import com.vire.model.request.FileRequest;
 import com.vire.model.response.FileResponse;
@@ -15,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,8 @@ public class FileService {
 
     @Autowired
     FileRepository fileRepository;
+  /*  @Autowired
+    AmazonS3 amazonS3;*/
 
     public FileResponse uploadFile(final FileRequest request) {
 
@@ -49,6 +54,7 @@ public class FileService {
 
     public String storeFile(MultipartFile file, String filePath, String fileDirType) {
         // Normalize file name
+        boolean amazonServer = false;
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         final Path fileStorageLocation;
         try {
@@ -60,7 +66,25 @@ public class FileService {
             Path pathDir = Paths.get(filePath, fileDirType).toAbsolutePath().normalize();
             Files.createDirectories(pathDir);
             Path targetLocation = pathDir.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            if(amazonServer) {
+                /*try {
+                    Map<String, String> metadata = new HashMap<>();
+                    metadata.put("Content-Type", file.getContentType());
+                    metadata.put("Content-Length", String.valueOf(file.getSize()));
+                    String path = String.format("%s/%s", "BucketName", UUID.randomUUID());
+                    ObjectMetadata objectMetadata = new ObjectMetadata();
+                    for (var entrySet:
+                         metadata.entrySet()) {
+                        objectMetadata.addUserMetadata(entrySet.getKey(),entrySet.getValue());
+                    }
+                    amazonS3.putObject(path, fileName, file.getInputStream(), objectMetadata);
+                } catch (AmazonServiceException e) {
+                    throw new IllegalStateException("Failed to upload the file", e);
+                }*/
+            }else{
+                Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            }
             String relativePath = Paths.get(fileDirType).resolve(fileName).toString();
             return relativePath;
         } catch (IOException ex) {

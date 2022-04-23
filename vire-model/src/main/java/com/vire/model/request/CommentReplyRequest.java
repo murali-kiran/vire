@@ -7,20 +7,18 @@ import java.io.Serializable;
 
 @Data
 public class CommentReplyRequest implements Serializable {
-    private  Long id;
-    private  Long commentReplierProfileId;
+    private  String id;
+    private  String commentReplierProfileId;
     private  String reply;
-    private  Long commentId;
-    private  Long replyTime;
-    private Long socialId;
+    private  String commentId;
+    private String socialId;
     public CommentReplyDto toDto(){
         var dto = new CommentReplyDto();
-        dto.setSocialPostCommentReplyId(this.getId());
-        dto.setCommentReplierProfileId(this.getCommentReplierProfileId());
+        dto.setSocialPostCommentReplyId(this.getId() == null ? null : Long.valueOf(this.getId()));
+        dto.setCommentReplierProfileId(this.getCommentReplierProfileId() == null ? null : Long.valueOf(this.getCommentReplierProfileId()));
         dto.setReply(this.getReply());
-        dto.setCommentId(this.getCommentId());
-        dto.setSocialId(this.socialId);
-        dto.setReplyTime(this.getReplyTime());
+        dto.setCommentId(this.getCommentId() == null ? null : Long.valueOf(this.getCommentId()));
+        dto.setSocialId(this.getSocialId() == null ? null : Long.valueOf(this.getSocialId()));
         return dto;
     }
 }

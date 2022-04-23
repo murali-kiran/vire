@@ -10,7 +10,6 @@ public class CommentDto implements Serializable {
     private  Long commenterProfileId;
     private  String comment;
     private  Long socialId;
-    private  Long commentTime;
     private Long createdTime;
     private Long updatedTime;
 }

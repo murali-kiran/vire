@@ -26,8 +26,6 @@ public class CommentReplyDao extends BaseDao{
     @Column(name = "social_id", nullable = false)
     private Long socialId;
 
-    @Column(name = "reply_time", nullable = false)
-    private Long replyTime;
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -47,7 +45,6 @@ public class CommentReplyDao extends BaseDao{
         dto.setReply(this.getReply());
         dto.setCommentId(this.getCommentId());
         dto.setSocialId(this.getSocialId());
-        dto.setReplyTime(this.getReplyTime());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
         return dto;
@@ -60,7 +57,6 @@ public class CommentReplyDao extends BaseDao{
         dao.setReply(dto.getReply());
         dao.setCommentId(dto.getCommentId());
         dao.setSocialId(dto.getSocialId());
-        dao.setReplyTime(dto.getReplyTime());
         return dao;
     }
 }
