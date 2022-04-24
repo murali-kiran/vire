@@ -112,7 +112,7 @@ public class SocialService {
            List<PersonalProfileInterestRequest> personalProfileInterestRequests = personalResponse.getPersonalProfile().getInterests();
 
             for (PersonalProfileInterestRequest personalProfileInterestRequest : personalProfileInterestRequests) {
-                if(!searchString.isEmpty()) {
+                if(searchString.length() != 0) {
                     searchString.append(" OR ");
                 }else{
                     searchString.append(" type:")
