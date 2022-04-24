@@ -95,7 +95,7 @@ public class ProfileRepository {
 
                 AddressDao addressDao = AddressDao.fromDto(profileDto.getFirmProfile().getAddress());
                 addressDao.onPreUpdate();
-                //addressRepositoryJpa.save(addressDao);
+                addressRepositoryJpa.save(addressDao);
             }
 
             return profileRepositoryJpa.save(profileDao).toDto();

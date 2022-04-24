@@ -2,12 +2,11 @@ package com.vire.model.response;
 
 import com.vire.dto.ProfileDto;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
 
 @Data
 public class ProfileResponse {
 
-    private Long profileId;
+    private String profileId;
     private String name;
     private String password;
     private String emailId;
@@ -17,13 +16,14 @@ public class ProfileResponse {
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
 
+    /*
     public static ProfileResponse fromDto(final ProfileDto dto){
 
         var loginResponse = new ProfileResponse();
+        loginResponse.setProfileId(dto.getProfileId().toString());
         loginResponse.setAadhar(dto.getAadhar());
         loginResponse.setEmailId(dto.getEmailId());
         loginResponse.setName(dto.getName());
-        loginResponse.setProfileId(dto.getProfileId());
         loginResponse.setMobileNumber(dto.getMobileNumber());
 
         if(dto.getPersonalProfile()!=null){
@@ -35,6 +35,28 @@ public class ProfileResponse {
         }
 
         return loginResponse;
+    }
+
+     */
+
+    public static ProfileResponse fromDto(final ProfileDto dto) {
+
+        var profileResponse = new ProfileResponse();
+        profileResponse.setProfileId(dto.getProfileId().toString());
+        profileResponse.setName(dto.getName());
+        profileResponse.setPassword(dto.getPassword());
+        profileResponse.setEmailId(dto.getEmailId());
+        profileResponse.setMobileNumber(dto.getMobileNumber());
+        profileResponse.setAadhar(dto.getAadhar());
+        profileResponse.setIsAadharVerified(dto.getIsAadharVerified());
+
+        if(dto.getPersonalProfile()!=null){
+            profileResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
+        }else {
+            profileResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
+        }
+
+        return  profileResponse;
     }
 
 }

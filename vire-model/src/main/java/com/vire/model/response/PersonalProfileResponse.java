@@ -1,17 +1,17 @@
 package com.vire.model.response;
 
+import com.vire.dto.PersonalProfileDto;
 import com.vire.enumeration.BloodDonateWillingness;
 import com.vire.enumeration.WorkStatus;
-import com.vire.model.request.AddressRequest;
-import com.vire.model.request.PersonalProfileInterestRequest;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class PersonalProfileResponse {
 
-    private Long personalProfileId;
+    private String personalProfileId;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;
@@ -29,6 +29,36 @@ public class PersonalProfileResponse {
     private BloodDonateWillingness bloodDonateWillingness;
     private AddressResponse presentAddress;
     private AddressResponse permanentAddress;
-    private List<PersonalProfileInterestRequest> interests;
+    private List<PersonalProfileInterestResponse> interests;
+
+    public static PersonalProfileResponse fromDto(final PersonalProfileDto dto) {
+
+        PersonalProfileResponse personalProfileResponse = new PersonalProfileResponse();
+        personalProfileResponse.setPersonalProfileId(dto.getPersonalProfileId().toString());
+        personalProfileResponse.setSchoolBoard(dto.getSchoolBoard());
+        personalProfileResponse.setSchoolName(dto.getSchoolName());
+        personalProfileResponse.setIntermediateBoard(dto.getIntermediateBoard());
+        personalProfileResponse.setIntermediateCollegeName(dto.getIntermediateCollegeName());
+        personalProfileResponse.setGraduationBoard(dto.getGraduationBoard());
+        personalProfileResponse.setGraduationCollegeName(dto.getGraduationCollegeName());
+        personalProfileResponse.setPostGraduationBoard(dto.getPostGraduationBoard());
+        personalProfileResponse.setPostGraduationCollegeName(dto.getPostGraduationCollegeName());
+        personalProfileResponse.setWorkStatus(dto.getWorkStatus());
+        personalProfileResponse.setFieldProfessionBusiness(dto.getFieldProfessionBusiness());
+        personalProfileResponse.setDesignation(dto.getDesignation());
+        personalProfileResponse.setOrganizationName(dto.getOrganizationName());
+        personalProfileResponse.setOrganizationLocation(dto.getOrganizationLocation());
+        personalProfileResponse.setBloodGroup(dto.getBloodGroup());
+        personalProfileResponse.setBloodDonateWillingness(dto.getBloodDonateWillingness());
+        personalProfileResponse.setPresentAddress(AddressResponse.fromDto(dto.getPresentAddress()));
+        personalProfileResponse.setPermanentAddress(AddressResponse.fromDto(dto.getPermanentAddress()));
+
+        if(dto.getInterests()!=null) {
+            personalProfileResponse.setInterests(dto.getInterests().stream().map(interest->PersonalProfileInterestResponse.fromDto(interest)).collect(Collectors.toList()));
+        }
+
+        return personalProfileResponse;
+
+    }
 
 }
