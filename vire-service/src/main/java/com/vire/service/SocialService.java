@@ -129,7 +129,6 @@ public class SocialService {
         String designation = personalResponse.getPersonalProfile().getDesignation();
         String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
         String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
-        //searchString.append(" ( ")
         List<String> uniqueSocials = socialSendToService.searchSent(searchString.toString()).stream()
                 .map(SocialSendToResponse::getSocialId)
                 .distinct()
