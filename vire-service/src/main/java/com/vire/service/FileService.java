@@ -5,7 +5,6 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
 import com.vire.amazon.BucketName;
 import com.vire.exception.FileStorageException;
 import com.vire.model.request.FileRequest;
@@ -71,7 +70,7 @@ public class FileService {
                     objectMetadata.addUserMetadata("title", file.getName());
                     PutObjectRequest request = new PutObjectRequest(path, fileName, file.getInputStream(), objectMetadata);
                     request.setMetadata(objectMetadata);
-                    PutObjectResult result = amazonS3.putObject(request);
+                    amazonS3.putObject(request);
                     log.info("**********************File Uploaded successfully**********************Content type" + objectMetadata.getContentType()+"**File Name**"+fileName);
                 } catch (AmazonServiceException e) {
                     log.info("**********************File Upload Failed*******************************");
