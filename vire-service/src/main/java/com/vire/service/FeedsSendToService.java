@@ -2,7 +2,6 @@ package com.vire.service;
 
 import com.vire.model.request.FeedsSendToRequest;
 import com.vire.model.response.FeedsSendToResponse;
-import com.vire.model.response.FeedsSendToResponse;
 import com.vire.repository.FeedsSendToRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;

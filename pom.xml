@@ -28,6 +28,7 @@
         <module>vire-repository-jpa</module>
         <module>vire-dao</module>
         <module>vire-repository</module>
+        <module>vire-utility</module>
     </modules>
 
 

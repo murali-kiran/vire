@@ -18,6 +18,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <artifactId>vire-utility</artifactId>
+            <groupId>com.vire</groupId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>

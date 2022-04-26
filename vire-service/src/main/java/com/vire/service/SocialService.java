@@ -1,6 +1,5 @@
 package com.vire.service;
 
-import com.vire.model.request.PersonalProfileInterestRequest;
 import com.vire.model.request.SocialRequest;
 import com.vire.model.response.*;
 import com.vire.repository.*;

@@ -18,8 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -33,8 +31,7 @@ public class FileService {
 
     public FileResponse uploadFile(final FileRequest request) {
 
-        var dto = request.toDto();
-        dto.setFileId(snowflake.nextId());
+        var dto = request.toDto(snowflake);
 
         return FileResponse.fromDto(fileRepository.uploadFile(dto));
     }
