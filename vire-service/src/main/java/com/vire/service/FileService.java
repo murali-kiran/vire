@@ -52,6 +52,28 @@ public class FileService {
                 .map(dto -> FileResponse.fromDto(dto))
                 .get();
     }
+    private void storeInAws(MultipartFile file, String fileName, String fileDirName){
+        try {
+            String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), fileDirName);
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(file.getContentType());
+            objectMetadata.setContentLength(file.getSize());
+            objectMetadata.addUserMetadata("title", file.getName());
+            PutObjectRequest request = new PutObjectRequest(path, fileName, file.getInputStream(), objectMetadata);
+            request.setMetadata(objectMetadata);
+            amazonS3.putObject(request);
+            log.info("**********************File Uploaded successfully**********************Content type" + objectMetadata.getContentType()+"**File Name**"+fileName);
+        } catch (AmazonServiceException e) {
+            log.info("**********************File Upload Failed*******************************");
+            throw new IllegalStateException("Failed to upload the file", e);
+        } catch (SdkClientException e) {
+            log.info("**********************File Upload Failed*******************************");
+            throw new IllegalStateException("Failed to upload the file", e);
+        } catch (Exception e) {
+            log.info("**********************File Upload Failed*******************************");
+            throw new IllegalStateException("Failed to upload the file", e);
+        }
+    }
 
     public String storeFile(MultipartFile file, String filePath, String fileDirName, Boolean isAmazonServer) {
         // Normalize file name
@@ -62,23 +84,7 @@ public class FileService {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
             if(isAmazonServer) {
-                try {
-                    String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), fileDirName);
-                    ObjectMetadata objectMetadata = new ObjectMetadata();
-                    objectMetadata.setContentType(file.getContentType());
-                    objectMetadata.setContentLength(file.getSize());
-                    objectMetadata.addUserMetadata("title", file.getName());
-                    PutObjectRequest request = new PutObjectRequest(path, fileName, file.getInputStream(), objectMetadata);
-                    request.setMetadata(objectMetadata);
-                    amazonS3.putObject(request);
-                    log.info("**********************File Uploaded successfully**********************Content type" + objectMetadata.getContentType()+"**File Name**"+fileName);
-                } catch (AmazonServiceException e) {
-                    log.info("**********************File Upload Failed*******************************");
-                    throw new IllegalStateException("Failed to upload the file", e);
-                } catch (SdkClientException e) {
-                    log.info("**********************File Upload Failed*******************************");
-                    throw new IllegalStateException("Failed to upload the file", e);
-                }
+                storeInAws(file, fileName, fileDirName);
             }else{
                 // Copy file to the target location (Replacing existing file with the same name)
                 Path pathDir = Paths.get(filePath, fileDirName).toAbsolutePath().normalize();
