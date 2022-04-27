@@ -21,13 +21,13 @@ public class FileController {
     @Value("${file.path}")
     private String filePath;
     @Value("${file.type}")
-    private String fileDirType;
+    private String fileDirName;
 
 
     @PostMapping(value = "/uploadFile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<FileResponse> create(@RequestPart("file") MultipartFile file){
         FileRequest request = new FileRequest();
-        String filePath = fileService.storeFile(file, this.filePath, this.fileDirType);
+        String filePath = fileService.storeFile(file, this.filePath, this.fileDirName, VireConstants.IS_AMAZON_SERVER);
         request.setFileSize(file.getSize());
         request.setMimeType(file.getContentType());
         request.setFileCommonPath(filePath);

@@ -1,5 +1,7 @@
 package com.vire.constant;
 
+import java.util.function.BooleanSupplier;
+
 public class VireConstants {
     public final static String PERSONAL_PROFILE_REQUEST_PATH_API = "/api/v1/personalProfile";
     public final static String FIRM_PROFILE_REQUEST_PATH_API = "/api/v1/firmProfile";
@@ -13,4 +15,5 @@ public class VireConstants {
     public final static String COMMENT_REQUEST_PATH_API = SOCIAL_REQUEST_PATH_API+"/comment";
     public final static String FEEDS_REQUEST_PATH_API = "/api/v1/feeds";
     public final static String SEND_TO_REQUEST_PATH_API = FEEDS_REQUEST_PATH_API + "/sendto";
+    public final static Boolean IS_AMAZON_SERVER = true;
 }

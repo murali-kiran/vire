@@ -6,6 +6,7 @@ import com.vire.model.response.*;
 import com.vire.repository.FileRepository;
 import com.vire.repository.FeedsRepository;
 import com.vire.utils.Snowflake;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FeedsService {
 
@@ -104,37 +106,34 @@ public class FeedsService {
         PersonalResponse personalResponse = profileService.retrievePersonalProfileById(profileId).get();
         StringBuilder searchString = new StringBuilder();
         if(personalResponse != null){
-           List<PersonalProfileInterestRequest> personalProfileInterestRequests = personalResponse.getPersonalProfile().getInterests();
+           List<PersonalProfileInterestResponse> personalProfileInterestResponses = personalResponse.getPersonalProfile().getInterests();
 
-            for (PersonalProfileInterestRequest personalProfileInterestRequest : personalProfileInterestRequests) {
-                if(!searchString.isEmpty()) {
+            for (PersonalProfileInterestResponse personalProfileInterestResponse : personalProfileInterestResponses) {
+                if(searchString.length() != 0) {
                     searchString.append(" OR ");
                 }else{
                     searchString.append(" type:")
                             .append("INTERESTS")
                             .append(" AND ( ");
                 }
-                searchString.append("( value:"+ personalProfileInterestRequest.getInterest()+" )");
+                searchString.append("( value:"+ personalProfileInterestResponse.getInterest()+" )");
 
             }
             searchString.append(" )");
-           // interests.deleteCharAt(interests.length()-1);
         }
-        System.out.println("Search String::::"+searchString.toString());
+        log.info("Search String::::"+searchString.toString());
 
         String designation = personalResponse.getPersonalProfile().getDesignation();
         String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
         String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
-        //searchString.append(" ( ")
-       /* List<Long> uniqueFeeds = feedsSendToService.searchSent(searchString.toString()).stream()
+        List<String> uniqueFeeds = feedsSendToService.searchSent(searchString.toString()).stream()
                 .map(FeedsSendToResponse::getFeedId)
                 .distinct()
                 .collect(Collectors.toList());
         List<FeedsResponse> feedsResponses = new ArrayList<>();
-        for (Long feedsId : uniqueFeeds) {
-            feedsResponses.add(retrieveFeedsDetailsById(feedsId));
-        }*/
-        List<FeedsResponse> feedsResponses = new ArrayList<>();
+        for (String feedsId : uniqueFeeds) {
+            feedsResponses.add(retrieveFeedsDetailsById(Long.valueOf(feedsId)));
+        }
         return feedsResponses;
     }
 }
