@@ -21,11 +21,8 @@ public class CommunityProfileDao {
     @Column(name = "profile_id", nullable = false)
     private Long profileId;
 
-    @ManyToOne
-    @JoinColumn(name="community_id", nullable=false)
-    private CommunityDao community;
-
-
+    @Column(name="community_id", nullable=false)
+    private Long communityId;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -51,7 +48,7 @@ public class CommunityProfileDao {
         dto.setCommunityProfileId(this.getCommunityProfileId());
         
         dto.setProfileId(this.getProfileId());
-
+        dto.setCommunityId(this.getCommunityId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -63,7 +60,7 @@ public class CommunityProfileDao {
         var communityProfile = new CommunityProfileDao();
 
         communityProfile.setCommunityProfileId(dto.getCommunityProfileId());
-        
+        communityProfile.setCommunityId(dto.getCommunityId());
         communityProfile.setProfileId(dto.getProfileId());
 
         return communityProfile;

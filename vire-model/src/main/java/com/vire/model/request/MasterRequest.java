@@ -4,6 +4,8 @@ import com.vire.utils.Snowflake;
 import com.vire.dto.MasterDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,8 +13,9 @@ import java.util.stream.Collectors;
 public class MasterRequest {
 
     private String masterId;
-    
+    @NotBlank(message = "Master type required")
     private String masterType;
+    @NotBlank(message = "Master value required")
     private String masterValue;
 
     public MasterDto toDto(Snowflake snowflake) {

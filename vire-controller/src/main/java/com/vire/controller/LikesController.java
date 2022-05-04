@@ -22,7 +22,7 @@ public class LikesController {
     public ResponseEntity<LikesResponse> createLike(@RequestBody LikesRequest request){
         return new ResponseEntity<>(likesService.createLike(request), HttpStatus.CREATED);
     }
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<LikesResponse> updateLike(@RequestBody LikesRequest request){
         return new ResponseEntity<>(likesService.updateLike(request), HttpStatus.CREATED);
     }

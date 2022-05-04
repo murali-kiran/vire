@@ -7,10 +7,12 @@ import com.vire.constant.VireConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping(VireConstants.COMMUNITYPROFILE_REQUEST_PATH_API)
 public class CommunityProfileController {
@@ -19,12 +21,12 @@ public class CommunityProfileController {
   CommunityProfileService communityProfileService;
 
   @PostMapping("/create")
-  public ResponseEntity<CommunityProfileResponse> create(@RequestBody CommunityProfileRequest request) {
+  public ResponseEntity<CommunityProfileResponse> create(@Valid @RequestBody CommunityProfileRequest request) {
     return new ResponseEntity<>(communityProfileService.create(request), HttpStatus.CREATED);
   }
 
-  @PostMapping("/update")
-  public ResponseEntity<CommunityProfileResponse> update(@RequestBody CommunityProfileRequest request) {
+  @PutMapping("/update")
+  public ResponseEntity<CommunityProfileResponse> update(@Valid @RequestBody CommunityProfileRequest request) {
     return new ResponseEntity<>(communityProfileService.update(request), HttpStatus.CREATED);
   }
 

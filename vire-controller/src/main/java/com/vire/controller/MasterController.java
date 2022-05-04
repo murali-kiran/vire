@@ -7,10 +7,13 @@ import com.vire.constant.VireConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.MASTER_REQUEST_PATH_API)
 public class MasterController {
@@ -19,12 +22,12 @@ public class MasterController {
   MasterService masterService;
 
   @PostMapping("/create")
-  public ResponseEntity<MasterResponse> create(@RequestBody MasterRequest request) {
+  public ResponseEntity<MasterResponse> create(@Valid @RequestBody MasterRequest request) {
     return new ResponseEntity<>(masterService.create(request), HttpStatus.CREATED);
   }
 
   @PutMapping("/update")
-  public ResponseEntity<MasterResponse> update(@RequestBody MasterRequest request) {
+  public ResponseEntity<MasterResponse> update(@Valid @RequestBody MasterRequest request) {
     return new ResponseEntity<>(masterService.update(request), HttpStatus.CREATED);
   }
 

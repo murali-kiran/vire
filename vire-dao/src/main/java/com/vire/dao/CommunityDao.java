@@ -33,8 +33,8 @@ public class CommunityDao {
     @Column(name = "rules", nullable = false)
     private String rules;
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommunityProfileDao> profiles;
+    /*@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityProfileDao> profiles;*/
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -65,12 +65,12 @@ public class CommunityDao {
         dto.setFileId(this.getFileId());
         dto.setRules(this.getRules());
 
-        if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
+        /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()
                     .map(child -> child.toDto())
                     .collect(Collectors.toList()));
-        }
+        }*/
 
 
         dto.setCreatedTime(this.getCreatedTime());
@@ -91,12 +91,12 @@ public class CommunityDao {
         community.setFileId(dto.getFileId());
         community.setRules(dto.getRules());
 
-        if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
+        /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             community.setProfiles(dto.getProfiles()
                     .stream()
                     .map(child -> CommunityProfileDao.fromDto(child))
                     .collect(Collectors.toList()));
-        }
+        }*/
 
 
         return community;

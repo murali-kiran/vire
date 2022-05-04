@@ -4,6 +4,9 @@ import com.vire.utils.Snowflake;
 import com.vire.dto.FeedLikesDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,8 +14,11 @@ import java.util.stream.Collectors;
 public class FeedLikesRequest {
 
     private String feedLikesId;
-    
+    @NotBlank(message = "Liker Profile id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Liker Profile id must be numeric")
     private Long likerProfileId;
+    @NotBlank(message = "Feed id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Feed id must be numeric")
     private Long feedId;
 
     public FeedLikesDto toDto(Snowflake snowflake) {

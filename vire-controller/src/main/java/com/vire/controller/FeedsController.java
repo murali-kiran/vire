@@ -7,10 +7,13 @@ import com.vire.service.FeedsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.FEEDS_REQUEST_PATH_API)
 public class FeedsController {
@@ -18,12 +21,12 @@ public class FeedsController {
     FeedsService feedsService;
 
     @PostMapping("/create")
-    public ResponseEntity<FeedsResponse> create(@RequestBody FeedsRequest request) {
+    public ResponseEntity<FeedsResponse> create(@Valid @RequestBody FeedsRequest request) {
         return new ResponseEntity<>(feedsService.createFeeds(request), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<FeedsResponse> update(@RequestBody FeedsRequest request) {
+    @PutMapping("/update")
+    public ResponseEntity<FeedsResponse> update(@Valid @RequestBody FeedsRequest request) {
         return new ResponseEntity<>(feedsService.updateFeeds(request), HttpStatus.CREATED);
     }
 

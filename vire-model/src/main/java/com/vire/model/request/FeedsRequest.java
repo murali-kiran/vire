@@ -7,6 +7,8 @@ import com.vire.dto.SocialDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +16,13 @@ import java.util.stream.Collectors;
 public class FeedsRequest {
 
     private String feedId;
+    @NotBlank(message = "Profile id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Profile id must be numeric")
     private String profileId;
+    @NotBlank(message = "Description required")
     private String description;
+    @NotBlank(message = "File id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
     private String fileId;
     private List<FeedsSendToRequest> feedsSendTo;
     private  Long createdTime;

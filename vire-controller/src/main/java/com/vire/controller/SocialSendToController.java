@@ -33,8 +33,8 @@ public class SocialSendToController {
 
         return new ResponseEntity<>(socialSendToService.create(request), HttpStatus.CREATED);
     }
-    @PostMapping("/update")
-    public ResponseEntity<SocialSendToResponse> updateSent(@RequestBody SocialSendToRequest request){
+    @PutMapping("/update")
+    public ResponseEntity<SocialSendToResponse> updateSent(@Valid @RequestBody SocialSendToRequest request){
         return new ResponseEntity<>(socialSendToService.update(request), HttpStatus.CREATED);
     }
 

@@ -4,6 +4,9 @@ import com.vire.utils.Snowflake;
 import com.vire.dto.FeedCommentDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +14,13 @@ import java.util.stream.Collectors;
 public class FeedCommentRequest {
 
     private String feedCommentId;
-    
+    @NotBlank(message = "Commenter Profile id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Commenter Profile id must be numeric")
     private Long commentorProfileId;
+    @NotBlank(message = "Feed id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Feed id must be numeric")
     private Long feedId;
+    @NotBlank(message = "Comment required")
     private String comment;
 
     public FeedCommentDto toDto(Snowflake snowflake) {

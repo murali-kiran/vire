@@ -7,10 +7,12 @@ import com.vire.service.FeedCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping(VireConstants.FEEDCOMMENT_REQUEST_PATH_API)
 public class FeedCommentController {
@@ -19,12 +21,12 @@ public class FeedCommentController {
   FeedCommentService feedCommentService;
 
   @PostMapping("/create")
-  public ResponseEntity<FeedCommentResponse> create(@RequestBody FeedCommentRequest request) {
+  public ResponseEntity<FeedCommentResponse> create(@Valid @RequestBody FeedCommentRequest request) {
     return new ResponseEntity<>(feedCommentService.create(request), HttpStatus.CREATED);
   }
 
-  @PostMapping("/update")
-  public ResponseEntity<FeedCommentResponse> update(@RequestBody FeedCommentRequest request) {
+  @PutMapping("/update")
+  public ResponseEntity<FeedCommentResponse> update(@Valid @RequestBody FeedCommentRequest request) {
     return new ResponseEntity<>(feedCommentService.update(request), HttpStatus.CREATED);
   }
 

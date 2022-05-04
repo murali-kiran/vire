@@ -7,10 +7,13 @@ import com.vire.service.FeedLikesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.FEEDLIKES_REQUEST_PATH_API)
 public class FeedLikesController {
@@ -19,12 +22,12 @@ public class FeedLikesController {
   FeedLikesService feedLikesService;
 
   @PostMapping("/create")
-  public ResponseEntity<FeedLikesResponse> create(@RequestBody FeedLikesRequest request) {
+  public ResponseEntity<FeedLikesResponse> create(@Valid @RequestBody FeedLikesRequest request) {
     return new ResponseEntity<>(feedLikesService.create(request), HttpStatus.CREATED);
   }
 
-  @PostMapping("/update")
-  public ResponseEntity<FeedLikesResponse> update(@RequestBody FeedLikesRequest request) {
+  @PutMapping("/update")
+  public ResponseEntity<FeedLikesResponse> update(@Valid @RequestBody FeedLikesRequest request) {
     return new ResponseEntity<>(feedLikesService.update(request), HttpStatus.CREATED);
   }
 

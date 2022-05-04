@@ -15,7 +15,7 @@ public class CommunityResponse {
     private String creatorProfileId;
     private String fileId;
     private String rules;
-    private List<CommunityProfileResponse> profiles;
+    //private List<CommunityProfileResponse> profiles;
     private Long createdTime;
     private Long updatedTime;
 
@@ -31,12 +31,12 @@ public class CommunityResponse {
         community.setFileId(String.valueOf(dto.getFileId()));
         community.setRules(dto.getRules());
 
-        if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
+        /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             community.setProfiles(dto.getProfiles()
                     .stream()
                     .map(child -> CommunityProfileResponse.fromDto(child))
                     .collect(Collectors.toList()));
-        }
+        }*/
 
         community.setCreatedTime(dto.getCreatedTime());
         community.setUpdatedTime(dto.getUpdatedTime());

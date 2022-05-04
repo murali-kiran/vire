@@ -7,10 +7,13 @@ import com.vire.service.CommentReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.REPLY_REQUEST_PATH_API)
 public class CommentReplyController {
@@ -18,12 +21,12 @@ public class CommentReplyController {
     @Autowired
     CommentReplyService commentReplyService;
 
-    @PostMapping("/createreply")
-    public ResponseEntity<CommentReplyResponse> createReply(@RequestBody CommentReplyRequest request){
+    @PostMapping("/create")
+    public ResponseEntity<CommentReplyResponse> createReply(@Valid @RequestBody CommentReplyRequest request){
         return new ResponseEntity<>(commentReplyService.createReply(request), HttpStatus.CREATED);
     }
-    @PostMapping("/updatereply")
-    public ResponseEntity<CommentReplyResponse> updateReply(@RequestBody CommentReplyRequest request){
+    @PostMapping("/update")
+    public ResponseEntity<CommentReplyResponse> updateReply(@Valid @RequestBody CommentReplyRequest request){
         return new ResponseEntity<>(commentReplyService.updateReply(request), HttpStatus.CREATED);
     }
 

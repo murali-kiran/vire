@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class CommunityProfileDto {
     private Long communityProfileId;
     private Long profileId;
+    private Long communityId;
     public Long createdTime;
     public Long updatedTime;
 }

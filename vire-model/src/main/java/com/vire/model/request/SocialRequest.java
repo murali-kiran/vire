@@ -4,6 +4,7 @@ import com.vire.dto.SocialDto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,9 +13,11 @@ public class SocialRequest {
 
     private  String socialId;
     @NotBlank(message = "Profile required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Chat Initiator profile id must be numeric")
     private  String profileId;
     @NotBlank(message = "Category required")
     private  String categoryId;
+    @Pattern(regexp="(^[0-9]*$)", message = "Chat Initiator profile id must be numeric")
     @NotBlank(message = "Social post type required")
     private  String type;
     @NotBlank(message = "Subject required")
@@ -22,8 +25,11 @@ public class SocialRequest {
     @NotBlank(message = "Description required")
     private  String description;
     @NotBlank(message = "File required")
+    @Pattern(regexp="(^[0-9]*$)", message = "Chat Initiator profile id must be numeric")
     private  String fileId;
+    @Pattern(regexp="(^$|[0-9]{10})", message = "Contact must be numeric and 10 digits")
     private  String contact;
+    @Pattern(regexp="(^$|[0-9]{10})", message = "Alternate contact must be numeric and 10 digits")
     private  String alternateContact;
     private  Long createdTime;
     private  Long updatedTime;
