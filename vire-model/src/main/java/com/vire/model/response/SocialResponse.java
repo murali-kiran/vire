@@ -16,9 +16,11 @@ public class SocialResponse {
     private  String type;
     private  String subject;
     private  String description;
+    private  String fileId;
     private  String contact;
     private  String alternateContact;
-    private  String fileId;
+    private int shareContact;
+    private int shareAlternate;
     private  Long createdTime;
     private  Long updatedTime;
     private List<SocialSendToResponse> sendTo;

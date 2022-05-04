@@ -12,33 +12,32 @@ import java.util.stream.Collectors;
 @Entity
 @Data
 public class SocialDao {
-    @javax.persistence.Id
-
-    @javax.persistence.Column(name = "social_id", nullable = false)
+    @Id
+    @Column(name = "social_id", nullable = false)
     private Long socialId;
 
-    @javax.persistence.Column(name = "profile_id", nullable = false)
+    @Column(name = "profile_id", nullable = false)
     private Long profileId;
 
-    @javax.persistence.Column(name = "category_id", nullable = false)
+    @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @javax.persistence.Column(name = "type", length = 191)
+    @Column(name = "type", length = 191)
     private String type;
 
-    @javax.persistence.Column(name = "subject", length = 191)
+    @Column(name = "subject", length = 191)
     private String subject;
 
-    @javax.persistence.Column(name = "description", length = 191)
+    @Column(name = "description", length = 191)
     private String description;
 
-    @javax.persistence.Column(name = "contact", length = 20)
+    @Column(name = "contact", length = 20)
     private String contact;
 
-    @javax.persistence.Column(name = "alternate_contact", length = 20)
+    @Column(name = "alternate_contact", length = 20)
     private String alternateContact;
 
-    @javax.persistence.Column(name = "file_id")
+    @Column(name = "file_id")
     private Long fileId;
 
     @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)

@@ -2,6 +2,8 @@ package com.vire.model.request;
 
 import com.vire.dto.SocialDto;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,14 +11,20 @@ import java.util.stream.Collectors;
 public class SocialRequest {
 
     private  String socialId;
+    @NotBlank(message = "Profile required")
     private  String profileId;
+    @NotBlank(message = "Category required")
     private  String categoryId;
+    @NotBlank(message = "Social post type required")
     private  String type;
+    @NotBlank(message = "Subject required")
     private  String subject;
+    @NotBlank(message = "Description required")
     private  String description;
+    @NotBlank(message = "File required")
+    private  String fileId;
     private  String contact;
     private  String alternateContact;
-    private  String fileId;
     private  Long createdTime;
     private  Long updatedTime;
     private List<SocialSendToRequest> sendTo;

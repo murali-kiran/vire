@@ -15,5 +15,13 @@ public class VireConstants {
     public final static String COMMENT_REQUEST_PATH_API = SOCIAL_REQUEST_PATH_API+"/comment";
     public final static String FEEDS_REQUEST_PATH_API = "/api/v1/feeds";
     public final static String SEND_TO_REQUEST_PATH_API = FEEDS_REQUEST_PATH_API + "/sendto";
-    public final static Boolean IS_AMAZON_SERVER = true;
+    public final static Boolean IS_AMAZON_SERVER = false;
+
+    public final static String COMMUNITY_REQUEST_PATH_API = "/api/community";
+    public final static String COMMUNITYPROFILE_REQUEST_PATH_API = "/api/communityprofile";
+    public final static String FEEDCOMMENT_REQUEST_PATH_API = "/api/feedcomment";
+    public final static String FEEDCOMMENTREPLY_REQUEST_PATH_API = "/api/feedcommentreply";
+    public final static String FEEDLIKES_REQUEST_PATH_API = "/api/feedlikes";
+    public final static String MASTER_REQUEST_PATH_API = "/api/master";
+
 }

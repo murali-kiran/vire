@@ -4,12 +4,15 @@ import com.vire.dto.SocialSendToDto;
 import com.vire.enumeration.SendToEnum;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
 public class SocialSendToRequest implements Serializable {
     private  String sendToId;
+    @NotBlank(message = "Type is mandatory")
     private String type;
+    @NotBlank(message = "Value is mandatory")
     private  String value;
     public SocialSendToDto toDto(){
         var dto = new SocialSendToDto();

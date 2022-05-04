@@ -53,8 +53,8 @@ public class FeedsController {
     public ResponseEntity<FeedsResponse> findById(@PathVariable(name = "feedsid") Long feedsPostId) {
         return new ResponseEntity<FeedsResponse>(feedsService.retrieveFeedsDetailsById(feedsPostId), HttpStatus.OK);
     }
-   /* @GetMapping("feedsposts/{profileid}")
+    @GetMapping("feedsposts/{profileid}")
     public ResponseEntity<List<FeedsResponse>> findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
         return new ResponseEntity<List<FeedsResponse>>(feedsService.retrievePostsByProfileId(profileId), HttpStatus.OK);
-    }*/
+    }
 }

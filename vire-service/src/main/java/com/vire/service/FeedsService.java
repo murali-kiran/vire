@@ -121,11 +121,14 @@ public class FeedsService {
             }
             searchString.append(" )");
         }
-        log.info("Search String::::"+searchString.toString());
 
         String designation = personalResponse.getPersonalProfile().getDesignation();
         String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
         String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
+        searchString.append(" AND type:DESIGNATION AND ( value:"+designation+ " )");
+        searchString.append(" AND type:FPB AND ( value:"+fieldProfessionBusiness+ " )");
+        searchString.append(" AND type:LOCATION AND ( value:"+location+ " )");
+        log.info("Search String::::"+searchString.toString());
         List<String> uniqueFeeds = feedsSendToService.searchSent(searchString.toString()).stream()
                 .map(FeedsSendToResponse::getFeedId)
                 .distinct()
