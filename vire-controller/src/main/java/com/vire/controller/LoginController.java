@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(VireConstants.LOGIN_REQUEST_API)
 public class LoginController {
@@ -19,9 +21,23 @@ public class LoginController {
     @Autowired
     LoginService loginService;
 
-    @PostMapping
+/*    @PostMapping
     public ResponseEntity<ProfileResponse> login(@RequestBody LoginRequest loginRequest){
         var response = loginService.login(loginRequest);
         return response.isPresent() ? new ResponseEntity<>(response.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+    }
+
+ */
+
+    @PostMapping
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+
+        var response = loginService.login(loginRequest);
+        return response
+                .stream()
+                .map(profileResponse -> new ResponseEntity<>(profileResponse, HttpStatus.OK))
+                .findFirst()
+                .orElse(new ResponseEntity(HttpStatus.UNAUTHORIZED));
+        //return response;
     }
 }

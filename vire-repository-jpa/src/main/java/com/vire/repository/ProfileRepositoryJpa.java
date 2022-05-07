@@ -14,4 +14,8 @@ public interface ProfileRepositoryJpa
     public Optional<ProfileDao> findByEmailIdAndPassword(final String email, final  String password);
 
     public Optional<ProfileDao> findByMobileNumberAndPassword(final String phonenumber, final  String password);
+
+    public Optional<ProfileDao> findByEmailId(final String email);
+
+    public Optional<ProfileDao> findByMobileNumber(final String phonenumber);
 }

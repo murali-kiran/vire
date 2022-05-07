@@ -24,4 +24,7 @@ public class VireConstants {
     public final static String FEEDLIKES_REQUEST_PATH_API = "/api/feedlikes";
     public final static String MASTER_REQUEST_PATH_API = "/api/master";
 
+    public static final String JWT_TOKEN_PREFIX = "Bearer ";
+    public static final String JWT_HEADER_STRING = "Authorization";
+
 }
