@@ -15,6 +15,7 @@ public class SocialSendToDao extends BaseDao{
     @Column(name = "social_post_send_to_id", nullable = false)
     private Long sendToId;
 
+
     @Column(name = "type", nullable = false)
     private String type;
 

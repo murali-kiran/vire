@@ -72,13 +72,14 @@ create table firm_profile (
 create table t_social (
      social_id bigint not null,
 	 profile_id bigint not null,
-	 category_id bigint not null,
+     file_id varchar(191),
 	 type varchar(191),
      subject varchar(191),
 	 description varchar(191),
 	 contact varchar(20),
 	 alternate_contact varchar(20),
-	 file_id varchar(191),
+	 share_contact tinyint,
+	 share_alternate tinyint,
      created_time bigint not null,
      updated_time bigint not null,
      primary key (social_id)
@@ -165,3 +166,70 @@ create table t_feeds_send_to (
      primary key (t_feeds_send_to_id),
      constraint fk_t_feed_send_to foreign key (feed_id) references t_feeds(feed_id)
 );
+
+CREATE TABLE feed_comment (
+    feed_comment_id BIGINT NOT NULL,
+    commentor_profile_id BIGINT NOT NULL,
+    feed_id BIGINT NOT NULL,
+    comment VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (feed_comment_id)
+);
+CREATE TABLE feed_comment_reply (
+    feed_comment_reply_id BIGINT NOT NULL,
+    replier_profile_id BIGINT NOT NULL,
+    feed_id BIGINT NOT NULL,
+    comment_id BIGINT NOT NULL,
+    reply VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (feed_comment_reply_id)
+);
+
+CREATE TABLE feed_likes (
+    feed_likes_id BIGINT NOT NULL,
+    liker_profile_id BIGINT NOT NULL,
+    feed_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (feed_likes_id)
+);
+
+CREATE TABLE community_profile (
+    community_profile_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    community_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (community_profile_id)
+);
+
+CREATE TABLE `t_master_data` (
+  `master_data_id` BIGINT NOT NULL,
+  `master_data_type` BIGINT NOT NULL,
+  `master_data_value` BIGINT NOT NULL,
+  `created_time` BIGINT NOT NULL,
+  `updated_time` BIGINT NULL,
+  PRIMARY KEY (`master_data_id`)
+  );
+CREATE TABLE community (
+    community_id BIGINT NOT NULL,
+    name VARCHAR(191) NOT NULL,
+    description VARCHAR(20) NOT NULL,
+    creator_profile_id BIGINT NOT NULL,
+    file_id BIGINT NOT NULL,
+    rules VARCHAR(20) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (community_id)
+);
+CREATE TABLE master (
+    master_id BIGINT NOT NULL,
+    master_type VARCHAR(191) NOT NULL,
+    master_value VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (master_id)
+);
+  ALTER TABLE community_profile ADD CONSTRAINT fk_community_profile_community_id FOREIGN KEY (community_id) REFERENCES community(community_id);

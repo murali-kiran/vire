@@ -16,10 +16,10 @@ public class CommentReplyResponse implements Serializable {
     private Long updatedTime;
     public static CommentReplyResponse fromDto(CommentReplyDto dto){
         var response = new CommentReplyResponse();
-        response.setId(dto.getSocialPostCommentReplyId().toString());
-        response.setCommentReplierProfileId(dto.getCommentReplierProfileId().toString());
+        response.setId(String.valueOf(dto.getSocialPostCommentReplyId()));
+        response.setCommentReplierProfileId(String.valueOf(dto.getCommentReplierProfileId()));
         response.setReply(dto.getReply());
-        response.setCommentId(dto.getCommentId().toString().toString());
+        response.setCommentId(String.valueOf(dto.getCommentId()));
         response.setSocialId(dto.getSocialId().toString());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());

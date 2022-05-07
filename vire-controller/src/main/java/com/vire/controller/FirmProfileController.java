@@ -8,11 +8,14 @@ import com.vire.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.FIRM_PROFILE_REQUEST_PATH_API)
 public class FirmProfileController {
@@ -21,12 +24,12 @@ public class FirmProfileController {
     ProfileService profileService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<FirmResponse> createFirmProfile(@RequestBody FirmRequest request) {
+    public ResponseEntity<FirmResponse> createFirmProfile(@Valid @RequestBody FirmRequest request) {
         return new ResponseEntity<>(profileService.createFirmProfile(request), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity<FirmResponse> updateFirmProfile(@RequestBody FirmRequest request) {
+    public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmRequest request) {
         return new ResponseEntity<>(profileService.updateFirmProfile(request), HttpStatus.OK);
     }
 

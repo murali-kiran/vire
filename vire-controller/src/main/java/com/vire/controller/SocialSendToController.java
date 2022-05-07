@@ -4,13 +4,22 @@ import com.vire.constant.VireConstants;
 import com.vire.model.request.SocialSendToRequest;
 import com.vire.model.response.SocialSendToResponse;
 import com.vire.service.SocialSendToService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
+@Slf4j
+@Validated
 @RestController
 @RequestMapping(VireConstants.SENT_REQUEST_PATH_API)
 public class SocialSendToController {
@@ -19,11 +28,13 @@ public class SocialSendToController {
     SocialSendToService socialSendToService;
 
     @PostMapping("/create")
-    public ResponseEntity<SocialSendToResponse> createSent(@RequestBody SocialSendToRequest request){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<SocialSendToResponse> createSent(@Valid @RequestBody SocialSendToRequest request){
+
         return new ResponseEntity<>(socialSendToService.create(request), HttpStatus.CREATED);
     }
-    @PostMapping("/update")
-    public ResponseEntity<SocialSendToResponse> updateSent(@RequestBody SocialSendToRequest request){
+    @PutMapping("/update")
+    public ResponseEntity<SocialSendToResponse> updateSent(@Valid @RequestBody SocialSendToRequest request){
         return new ResponseEntity<>(socialSendToService.update(request), HttpStatus.CREATED);
     }
 
@@ -42,4 +53,16 @@ public class SocialSendToController {
             @RequestParam(value = "searchpostsent") String searchString) {
         return new ResponseEntity<>(socialSendToService.searchSent(searchString), HttpStatus.OK);
     }
+    /*@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$ERROR MSG:"+errors);
+        return ResponseEntity.badRequest().body(errors);
+    }*/
 }

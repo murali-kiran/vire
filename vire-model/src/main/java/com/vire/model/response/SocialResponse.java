@@ -16,24 +16,26 @@ public class SocialResponse {
     private  String type;
     private  String subject;
     private  String description;
+    private  String fileId;
     private  String contact;
     private  String alternateContact;
-    private  String fileId;
+    private int shareContact;
+    private int shareAlternate;
     private  Long createdTime;
     private  Long updatedTime;
     private List<SocialSendToResponse> sendTo;
 
     public static SocialResponse fromDto(SocialDto dto){
         var response = new SocialResponse();
-        response.setSocialId(dto.getSocialId().toString());
-        response.setProfileId(dto.getProfileId().toString());
-        response.setCategoryId(dto.getCategoryId().toString());
+        response.setSocialId(String.valueOf(dto.getSocialId()));
+        response.setProfileId(String.valueOf(dto.getProfileId()));
+        response.setCategoryId(String.valueOf(dto.getCategoryId()));
         response.setType(dto.getType());
         response.setSubject(dto.getSubject());
         response.setDescription(dto.getDescription());
         response.setContact(dto.getContact());
         response.setAlternateContact(dto.getAlternateContact());
-        response.setFileId(dto.getFileId().toString());
+        response.setFileId(String.valueOf(dto.getFileId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getSendTo() != null && !dto.getSendTo().isEmpty()) {

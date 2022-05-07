@@ -29,15 +29,15 @@ public class SocialPostResponse {
 
     public static SocialPostResponse fromDto(final SocialDto dto) {
         var response = new SocialPostResponse();
-        response.setSocialId(dto.getSocialId().toString());
-        response.setProfileId(dto.getProfileId().toString());
-        response.setCategoryId(dto.getCategoryId().toString());
+        response.setSocialId(String.valueOf(dto.getSocialId()));
+        response.setProfileId(String.valueOf(dto.getProfileId()));
+        response.setCategoryId(String.valueOf(dto.getCategoryId()));
         response.setType(dto.getType());
         response.setSubject(dto.getSubject());
         response.setDescription(dto.getDescription());
         response.setContact(dto.getContact());
         response.setAlternateContact(dto.getAlternateContact());
-        response.setFileId(dto.getFileId().toString());
+        response.setFileId(String.valueOf(dto.getFileId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getSendTo() != null && !dto.getSendTo().isEmpty()) {

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://viredb.cjkvnr9lbjyl.ap-south-1.rds.amazonaws.com:3306/vire
+    url: jdbc:mysql://localhost:3306/test
     username: root
-    password: Password_v
+    password: root
   jpa:
     show-sql: true
     properties:

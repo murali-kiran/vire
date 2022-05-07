@@ -8,10 +8,13 @@ import com.vire.service.SocialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.SOCIAL_REQUEST_PATH_API)
 public class SocialController {
@@ -19,12 +22,12 @@ public class SocialController {
     SocialService socialService;
 
     @PostMapping("/create")
-    public ResponseEntity<SocialResponse> create(@RequestBody SocialRequest request) {
+    public ResponseEntity<SocialResponse> create(@Valid @RequestBody SocialRequest request) {
         return new ResponseEntity<>(socialService.createSocial(request), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<SocialResponse> update(@RequestBody SocialRequest request) {
+    @PutMapping("/update")
+    public ResponseEntity<SocialResponse> update(@Valid @RequestBody SocialRequest request) {
         return new ResponseEntity<>(socialService.updateSocial(request), HttpStatus.CREATED);
     }
 

@@ -7,23 +7,25 @@ import com.vire.service.SocialChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping(VireConstants.CHAT_REQUEST_PATH_API)
-public class SocialPostChatController {
+public class SocialChatController {
 
     @Autowired
     SocialChatService socialChatService;
 
     @PostMapping("/create")
-    public ResponseEntity<SocialChatResponse> create(@RequestBody SocialChatRequest request){
+    public ResponseEntity<SocialChatResponse> create(@Valid @RequestBody SocialChatRequest request){
         return new ResponseEntity<>(socialChatService.create(request), HttpStatus.CREATED);
     }
-    @PostMapping("/update")
-    public ResponseEntity<SocialChatResponse> update(@RequestBody SocialChatRequest request){
+    @PutMapping("/update")
+    public ResponseEntity<SocialChatResponse> update(@Valid @RequestBody SocialChatRequest request){
         return new ResponseEntity<>(socialChatService.update(request), HttpStatus.CREATED);
     }
 

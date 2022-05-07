@@ -34,8 +34,7 @@ public class FileService {
 
     public FileResponse uploadFile(final FileRequest request) {
 
-        var dto = request.toDto();
-        dto.setFileId(snowflake.nextId());
+        var dto = request.toDto(snowflake);
 
         return FileResponse.fromDto(fileRepository.uploadFile(dto));
     }

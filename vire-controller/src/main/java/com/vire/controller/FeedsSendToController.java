@@ -7,10 +7,12 @@ import com.vire.service.FeedsSendToService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping(VireConstants.SEND_TO_REQUEST_PATH_API)
 public class FeedsSendToController {
@@ -19,11 +21,11 @@ public class FeedsSendToController {
     FeedsSendToService feedsSendToService;
 
     @PostMapping("/create")
-    public ResponseEntity<FeedsSendToResponse> createSent(@RequestBody FeedsSendToRequest request){
+    public ResponseEntity<FeedsSendToResponse> createSent(@Valid @RequestBody FeedsSendToRequest request){
         return new ResponseEntity<>(feedsSendToService.create(request), HttpStatus.CREATED);
     }
-    @PostMapping("/update")
-    public ResponseEntity<FeedsSendToResponse> updateSent(@RequestBody FeedsSendToRequest request){
+    @PutMapping("/update")
+    public ResponseEntity<FeedsSendToResponse> updateSent(@Valid @RequestBody FeedsSendToRequest request){
         return new ResponseEntity<>(feedsSendToService.update(request), HttpStatus.CREATED);
     }
 
