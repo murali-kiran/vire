@@ -148,4 +148,12 @@ public class ProfileRepository {
     public  Optional<ProfileDao> loginWithPhoneNumber(final String mobileNumber, final String password){
         return profileRepositoryJpa.findByMobileNumberAndPassword(mobileNumber,password);
     }
+
+    public  Optional<ProfileDao> findByEmailId(final String email){
+        return profileRepositoryJpa.findByEmailId(email);
+    }
+
+    public  Optional<ProfileDao> findByMobileNumber(final String mobileNumber){
+        return profileRepositoryJpa.findByMobileNumber(mobileNumber);
+    }
 }

@@ -16,4 +16,7 @@ public class VireConstants {
     public final static String FEEDS_REQUEST_PATH_API = "/api/v1/feeds";
     public final static String SEND_TO_REQUEST_PATH_API = FEEDS_REQUEST_PATH_API + "/sendto";
     public final static Boolean IS_AMAZON_SERVER = true;
+
+    public static final String JWT_TOKEN_PREFIX = "Bearer ";
+    public static final String JWT_HEADER_STRING = "Authorization";
 }
