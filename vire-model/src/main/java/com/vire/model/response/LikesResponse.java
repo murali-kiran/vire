@@ -14,9 +14,9 @@ public class LikesResponse implements Serializable {
     private Long updatedTime;
     public static LikesResponse fromDto(LikesDto dto){
         var response = new LikesResponse();
-        response.setId(dto.getId().toString());
-        response.setLikerProfileId(dto.getLikerProfileId().toString());
-        response.setSocialPostId(dto.getSocialId().toString());
+        response.setId(String.valueOf(dto.getId()));
+        response.setLikerProfileId(String.valueOf(dto.getLikerProfileId()));
+        response.setSocialPostId(String.valueOf(dto.getSocialId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         return response;

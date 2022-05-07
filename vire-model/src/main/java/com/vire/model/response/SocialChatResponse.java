@@ -16,11 +16,11 @@ public class SocialChatResponse implements Serializable {
     private Long updatedTime;
     public static SocialChatResponse fromDto(SocialChatDto dto){
         var response = new SocialChatResponse();
-        response.setId(dto.getId().toString());
-        response.setChatInitiatorProfileId(dto.getChatInitiatorProfileId().toString());
-        response.setSenderProfileId(dto.getSenderProfileId().toString());
+        response.setId(String.valueOf(dto.getId()));
+        response.setChatInitiatorProfileId(String.valueOf(dto.getChatInitiatorProfileId()));
+        response.setSenderProfileId(String.valueOf(dto.getSenderProfileId()));
         response.setMessage(dto.getMessage());
-        response.setSocialPostId(dto.getSocialPostId().toString());
+        response.setSocialPostId(String.valueOf(dto.getSocialPostId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         return response;

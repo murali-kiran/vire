@@ -4,14 +4,24 @@ import com.vire.dto.ProfileDto;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 @Data
 public class FirmRequest {
 
     private String profileId;
+    @NotBlank(message = "Name required")
     private String name;
+    @NotBlank(message = "Password required")
     private String password;
+    @NotBlank(message = "Profile required")
+    @Pattern(regexp="^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" +
+            "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "Invalid email address")
     private String emailId;
+    @Pattern(regexp="(^$|[0-9]{10})", message = "Mobile number must be numeric and 10 digits")
     private String mobileNumber;
+    @Pattern(regexp="(^$|[0-9]{12})", message = "Invalid Aadhaar number")
     private String aadhar;
     private String isAadharVerified;
     private FirmProfileRequest firmProfile;

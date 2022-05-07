@@ -16,10 +16,10 @@ public class SocialSendToResponse implements Serializable {
     private Long updatedTime;
     public static SocialSendToResponse fromDto(SocialSendToDto dto){
         var response = new SocialSendToResponse();
-        response.setSendToId(dto.getSendToId().toString());
+        response.setSendToId(String.valueOf(dto.getSendToId()));
         response.setType(dto.getType());
         response.setValue(dto.getValue());
-        response.setSocialId(dto.getSocialId().toString());
+        response.setSocialId(String.valueOf(dto.getSocialId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         return response;

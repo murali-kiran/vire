@@ -7,10 +7,13 @@ import com.vire.service.LikesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(VireConstants.LIKE_REQUEST_PATH_API)
 public class LikesController {
@@ -19,11 +22,11 @@ public class LikesController {
     LikesService likesService;
 
     @PostMapping("/create")
-    public ResponseEntity<LikesResponse> createLike(@RequestBody LikesRequest request){
+    public ResponseEntity<LikesResponse> createLike(@Valid @RequestBody LikesRequest request){
         return new ResponseEntity<>(likesService.createLike(request), HttpStatus.CREATED);
     }
     @PutMapping("/update")
-    public ResponseEntity<LikesResponse> updateLike(@RequestBody LikesRequest request){
+    public ResponseEntity<LikesResponse> updateLike(@Valid @RequestBody LikesRequest request){
         return new ResponseEntity<>(likesService.updateLike(request), HttpStatus.CREATED);
     }
 
