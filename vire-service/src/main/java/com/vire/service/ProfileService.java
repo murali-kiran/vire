@@ -8,6 +8,7 @@ import com.vire.model.response.ProfileResponse;
 import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,10 +21,15 @@ public class ProfileService {
   @Autowired
   Snowflake snowflake;
 
-  @Autowired ProfileRepository profileRepository;
+  @Autowired
+  ProfileRepository profileRepository;
+
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
     var dto = request.toDto();
+    dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
     dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
     dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
@@ -32,6 +38,7 @@ public class ProfileService {
 
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
     var dto = request.toDto();
+    dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
 
     var personalProfileDto = dto.getPersonalProfile();
@@ -58,18 +65,18 @@ public class ProfileService {
 
   public Optional<PersonalResponse> deletePersonalProfile(final Long profileId) {
 
-    if(!profileRepository.isPersonalProfileExists(profileId)){
-      return  Optional.empty();
-    }else {
+    if (!profileRepository.isPersonalProfileExists(profileId)) {
+      return Optional.empty();
+    } else {
       return profileRepository.deleteProfile(profileId).map(dto -> PersonalResponse.fromDto(dto));
     }
 
   }
 
   public Optional<FirmResponse> deleteFirmProfile(final Long profileId) {
-    if(!profileRepository.isFirmProfileExists(profileId)){
-      return  Optional.empty();
-    }else {
+    if (!profileRepository.isFirmProfileExists(profileId)) {
+      return Optional.empty();
+    } else {
       return profileRepository.deleteProfile(profileId).map(dto -> FirmResponse.fromDto(dto));
     }
   }
@@ -77,33 +84,33 @@ public class ProfileService {
   public List<PersonalResponse> retrieveAllProfiles() {
 
     return profileRepository.retrieveAllProfiles().stream()
-        .map(dto -> PersonalResponse.fromDto(dto))
-        .collect(Collectors.toList());
+            .map(dto -> PersonalResponse.fromDto(dto))
+            .collect(Collectors.toList());
   }
 
   public Optional<PersonalResponse> retrievePersonalProfileById(final Long profileId) {
-     if(!profileRepository.isPersonalProfileExists(profileId)){
-        return  Optional.empty();
-     }else {
-       return profileRepository.retrieveProfileById(profileId).map(dto -> PersonalResponse.fromDto(dto));
-     }
+    if (!profileRepository.isPersonalProfileExists(profileId)) {
+      return Optional.empty();
+    } else {
+      return profileRepository.retrieveProfileById(profileId).map(dto -> PersonalResponse.fromDto(dto));
+    }
   }
 
   public Optional<FirmResponse> retrieveFirmProfileById(final Long profileId) {
-    if(!profileRepository.isFirmProfileExists(profileId)){
-      return  Optional.empty();
-    }else {
+    if (!profileRepository.isFirmProfileExists(profileId)) {
+      return Optional.empty();
+    } else {
       return profileRepository.retrieveProfileById(profileId).map(dto -> FirmResponse.fromDto(dto));
     }
   }
 
   public List<PersonalResponse> searchProfiles(final String searchString) {
     return profileRepository.searchProfiles(searchString).stream()
-        .map(dto -> PersonalResponse.fromDto(dto))
-        .collect(Collectors.toList());
+            .map(dto -> PersonalResponse.fromDto(dto))
+            .collect(Collectors.toList());
   }
 
   public Optional<ProfileResponse> retrieveProfileById(final Long profileId) {
-      return profileRepository.retrieveProfileById(profileId).map(dto -> ProfileResponse.fromDto(dto));
+    return profileRepository.retrieveProfileById(profileId).map(dto -> ProfileResponse.fromDto(dto));
   }
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class ProfileResponse {
 
+    private String token;
+    private String type = "Bearer";
     private String profileId;
     private String name;
     private String password;

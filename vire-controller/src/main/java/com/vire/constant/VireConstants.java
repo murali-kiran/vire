@@ -28,4 +28,7 @@ public class VireConstants {
     public final static String EXPERIENCECOMMENTREPLY_REQUEST_PATH_API = "/api/experiencecommentreply";
     public final static String EXPERIENCELIKES_REQUEST_PATH_API = "/api/experiencelikes";
 
+    public static final String JWT_TOKEN_PREFIX = "Bearer ";
+    public static final String JWT_HEADER_STRING = "Authorization";
+
 }
