@@ -23,5 +23,9 @@ public class VireConstants {
     public final static String FEEDCOMMENTREPLY_REQUEST_PATH_API = "/api/feedcommentreply";
     public final static String FEEDLIKES_REQUEST_PATH_API = "/api/feedlikes";
     public final static String MASTER_REQUEST_PATH_API = "/api/master";
+    public final static String EXPERIENCE_REQUEST_PATH_API = "/api/experience";
+    public final static String EXPERIENCECOMMENT_REQUEST_PATH_API = "/api/experiencecomment";
+    public final static String EXPERIENCECOMMENTREPLY_REQUEST_PATH_API = "/api/experiencecommentreply";
+    public final static String EXPERIENCELIKES_REQUEST_PATH_API = "/api/experiencelikes";
 
 }

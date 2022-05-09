@@ -232,4 +232,46 @@ CREATE TABLE master (
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (master_id)
 );
+CREATE TABLE experience (
+    experience_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    file_id BIGINT NOT NULL,
+    title VARCHAR(191) NOT NULL,
+    description VARCHAR(191) NOT NULL,
+    location VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (experience_id)
+);
+
+CREATE TABLE experience_comment (
+    experience_comment_id BIGINT NOT NULL,
+    commentor_profile_id BIGINT NOT NULL,
+    experience_id BIGINT NOT NULL,
+    comment VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (experience_comment_id)
+);
+
+CREATE TABLE experience_likes (
+    experience_likes_id BIGINT NOT NULL,
+    liker_profile_id BIGINT NOT NULL,
+    experience_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (experience_likes_id)
+);
+
+CREATE TABLE experience_comment_reply (
+    experience_comment_reply_id BIGINT NOT NULL,
+    replier_profile_id BIGINT NOT NULL,
+    experience_id BIGINT NOT NULL,
+    comment_id BIGINT NOT NULL,
+    reply VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (experience_comment_reply_id)
+);
   ALTER TABLE community_profile ADD CONSTRAINT fk_community_profile_community_id FOREIGN KEY (community_id) REFERENCES community(community_id);
