@@ -5,6 +5,11 @@ import com.vire.model.request.FirmRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.service.ProfileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,22 +28,50 @@ public class FirmProfileController {
     @Autowired
     ProfileService profileService;
 
+    @Operation(summary = "Create personal profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created firm profile successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PersonalResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Invalid supplied input",
+                    content = @Content) })
     @PostMapping(value = "/create")
     public ResponseEntity<FirmResponse> createFirmProfile(@Valid @RequestBody FirmRequest request) {
         return new ResponseEntity<>(profileService.createFirmProfile(request), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update personal profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "updated firm profile successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PersonalResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Invalid supplied input",
+                    content = @Content) })
     @PutMapping(value = "/update")
     public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmRequest request) {
         return new ResponseEntity<>(profileService.updateFirmProfile(request), HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete firm profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deleted firm profile successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PersonalResponse.class)) }),
+            @ApiResponse(responseCode = "404", description = "Firm profile with this ID not exist",
+                    content = @Content) })
     @DeleteMapping(value = "delete/{profileid}")
     public ResponseEntity<FirmResponse> deleteFirmProfile(@PathVariable(value = "profileid") Long profileId) {
         Optional<FirmResponse> firmResponse = profileService.deleteFirmProfile(profileId);
         return firmResponse.isPresent() ? new ResponseEntity<>(firmResponse.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "Get a firm profile by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully got a firm profile by its id",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PersonalResponse.class)) }),
+            @ApiResponse(responseCode = "404", description = "Firm profile with this ID not exist",
+                    content = @Content) })
     @GetMapping(value = "get/{profileid}")
     public ResponseEntity<FirmResponse> retrieveFirmProfileById(@PathVariable(value = "profileid") Long profileId) {
         Optional<FirmResponse> firmResponse = profileService.retrieveFirmProfileById(profileId);
