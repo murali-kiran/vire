@@ -80,7 +80,7 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "searching comments successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class)) }),
-            @ApiResponse(responseCode = "500", description = "searching retrieval failed",
+            @ApiResponse(responseCode = "500", description = "searching of comments failed",
                     content = @Content) })
     @GetMapping("search")
     public ResponseEntity<List<CommentResponse>> searchComment(
