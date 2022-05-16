@@ -1,5 +1,6 @@
 package com.vire.model.request;
 
+//import com.vire.customvalidation.ContactNumberConstraint;
 import com.vire.dto.SocialDto;
 import lombok.Data;
 
@@ -13,19 +14,18 @@ public class SocialRequest {
 
     private  String socialId;
     @NotBlank(message = "Profile required")
-    @Pattern(regexp="(^[0-9]*$)", message = "Chat Initiator profile id must be numeric")
+    @Pattern(regexp="(^[0-9]*$)", message = "Profile id must be numeric")
     private  String profileId;
     @NotBlank(message = "Category required")
     private  String categoryId;
-    @Pattern(regexp="(^[0-9]*$)", message = "Chat Initiator profile id must be numeric")
     @NotBlank(message = "Social post type required")
     private  String type;
     @NotBlank(message = "Subject required")
     private  String subject;
     @NotBlank(message = "Description required")
     private  String description;
-    @NotBlank(message = "File required")
-    @Pattern(regexp="(^[0-9]*$)", message = "Chat Initiator profile id must be numeric")
+    @NotBlank(message = "File id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
     private  String fileId;
     @Pattern(regexp="(^$|[0-9]{10})", message = "Contact must be numeric and 10 digits")
     private  String contact;

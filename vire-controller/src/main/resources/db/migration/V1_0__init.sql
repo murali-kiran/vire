@@ -72,6 +72,7 @@ create table firm_profile (
 create table t_social (
      social_id bigint not null,
 	 profile_id bigint not null,
+	 category_id bigint not null,
      file_id varchar(191),
 	 type varchar(191),
      subject varchar(191),

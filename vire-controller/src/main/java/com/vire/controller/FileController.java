@@ -4,6 +4,7 @@ import com.vire.constant.VireConstants;
 import com.vire.model.request.FileRequest;
 import com.vire.model.response.FileResponse;
 import com.vire.service.FileService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping(VireConstants.FILE_REQUEST_PATH_API)
 public class FileController {
@@ -40,6 +42,7 @@ public class FileController {
     }
     @GetMapping("/{fileid}")
     public ResponseEntity<FileResponse> retrieveById(@PathVariable Long fileId){
+        log.info("*******File ID**********:"+fileId);
         return new ResponseEntity<FileResponse>(fileService.retrieveById(fileId), HttpStatus.OK);
     }
 

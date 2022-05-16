@@ -15,7 +15,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(VireConstants.REPLY_REQUEST_PATH_API)
+@RequestMappicdng(VireConstants.REPLY_REQUEST_PATH_API)
 public class CommentReplyController {
 
     @Autowired
