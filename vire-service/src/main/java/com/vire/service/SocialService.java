@@ -2,7 +2,8 @@ package com.vire.service;
 
 import com.vire.model.request.SocialRequest;
 import com.vire.model.response.*;
-import com.vire.repository.*;
+import com.vire.repository.FileRepository;
+import com.vire.repository.SocialRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class SocialService {
     ProfileService profileService;
     @Autowired
     SocialSendToService socialSendToService;
+
     public SocialResponse createSocial(final SocialRequest request) {
 
         var dto = request.toDto();
@@ -77,18 +79,20 @@ public class SocialService {
                 .map(dto -> SocialResponse.fromDto(dto))
                 .get();
     }
+
     public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
-        SocialPostResponse socialPostResponse =  socialRepo.retrieveById(socialId)
+        SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
                 .map(dto -> SocialPostResponse.fromDto(dto))
                 .get();
-        List<CommentResponse> commentsList = commentService.searchComments("socialId:"+socialId);
-        List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:"+socialId);
-        List<LikesResponse> likesList = likesService.searchLikes("socialId:"+socialId);
+        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
+        List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:" + socialId);
+        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setCommentsReply(commentReplyList);
         socialPostResponse.setLikes(likesList);
         return socialPostResponse;
     }
+
     public List<SocialResponse> getPostsByCommunity(Long communityId) {
 
         return socialRepo.getPostsByCommunity(communityId).stream()
@@ -109,36 +113,37 @@ public class SocialService {
         Set<String> socialIds = getSocialListBySearch(profileId);
         long endTime = System.nanoTime();
         double elapsedTimeInSecond = (double) (endTime - startTime) / 1_000_000_000;
-        log.info("****************duration:"+elapsedTimeInSecond);
+        log.info("****************duration:" + elapsedTimeInSecond);
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
             socialPostResponses.add(retrieveSocialDetailsById(Long.valueOf(socialId)));
         }
         return socialPostResponses;
     }
-//TODO:fine tune performance
-    private Set<String> getSocialListBySearch(Long profileId){
+
+    //TODO:fine tune performance
+    private Set<String> getSocialListBySearch(Long profileId) {
         Optional<PersonalResponse> personalResponse = profileService.retrievePersonalProfileById(profileId);
         StringBuilder interestSearchString = new StringBuilder();
         Set<String> uniqueSocialSet = new HashSet<>();
-        if(!personalResponse.isEmpty()){
+        if (!personalResponse.isEmpty()) {
 
             List<PersonalProfileInterestResponse> personalProfileInterestResponses = personalResponse.get().getPersonalProfile().getInterests();
             for (PersonalProfileInterestResponse personalProfileInterestResponse : personalProfileInterestResponses) {
-                if(interestSearchString.length() != 0) {
+                if (interestSearchString.length() != 0) {
                     interestSearchString.append(" OR ");
-                }else{
+                } else {
                     interestSearchString.append(" type:")
                             .append("INTERESTS")
                             .append(" AND ( ");
                 }
-                interestSearchString.append("( value:"+ personalProfileInterestResponse.getInterest()+" )");
+                interestSearchString.append("( value:" + personalProfileInterestResponse.getInterest() + " )");
 
             }
             interestSearchString.append(" )");
 
             String desigSearchStr = "type:DESIGNATION AND ( value:" + personalResponse.get().getPersonalProfile().getDesignation() + " )";
-            String fpbSearchStr = "type:FPB AND ( value:" + personalResponse.get().getPersonalProfile().getFieldProfessionBusiness() + " )";
+            String fpbSearchStr = "type:FIELDPROFESSIONBUSINESS AND ( value:" + personalResponse.get().getPersonalProfile().getFieldProfessionBusiness() + " )";
             String locationSearchStr = "type:LOCATION AND ( value:" + personalResponse.get().getPersonalProfile().getPresentAddress().getCityTownVillage() + " )";
             //log.info("Search Interests String::::"+interestSearchString);
             List<String> searchStringList = new ArrayList<>();
@@ -152,11 +157,11 @@ public class SocialService {
                         .map(SocialSendToResponse::getSocialId)
                         .distinct()
                         .collect(Collectors.toList());
-                log.info("########unique Socials for "+searchStr+" ::::" + socialList);
-                if(uniqueSocialList != null) {
+                log.info("########unique Socials for " + searchStr + " ::::" + socialList);
+                if (uniqueSocialList != null) {
                     Set<String> set = new HashSet<>(socialList);
                     uniqueSocialSet.retainAll(set);
-                }else{
+                } else {
                     uniqueSocialSet = new HashSet<>(socialList);
                 }
             }

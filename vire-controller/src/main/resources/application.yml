@@ -18,5 +18,8 @@ server:
   port: 8090
 
 file:
-  path: "D:\\image_files\\"
+  path: "/home/ubuntu/files/"
   type: "images"
+
+auth:
+  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/**,/api/v1/personalProfile/**"

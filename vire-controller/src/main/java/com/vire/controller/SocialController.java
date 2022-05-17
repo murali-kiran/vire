@@ -29,10 +29,10 @@ public class SocialController {
     @Operation(summary = "Create Social")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Create Social Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Create Social Failed",
-                    content = @Content) })
+                    content = @Content)})
     @PostMapping("/create")
     public ResponseEntity<SocialResponse> create(@Valid @RequestBody SocialRequest request) {
         return new ResponseEntity<>(socialService.createSocial(request), HttpStatus.CREATED);
@@ -41,10 +41,10 @@ public class SocialController {
     @Operation(summary = "Update Social")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Update Social Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Update Social Failed",
-                    content = @Content) })
+                    content = @Content)})
     @PutMapping("/update")
     public ResponseEntity<SocialResponse> update(@Valid @RequestBody SocialRequest request) {
         return new ResponseEntity<>(socialService.updateSocial(request), HttpStatus.CREATED);
@@ -53,10 +53,10 @@ public class SocialController {
     @Operation(summary = "Delete Social")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete Social Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Delete Social Failed",
-                    content = @Content) })
+                    content = @Content)})
     @DeleteMapping("/{socialid}")
     public ResponseEntity<SocialResponse> delete(
             @PathVariable(value = "socialid") Long socialId) {
@@ -66,10 +66,10 @@ public class SocialController {
     @Operation(summary = "Retrieve All Social")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieve All Social Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Retrieve All Social Failed",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("/all")
     public ResponseEntity<List<SocialResponse>> retrieveAll() {
         return new ResponseEntity<>(socialService.getSocials(), HttpStatus.OK);
@@ -78,10 +78,10 @@ public class SocialController {
     @Operation(summary = "Retrieve Social by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieve Social by ID Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Retrieve Social by ID Failed",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("/{socialid}")
     public ResponseEntity<SocialResponse> retrieveById(@PathVariable(name = "socialid") Long socialId) {
         return new ResponseEntity<SocialResponse>(socialService.retrieveById(socialId), HttpStatus.OK);
@@ -90,10 +90,10 @@ public class SocialController {
     @Operation(summary = "Get Social post by community")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Get Social post by community Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Get Social post by community Failed",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("/{communityid}/communityposts")
     public ResponseEntity<List<SocialResponse>> getPostsByCommunity(@PathVariable(name = "communityid") Long communityId) {
         return new ResponseEntity<>(socialService.getPostsByCommunity(communityId), HttpStatus.OK);
@@ -102,10 +102,10 @@ public class SocialController {
     @Operation(summary = "Search Social")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Search Social Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Search Social Failed",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("search")
     public ResponseEntity<List<SocialResponse>> search(
             @RequestParam(value = "search") String searchString) {
@@ -115,10 +115,10 @@ public class SocialController {
     @Operation(summary = "Find Social by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Social by ID Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Find Social by ID Failed",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("socialdetails/{socialid}")
     public ResponseEntity<SocialPostResponse> findById(@PathVariable(name = "socialid") Long socialPostId) {
         return new ResponseEntity<SocialPostResponse>(socialService.retrieveSocialDetailsById(socialPostId), HttpStatus.OK);
@@ -127,10 +127,10 @@ public class SocialController {
     @Operation(summary = "Find Social by profile by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Social by profile by ID Successful",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Find Social by profile by ID Failed",
-                    content = @Content) })
+                    content = @Content)})
     @GetMapping("socialposts/{profileid}")
     public ResponseEntity<List<SocialPostResponse>> findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
         return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsByProfileId(profileId), HttpStatus.OK);

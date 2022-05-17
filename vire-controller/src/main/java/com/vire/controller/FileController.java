@@ -37,7 +37,7 @@ public class FileController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "File Uploading Failed",
-                    content = @Content) })
+                    content = @Content)})
     @PostMapping(value = "/uploadFile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<FileResponse> create(@RequestPart("file") MultipartFile file){
         FileRequest request = new FileRequest();

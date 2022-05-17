@@ -5,6 +5,7 @@ import com.vire.security.jwt.AuthEntryPointJwt;
 import com.vire.security.jwt.AuthTokenFilter;
 import com.vire.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,18 +24,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_WHITELIST = {
-            // -- Swagger UI v3 (OpenAPI)
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            // -- h2 console
-            "/h2-console/**",
-            // other public endpoints of your API may be appended to this array,
-            VireConstants.LOGIN_REQUEST_API+"/**",
-            VireConstants.FIRM_PROFILE_REQUEST_PATH_API+"/create**/**",
-            VireConstants.PERSONAL_PROFILE_REQUEST_PATH_API+"/create**/**"
-    };
-
+//    private static final String[] AUTH_WHITELIST = {
+//            // -- Swagger UI v3 (OpenAPI)
+//            "/v3/api-docs/**",
+//            "/swagger-ui/**",
+//            // -- h2 console
+//            "/h2-console/**",
+//            // other public endpoints of your API may be appended to this array,
+//            VireConstants.LOGIN_REQUEST_API+"/**",
+//            VireConstants.FIRM_PROFILE_REQUEST_PATH_API+"/create**/**",
+//            VireConstants.PERSONAL_PROFILE_REQUEST_PATH_API+"/create**/**"
+//    };
+@Value("${auth.whitelist}")
+private String[] AUTH_WHITELIST;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
