@@ -4,6 +4,7 @@ import com.vire.dto.ProfileDto;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -25,6 +26,8 @@ public class PersonalRequest {
     @Pattern(regexp="(^$|[0-9]{12})", message = "Aadhar must be numeric and 12 digits")
     private String aadhar;
     private String isAadharVerified;
+
+    @Valid
     private PersonalProfileRequest personalProfile;
 
     public ProfileDto toDto() {

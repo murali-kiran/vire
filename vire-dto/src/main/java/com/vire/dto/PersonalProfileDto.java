@@ -1,6 +1,7 @@
 package com.vire.dto;
 
 import com.vire.enumeration.BloodDonateWillingness;
+import com.vire.enumeration.Gender;
 import com.vire.enumeration.WorkStatus;
 import lombok.Data;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public class PersonalProfileDto {
 
     private Long personalProfileId;
+    private String dateOfBirth;
+    private Gender gender;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;

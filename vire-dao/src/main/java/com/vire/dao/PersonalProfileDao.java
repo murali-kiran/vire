@@ -2,6 +2,7 @@ package com.vire.dao;
 
 import com.vire.dto.PersonalProfileDto;
 import com.vire.enumeration.BloodDonateWillingness;
+import com.vire.enumeration.Gender;
 import com.vire.enumeration.WorkStatus;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,13 @@ public class PersonalProfileDao  {
     @Id
     @Column(name = "personal_profile_id")
     private Long personalProfileId;
+
+    @Column(name = "date_of_birth", nullable = false)
+    private String dateOfBirth;
+
+    @Column(name = "gender", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "school_board", nullable = true)
     private String schoolBoard;

@@ -13,6 +13,8 @@ create table profile (
 
 create table personal_profile (
   personal_profile_id bigint(20) not null,
+  date_of_birth varchar(255) not null,
+  gender varchar(255) not null,
   blood_donate_willingness varchar(255) not null,
   blood_group varchar(255) default null,
   designation varchar(255) default null,

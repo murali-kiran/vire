@@ -2,6 +2,7 @@ package com.vire.model.response;
 
 import com.vire.dto.PersonalProfileDto;
 import com.vire.enumeration.BloodDonateWillingness;
+import com.vire.enumeration.Gender;
 import com.vire.enumeration.WorkStatus;
 import lombok.Data;
 
@@ -12,6 +13,8 @@ import java.util.stream.Collectors;
 public class PersonalProfileResponse {
 
     private String personalProfileId;
+    private String dateOfBirth;
+    private Gender gender;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;
@@ -35,6 +38,8 @@ public class PersonalProfileResponse {
 
         PersonalProfileResponse personalProfileResponse = new PersonalProfileResponse();
         personalProfileResponse.setPersonalProfileId(dto.getPersonalProfileId().toString());
+        personalProfileResponse.setDateOfBirth(dto.getDateOfBirth());
+        personalProfileResponse.setGender(dto.getGender());
         personalProfileResponse.setSchoolBoard(dto.getSchoolBoard());
         personalProfileResponse.setSchoolName(dto.getSchoolName());
         personalProfileResponse.setIntermediateBoard(dto.getIntermediateBoard());
