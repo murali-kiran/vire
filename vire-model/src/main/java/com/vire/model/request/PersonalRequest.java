@@ -1,6 +1,7 @@
 package com.vire.model.request;
 
 import com.vire.dto.ProfileDto;
+import com.vire.enumeration.Gender;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,6 +28,13 @@ public class PersonalRequest {
     private String aadhar;
     private String isAadharVerified;
 
+    @NotBlank(message = "Date of birth required dd-MM-YYYY format")
+
+    // date range years from 1800 to 2999
+    @Pattern(regexp="^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-((18|2[0-9])[0-9]{2})$", message = "Invalid date of birth format")
+    private String dateOfBirth;
+    private Gender gender;
+
     @Valid
     private PersonalProfileRequest personalProfile;
 
@@ -40,6 +48,8 @@ public class PersonalRequest {
         profileDto.setMobileNumber(this.mobileNumber);
         profileDto.setAadhar(this.aadhar);
         profileDto.setIsAadharVerified(this.isAadharVerified);
+        profileDto.setDateOfBirth(this.dateOfBirth);
+        profileDto.setGender(this.gender);
         profileDto.setPersonalProfile(this.personalProfile.toDto());
 
         return profileDto;

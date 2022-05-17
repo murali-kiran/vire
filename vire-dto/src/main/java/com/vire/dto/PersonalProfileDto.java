@@ -11,8 +11,6 @@ import java.util.List;
 public class PersonalProfileDto {
 
     private Long personalProfileId;
-    private String dateOfBirth;
-    private Gender gender;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;

@@ -1,7 +1,9 @@
 package com.vire.dao;
 
 import com.vire.dto.ProfileDto;
+import com.vire.enumeration.Gender;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
@@ -33,6 +35,13 @@ public class ProfileDao {
 
     @Column(name = "is_aadhar_verified", nullable = false)
     private String isAadharVerified;
+
+    @Column(name = "date_of_birth", nullable = true)
+    private String dateOfBirth;
+
+    @Column(name = "gender", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -73,6 +82,14 @@ public class ProfileDao {
         profileDao.setIsAadharVerified(dto.getIsAadharVerified());
         profileDao.setPassword(dto.getPassword());
         profileDao.setMobileNumber(dto.getMobileNumber());
+
+        if(!StringUtils.isBlank(dto.getDateOfBirth())){
+            profileDao.setDateOfBirth(dto.getDateOfBirth());
+        }
+
+        if(dto.getGender()!=null){
+            profileDao.setGender(dto.getGender());
+        }
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setAmbiguityIgnored(true);

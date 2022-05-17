@@ -20,13 +20,6 @@ public class PersonalProfileDao  {
     @Column(name = "personal_profile_id")
     private Long personalProfileId;
 
-    @Column(name = "date_of_birth", nullable = false)
-    private String dateOfBirth;
-
-    @Column(name = "gender", nullable = true)
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
     @Column(name = "school_board", nullable = true)
     private String schoolBoard;
 

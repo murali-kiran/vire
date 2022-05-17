@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 public class PersonalProfileResponse {
 
     private String personalProfileId;
-    private String dateOfBirth;
-    private Gender gender;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;
@@ -38,8 +36,6 @@ public class PersonalProfileResponse {
 
         PersonalProfileResponse personalProfileResponse = new PersonalProfileResponse();
         personalProfileResponse.setPersonalProfileId(dto.getPersonalProfileId().toString());
-        personalProfileResponse.setDateOfBirth(dto.getDateOfBirth());
-        personalProfileResponse.setGender(dto.getGender());
         personalProfileResponse.setSchoolBoard(dto.getSchoolBoard());
         personalProfileResponse.setSchoolName(dto.getSchoolName());
         personalProfileResponse.setIntermediateBoard(dto.getIntermediateBoard());
