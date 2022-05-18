@@ -21,6 +21,7 @@ public class PersonalProfileDto {
     private String postGraduationCollegeName;
     private WorkStatus workStatus;
     private String fieldProfessionBusiness;
+    private String productOrService;
     private String designation;
     private String organizationName;
     private String organizationLocation;

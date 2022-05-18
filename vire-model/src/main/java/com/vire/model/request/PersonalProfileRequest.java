@@ -26,6 +26,7 @@ public class PersonalProfileRequest {
     private String postGraduationCollegeName;
     private WorkStatus workStatus;
     private String fieldProfessionBusiness;
+    private String productOrService;
     private String designation;
     private String organizationName;
     private String organizationLocation;
@@ -48,6 +49,7 @@ public class PersonalProfileRequest {
         personalProfileDto.setPostGraduationCollegeName(this.postGraduationCollegeName);
         personalProfileDto.setWorkStatus(this.workStatus);
         personalProfileDto.setFieldProfessionBusiness(this.fieldProfessionBusiness);
+        personalProfileDto.setProductOrService(this.productOrService);
         personalProfileDto.setDesignation(this.designation);
         personalProfileDto.setOrganizationName(this.organizationName);
         personalProfileDto.setOrganizationLocation(this.organizationLocation);

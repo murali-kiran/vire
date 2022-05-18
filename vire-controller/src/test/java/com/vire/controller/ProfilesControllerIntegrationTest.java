@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// https://stackoverflow.com/questions/45241566/spring-boot-unit-tests-with-jwt-token-security
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class,webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -82,6 +83,11 @@ public class ProfilesControllerIntegrationTest {
 
             idx++;
         }
+    }
+
+    @Test
+    public void shouldNotAllow_accessTo_UnauthenticatedUsers() throws Exception {
+        mvc.perform(get("/test")).andExpect(status().isUnauthorized());
     }
 
 
@@ -178,8 +184,8 @@ public class ProfilesControllerIntegrationTest {
 
             firmProfileRequest.setAddress(addressRequest);
             firmProfileRequest.setFirmAddress("firm address"+i);
-            firmProfileRequest.setFieldOfBusiness(FieldOfBusiness.SPORTS);
-            firmProfileRequest.setProductOrService(ProductOrService.SERVICE1);
+            firmProfileRequest.setFieldOfBusiness("FieldOfBusiness"+i);
+            firmProfileRequest.setProductOrService("ProductOrService"+i);
 
         }
 

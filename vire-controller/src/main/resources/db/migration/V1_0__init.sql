@@ -19,6 +19,7 @@ create table personal_profile (
   blood_group varchar(255) default null,
   designation varchar(255) default null,
   field_profession_business varchar(255) default null,
+  product_or_service varchar(255) default null,
   graduation_board varchar(255) default null,
   graduation_college_name varchar(255) default null,
   intermediate_board varchar(255) default null,

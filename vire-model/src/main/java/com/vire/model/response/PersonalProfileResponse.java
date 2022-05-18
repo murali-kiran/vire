@@ -23,6 +23,7 @@ public class PersonalProfileResponse {
     private String postGraduationCollegeName;
     private WorkStatus workStatus;
     private String fieldProfessionBusiness;
+    private String productOrService;
     private String designation;
     private String organizationName;
     private String organizationLocation;
@@ -53,6 +54,7 @@ public class PersonalProfileResponse {
         personalProfileResponse.setBloodDonateWillingness(dto.getBloodDonateWillingness());
         personalProfileResponse.setPresentAddress(AddressResponse.fromDto(dto.getPresentAddress()));
         personalProfileResponse.setPermanentAddress(AddressResponse.fromDto(dto.getPermanentAddress()));
+        personalProfileResponse.setProductOrService(dto.getProductOrService());
 
         if(dto.getInterests()!=null) {
             personalProfileResponse.setInterests(dto.getInterests().stream().map(interest->PersonalProfileInterestResponse.fromDto(interest)).collect(Collectors.toList()));

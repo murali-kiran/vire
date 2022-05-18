@@ -51,6 +51,9 @@ public class PersonalProfileDao  {
     @Column(name = "field_profession_business", nullable = true)
     private String fieldProfessionBusiness;
 
+    @Column(name = "product_or_service", nullable = true)
+    private String productOrService;
+
     @Column(name = "designation", nullable = true)
     private String designation;
 
