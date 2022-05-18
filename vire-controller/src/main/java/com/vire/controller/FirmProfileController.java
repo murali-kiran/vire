@@ -32,7 +32,7 @@ public class FirmProfileController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created firm profile successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PersonalResponse.class)) }),
+                            schema = @Schema(implementation = FirmResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PostMapping(value = "/create")
@@ -44,7 +44,7 @@ public class FirmProfileController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "updated firm profile successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PersonalResponse.class)) }),
+                            schema = @Schema(implementation = FirmResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PutMapping(value = "/update")
@@ -56,7 +56,7 @@ public class FirmProfileController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Deleted firm profile successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PersonalResponse.class)) }),
+                            schema = @Schema(implementation = FirmResponse.class)) }),
             @ApiResponse(responseCode = "404", description = "Firm profile with this ID not exist",
                     content = @Content) })
     @DeleteMapping(value = "delete/{profileid}")
@@ -69,7 +69,7 @@ public class FirmProfileController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully got a firm profile by its id",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PersonalResponse.class)) }),
+                            schema = @Schema(implementation = FirmResponse.class)) }),
             @ApiResponse(responseCode = "404", description = "Firm profile with this ID not exist",
                     content = @Content) })
     @GetMapping(value = "get/{profileid}")
@@ -78,10 +78,10 @@ public class FirmProfileController {
         return firmResponse.isPresent() ? new ResponseEntity<>(firmResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(value="/search")
+   /* @GetMapping(value="/search")
     public ResponseEntity<List<PersonalResponse>> searchFirmProfiles(
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(profileService.searchProfiles(searchString), HttpStatus.OK);
-    }
+    }*/
 
 }
