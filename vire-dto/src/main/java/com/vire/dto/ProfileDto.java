@@ -16,6 +16,7 @@ public class ProfileDto {
     private String dateOfBirth;
     private Gender gender;
     private Long fileId;
+    private String firstLogin;
     //private Boolean isPersonalProfile;
     private PersonalProfileDto personalProfile;
     private FirmProfileDto firmProfile;

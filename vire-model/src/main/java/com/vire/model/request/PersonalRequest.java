@@ -27,12 +27,13 @@ public class PersonalRequest {
     @Pattern(regexp="(^$|[0-9]{12})", message = "Aadhar must be numeric and 12 digits")
     private String aadhar;
     private String isAadharVerified;
+
     @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
     private String fileId;
-    @NotBlank(message = "Date of birth required dd-MM-YYYY format")
 
+    @NotBlank(message = "Date of birth required dd-MM-YYYY format")
     // date range years from 1800 to 2999
-    @Pattern(regexp="^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-((18|2[0-9])[0-9]{2})$", message = "Invalid date of birth format")
+    @Pattern(regexp="^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-((18|19|2[0-9])[0-9]{2})$", message = "Invalid date of birth format")
     private String dateOfBirth;
     private Gender gender;
 

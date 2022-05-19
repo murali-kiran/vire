@@ -73,7 +73,13 @@ public class LoginService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        ProfileResponse profileResponse = ProfileResponse.fromDto(userDetails.getProfileDao().toDto());
+        var profileDto = userDetails.getProfileDao().toDto();
+        ProfileResponse profileResponse = ProfileResponse.fromDto(profileDto);
+
+        if("true".equalsIgnoreCase(profileDto.getFirstLogin())){
+            profileDto.setFirstLogin("false");
+            profileRepository.updateProfile(profileDto);
+        }
 
         try {
             ObjectMapper mapper = new ObjectMapper();

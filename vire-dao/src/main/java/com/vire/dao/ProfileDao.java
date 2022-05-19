@@ -43,6 +43,9 @@ public class ProfileDao {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name="first_login", nullable = false)
+    private String firstLogin;
+
     @Column(name = "file_id", nullable = true)
     private Long fileId;
 
@@ -86,6 +89,8 @@ public class ProfileDao {
         profileDao.setPassword(dto.getPassword());
         profileDao.setMobileNumber(dto.getMobileNumber());
         profileDao.setFileId(dto.getFileId());
+        profileDao.setFirstLogin(dto.getFirstLogin());
+
         if(!StringUtils.isBlank(dto.getDateOfBirth())){
             profileDao.setDateOfBirth(dto.getDateOfBirth());
         }

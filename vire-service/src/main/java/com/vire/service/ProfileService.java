@@ -31,6 +31,7 @@ public class ProfileService {
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
+    dto.setFirstLogin("true");
     dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
     dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
     return FirmResponse.fromDto(profileRepository.createProfile(dto));
@@ -40,6 +41,7 @@ public class ProfileService {
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
+    dto.setFirstLogin("true");
 
     var personalProfileDto = dto.getPersonalProfile();
     personalProfileDto.setPersonalProfileId(snowflake.nextId());

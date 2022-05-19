@@ -19,8 +19,10 @@ public class ProfileResponse {
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
+    private String firstLogin;
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
+
 
     /*
     public static ProfileResponse fromDto(final ProfileDto dto){
@@ -58,6 +60,8 @@ public class ProfileResponse {
         profileResponse.setGender(dto.getGender());
         profileResponse.setFileId(String.valueOf(dto.getFileId()));
         profileResponse.setDateOfBirth(dto.getDateOfBirth());
+        profileResponse.setFirstLogin(dto.getFirstLogin());
+
         if(dto.getPersonalProfile()!=null){
             profileResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
         }else {
