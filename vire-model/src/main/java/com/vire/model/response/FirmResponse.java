@@ -13,6 +13,7 @@ public class FirmResponse {
     private String mobileNumber;
     private String aadhar;
     private String isAadharVerified;
+    private String fileId;
     private FirmProfileResponse firmProfile;
 
     public static FirmResponse fromDto(final ProfileDto dto) {
@@ -26,7 +27,7 @@ public class FirmResponse {
         firmResponse.setAadhar(dto.getAadhar());
         firmResponse.setIsAadharVerified(dto.getIsAadharVerified());
         firmResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
-
+        firmResponse.setFileId(String.valueOf(dto.getFileId()));
         return  firmResponse;
         //return new ModelMapper().map(dto, FirmResponse.class);
     }

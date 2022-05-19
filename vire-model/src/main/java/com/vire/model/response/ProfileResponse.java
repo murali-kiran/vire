@@ -18,6 +18,7 @@ public class ProfileResponse {
     private String isAadharVerified;
     private String dateOfBirth;
     private Gender gender;
+    private String fileId;
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
 
@@ -55,6 +56,7 @@ public class ProfileResponse {
         profileResponse.setAadhar(dto.getAadhar());
         profileResponse.setIsAadharVerified(dto.getIsAadharVerified());
         profileResponse.setGender(dto.getGender());
+        profileResponse.setFileId(String.valueOf(dto.getFileId()));
         profileResponse.setDateOfBirth(dto.getDateOfBirth());
         if(dto.getPersonalProfile()!=null){
             profileResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));

@@ -24,6 +24,8 @@ public class FirmRequest {
     @Pattern(regexp="(^$|[0-9]{12})", message = "Invalid Aadhaar number")
     private String aadhar;
     private String isAadharVerified;
+    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
+    private String fileId;
     private FirmProfileRequest firmProfile;
 
     public ProfileDto toDto() {
@@ -36,6 +38,7 @@ public class FirmRequest {
         profileDto.setMobileNumber(this.mobileNumber);
         profileDto.setAadhar(this.aadhar);
         profileDto.setIsAadharVerified(this.isAadharVerified);
+        profileDto.setFileId(this.fileId == null ? null : Long.valueOf(this.fileId));
         profileDto.setFirmProfile(this.getFirmProfile().toDto());
 
         return profileDto;

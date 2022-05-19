@@ -27,6 +27,7 @@ public class PersonalRequest {
     @Pattern(regexp="(^$|[0-9]{12})", message = "Aadhar must be numeric and 12 digits")
     private String aadhar;
     private String isAadharVerified;
+    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
     private String fileId;
     @NotBlank(message = "Date of birth required dd-MM-YYYY format")
 
