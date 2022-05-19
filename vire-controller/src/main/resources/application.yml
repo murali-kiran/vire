@@ -18,8 +18,8 @@ server:
   port: 8090
 
 file:
-  path: "/home/ubuntu/files/"
+  path: "/home/ubuntu/vireapp/files/"
   type: "images"
 
 auth:
-  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/**,/api/v1/personalProfile/**"
+  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/**,/api/v1/personalProfile/**,/api/v1/file/**"
