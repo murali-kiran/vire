@@ -4,19 +4,22 @@ import com.vire.constant.VireConstants;
 import com.vire.model.request.FileRequest;
 import com.vire.model.response.FileResponse;
 import com.vire.service.FileService;
-import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Slf4j
 @RestController
@@ -69,9 +72,15 @@ public class FileController {
             @ApiResponse(responseCode = "500", description = "Get File by ID Failed",
                     content = @Content) })
     @GetMapping("/{fileid}")
-    public ResponseEntity<FileResponse> retrieveById(@PathVariable Long fileId){
+    public ResponseEntity<FileResponse> retrieveById(@PathVariable(value = "fileid") Long fileId){
         log.info("*******File ID**********:"+fileId);
         return new ResponseEntity<FileResponse>(fileService.retrieveById(fileId), HttpStatus.OK);
+    }
+    @GetMapping("/downloadFile/{fileid}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable(value = "fileid") Long fileid) {
+            FileResponse fileResponse = fileService.retrieveById(fileid);
+            String filePath = this.filePath + File.separator + fileResponse.getFileCommonPath();
+            return fileService.retrieveFile(filePath);
     }
 
 }

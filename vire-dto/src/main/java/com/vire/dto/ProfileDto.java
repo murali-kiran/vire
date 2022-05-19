@@ -15,6 +15,7 @@ public class ProfileDto {
     private String isAadharVerified;
     private String dateOfBirth;
     private Gender gender;
+    private Long fileId;
     //private Boolean isPersonalProfile;
     private PersonalProfileDto personalProfile;
     private FirmProfileDto firmProfile;

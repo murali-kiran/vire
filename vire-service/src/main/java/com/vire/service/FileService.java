@@ -13,9 +13,16 @@ import com.vire.repository.FileRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,9 +52,9 @@ public class FileService {
                 .get();
     }
 
-    public FileResponse retrieveById(Long socialId) {
+    public FileResponse retrieveById(Long fileId) {
 
-        return fileRepository.retrieveById(socialId)
+        return fileRepository.retrieveById(fileId)
                 .map(dto -> FileResponse.fromDto(dto))
                 .get();
     }
@@ -99,6 +106,28 @@ public class FileService {
         } catch (Exception ex){
             log.info("**********************File Upload Failed*******************************");
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
+        }
+    }
+
+    public ResponseEntity<Resource> retrieveFile(String fileCommonPath) {
+        try {
+            File file = new File(fileCommonPath);
+            Path path = Paths.get(file.getAbsolutePath());
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+            HttpHeaders header = new HttpHeaders();
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=img.jpeg");
+            header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            header.add("Pragma", "no-cache");
+            header.add("Expires", "0");
+            return ResponseEntity.ok()
+                    .headers(header)
+                    .contentLength(file.length())
+                    .contentType(MediaType.parseMediaType("application/octet-stream"))
+                    .body(resource);
+
+        }catch (Exception ex){
+            log.info("**********************File download Failed*******************************");
+            throw new FileStorageException("Could not download file " + fileCommonPath + ". Please try again!", ex);
         }
     }
 }

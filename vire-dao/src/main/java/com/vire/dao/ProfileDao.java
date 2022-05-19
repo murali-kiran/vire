@@ -43,6 +43,9 @@ public class ProfileDao {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name = "file_id", nullable = true)
+    private Long fileId;
+
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private PersonalProfileDao personalProfile;
@@ -82,7 +85,7 @@ public class ProfileDao {
         profileDao.setIsAadharVerified(dto.getIsAadharVerified());
         profileDao.setPassword(dto.getPassword());
         profileDao.setMobileNumber(dto.getMobileNumber());
-
+        profileDao.setFileId(dto.getFileId());
         if(!StringUtils.isBlank(dto.getDateOfBirth())){
             profileDao.setDateOfBirth(dto.getDateOfBirth());
         }

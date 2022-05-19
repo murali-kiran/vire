@@ -1,6 +1,7 @@
 package com.vire.model.response;
 
 import com.vire.dto.ProfileDto;
+import com.vire.enumeration.Gender;
 import lombok.Data;
 
 @Data
@@ -15,6 +16,8 @@ public class ProfileResponse {
     private String mobileNumber;
     private String aadhar;
     private String isAadharVerified;
+    private String dateOfBirth;
+    private Gender gender;
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
 
@@ -51,7 +54,8 @@ public class ProfileResponse {
         profileResponse.setMobileNumber(dto.getMobileNumber());
         profileResponse.setAadhar(dto.getAadhar());
         profileResponse.setIsAadharVerified(dto.getIsAadharVerified());
-
+        profileResponse.setGender(dto.getGender());
+        profileResponse.setDateOfBirth(dto.getDateOfBirth());
         if(dto.getPersonalProfile()!=null){
             profileResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
         }else {

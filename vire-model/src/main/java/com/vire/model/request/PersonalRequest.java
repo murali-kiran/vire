@@ -27,7 +27,7 @@ public class PersonalRequest {
     @Pattern(regexp="(^$|[0-9]{12})", message = "Aadhar must be numeric and 12 digits")
     private String aadhar;
     private String isAadharVerified;
-
+    private String fileId;
     @NotBlank(message = "Date of birth required dd-MM-YYYY format")
 
     // date range years from 1800 to 2999
@@ -50,6 +50,7 @@ public class PersonalRequest {
         profileDto.setIsAadharVerified(this.isAadharVerified);
         profileDto.setDateOfBirth(this.dateOfBirth);
         profileDto.setGender(this.gender);
+        profileDto.setFileId(this.getFileId() == null || !StringUtils.isNumeric(this.getFileId())? null : Long.valueOf(this.getFileId()));
         profileDto.setPersonalProfile(this.personalProfile.toDto());
 
         return profileDto;
