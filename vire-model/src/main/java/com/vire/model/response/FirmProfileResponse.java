@@ -10,8 +10,8 @@ public class FirmProfileResponse {
     private String firmProfileId;
     private String firmAddress;
     private AddressResponse address;
-    private FieldOfBusiness fieldOfBusiness;
-    private ProductOrService productOrService;
+    private String fieldOfBusiness;
+    private String productOrService;
 
     public static FirmProfileResponse fromDto(FirmProfileDto dto){
 

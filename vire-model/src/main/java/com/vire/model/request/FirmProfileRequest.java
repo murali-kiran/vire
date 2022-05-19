@@ -15,8 +15,8 @@ public class FirmProfileRequest {
     @NotBlank(message = "Firm address required")
     private String firmAddress;
     private AddressRequest address;
-    private FieldOfBusiness fieldOfBusiness;
-    private ProductOrService productOrService;
+    private String fieldOfBusiness;
+    private String productOrService;
 
     public FirmProfileDto toDto() {
 

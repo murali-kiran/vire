@@ -16,11 +16,6 @@ import java.util.stream.Collectors;
 public class PersonalProfileRequest {
 
     private String personalProfileId;
-    @NotBlank(message = "Date of birth required dd-MM-YYYY format")
-    //@Pattern(regexp="^(1[0-2]|0[1-9])(-)(3[01]|[12][0-9]|0[1-9])(-)[0-9]{4}$", message = "Invalid date of birth format")
-    private String dateOfBirth;
-
-    private Gender gender;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;
@@ -31,6 +26,7 @@ public class PersonalProfileRequest {
     private String postGraduationCollegeName;
     private WorkStatus workStatus;
     private String fieldProfessionBusiness;
+    private String productOrService;
     private String designation;
     private String organizationName;
     private String organizationLocation;
@@ -43,8 +39,6 @@ public class PersonalProfileRequest {
     public PersonalProfileDto toDto() {
         PersonalProfileDto personalProfileDto = new PersonalProfileDto();
         personalProfileDto.setPersonalProfileId((this.personalProfileId == null  || !StringUtils.isNumeric(this.personalProfileId))? null : Long.valueOf(this.personalProfileId));
-        personalProfileDto.setDateOfBirth(this.dateOfBirth);
-        personalProfileDto.setGender(this.gender);
         personalProfileDto.setSchoolBoard(this.schoolBoard);
         personalProfileDto.setSchoolName(this.schoolName);
         personalProfileDto.setIntermediateBoard(this.intermediateBoard);
@@ -55,6 +49,7 @@ public class PersonalProfileRequest {
         personalProfileDto.setPostGraduationCollegeName(this.postGraduationCollegeName);
         personalProfileDto.setWorkStatus(this.workStatus);
         personalProfileDto.setFieldProfessionBusiness(this.fieldProfessionBusiness);
+        personalProfileDto.setProductOrService(this.productOrService);
         personalProfileDto.setDesignation(this.designation);
         personalProfileDto.setOrganizationName(this.organizationName);
         personalProfileDto.setOrganizationLocation(this.organizationLocation);

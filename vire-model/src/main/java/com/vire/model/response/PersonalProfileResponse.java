@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 public class PersonalProfileResponse {
 
     private String personalProfileId;
-    private String dateOfBirth;
-    private Gender gender;
     private String schoolBoard;
     private String schoolName;
     private String intermediateBoard;
@@ -25,6 +23,7 @@ public class PersonalProfileResponse {
     private String postGraduationCollegeName;
     private WorkStatus workStatus;
     private String fieldProfessionBusiness;
+    private String productOrService;
     private String designation;
     private String organizationName;
     private String organizationLocation;
@@ -38,8 +37,6 @@ public class PersonalProfileResponse {
 
         PersonalProfileResponse personalProfileResponse = new PersonalProfileResponse();
         personalProfileResponse.setPersonalProfileId(dto.getPersonalProfileId().toString());
-        personalProfileResponse.setDateOfBirth(dto.getDateOfBirth());
-        personalProfileResponse.setGender(dto.getGender());
         personalProfileResponse.setSchoolBoard(dto.getSchoolBoard());
         personalProfileResponse.setSchoolName(dto.getSchoolName());
         personalProfileResponse.setIntermediateBoard(dto.getIntermediateBoard());
@@ -57,6 +54,7 @@ public class PersonalProfileResponse {
         personalProfileResponse.setBloodDonateWillingness(dto.getBloodDonateWillingness());
         personalProfileResponse.setPresentAddress(AddressResponse.fromDto(dto.getPresentAddress()));
         personalProfileResponse.setPermanentAddress(AddressResponse.fromDto(dto.getPermanentAddress()));
+        personalProfileResponse.setProductOrService(dto.getProductOrService());
 
         if(dto.getInterests()!=null) {
             personalProfileResponse.setInterests(dto.getInterests().stream().map(interest->PersonalProfileInterestResponse.fromDto(interest)).collect(Collectors.toList()));

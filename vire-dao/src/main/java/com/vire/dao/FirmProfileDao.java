@@ -28,12 +28,12 @@ public class FirmProfileDao  {
     private AddressDao address;
 
     @Column(name = "field_of_business", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private FieldOfBusiness fieldOfBusiness;
+    //@Enumerated(EnumType.STRING)
+    private String fieldOfBusiness;
 
     @Column(name = "product_or_service", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProductOrService productOrService;
+    //@Enumerated(EnumType.STRING)
+    private String productOrService;
 
     @OneToOne
     @MapsId

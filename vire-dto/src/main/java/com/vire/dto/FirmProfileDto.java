@@ -10,7 +10,7 @@ public class FirmProfileDto {
     private Long firmProfileId;
     private String firmAddress;
     private AddressDto address;
-    private FieldOfBusiness fieldOfBusiness;
-    private ProductOrService productOrService;
+    private String fieldOfBusiness;
+    private String productOrService;
 
 }
