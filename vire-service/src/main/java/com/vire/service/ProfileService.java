@@ -1,5 +1,6 @@
 package com.vire.service;
 
+import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
@@ -28,6 +29,7 @@ public class ProfileService {
   PasswordEncoder passwordEncoder;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
+    verify(request.getEmailId(),request.getMobileNumber());
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
@@ -37,7 +39,14 @@ public class ProfileService {
     return FirmResponse.fromDto(profileRepository.createProfile(dto));
   }
 
+  private void verify(final String email, final String mobileNumber){
+    var records = profileRepository.findByEmailIdOrMobileNumber(email, mobileNumber);
+    if(!CollectionUtils.isEmpty(records)){
+      throw new VerifyEmailMobileNumberException("Email Id or Mobile number already exists in system");
+    }
+  }
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
+    verify(request.getEmailId(),request.getMobileNumber());
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
