@@ -11,11 +11,14 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
   h2:
     console.enabled: true
+  flyway:
+    locations: "classpath:/h2/db/migration"
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
 
 server:
   port: 8090
@@ -25,4 +28,7 @@ file:
   type: "images"
 
 auth:
-  whitelist: /**
+  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/create**/**,/api/v1/personalProfile/create**/**,/file/**,/api/master/search**/**"
+
+
+
