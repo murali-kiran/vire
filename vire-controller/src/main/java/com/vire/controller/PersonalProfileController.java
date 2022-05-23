@@ -1,5 +1,6 @@
 package com.vire.controller;
 
+import com.vire.common.ErrorMessage;
 import com.vire.constant.VireConstants;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.PersonalResponse;
@@ -31,6 +32,9 @@ public class PersonalProfileController {
             @ApiResponse(responseCode = "201", description = "created personal profile successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PersonalResponse.class)) }),
+            @ApiResponse(responseCode = "302", description = "profile with same Email or Mobile number already exists",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)) }),
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PostMapping(value = "/create")

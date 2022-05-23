@@ -1,5 +1,8 @@
 package com.vire.service;
 
+import com.amazonaws.services.apigateway.model.Op;
+import com.vire.dao.ProfileDao;
+import com.vire.exception.DuplicateEmailorMobileNumberFoundException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
@@ -28,6 +31,11 @@ public class ProfileService {
   PasswordEncoder passwordEncoder;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
+
+    if(profileRepository.findByEmailId(request.getEmailId()).isPresent() || profileRepository.findByMobileNumber(request.getMobileNumber()).isPresent()){
+      throw new DuplicateEmailorMobileNumberFoundException("Profile with same Email or Mobile number already exists");
+    }
+
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
@@ -38,6 +46,11 @@ public class ProfileService {
   }
 
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
+
+    if(profileRepository.findByEmailId(request.getEmailId()).isPresent() || profileRepository.findByMobileNumber(request.getMobileNumber()).isPresent()){
+      throw new DuplicateEmailorMobileNumberFoundException("Profile with same Email or Mobile number already exists");
+    }
+
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
