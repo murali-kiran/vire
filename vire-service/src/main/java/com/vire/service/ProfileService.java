@@ -1,8 +1,7 @@
 package com.vire.service;
 
-import com.amazonaws.services.apigateway.model.Op;
-import com.vire.dao.ProfileDao;
-import com.vire.exception.DuplicateEmailorMobileNumberFoundException;
+
+import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
@@ -32,9 +31,7 @@ public class ProfileService {
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
 
-    if(profileRepository.findByEmailId(request.getEmailId()).isPresent() || profileRepository.findByMobileNumber(request.getMobileNumber()).isPresent()){
-      throw new DuplicateEmailorMobileNumberFoundException("Profile with same Email or Mobile number already exists");
-    }
+    verify(request.getEmailId(),request.getMobileNumber());
 
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -45,11 +42,15 @@ public class ProfileService {
     return FirmResponse.fromDto(profileRepository.createProfile(dto));
   }
 
+  private void verify(final String email, final String mobileNumber){
+    var records = profileRepository.findByEmailIdOrMobileNumber(email, mobileNumber);
+    if(!CollectionUtils.isEmpty(records)){
+      throw new VerifyEmailMobileNumberException("Email Id or Mobile number already exists in system");
+    }
+  }
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
 
-    if(profileRepository.findByEmailId(request.getEmailId()).isPresent() || profileRepository.findByMobileNumber(request.getMobileNumber()).isPresent()){
-      throw new DuplicateEmailorMobileNumberFoundException("Profile with same Email or Mobile number already exists");
-    }
+    verify(request.getEmailId(),request.getMobileNumber());
 
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));

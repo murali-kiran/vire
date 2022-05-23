@@ -156,4 +156,8 @@ public class ProfileRepository {
     public  Optional<ProfileDao> findByMobileNumber(final String mobileNumber){
         return profileRepositoryJpa.findByMobileNumber(mobileNumber);
     }
+
+    public  List<ProfileDao> findByEmailIdOrMobileNumber(final String email, final String mobileNumber){
+        return profileRepositoryJpa.findByEmailIdOrMobileNumber(email, mobileNumber);
+    }
 }
