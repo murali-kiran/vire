@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.PersonalResponse;
@@ -33,6 +34,9 @@ public class FirmProfileController {
             @ApiResponse(responseCode = "201", description = "Created firm profile successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = FirmResponse.class)) }),
+            @ApiResponse(responseCode = "302", description = "profile with same Email or Mobile number already exists",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorInfo.class)) }),
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PostMapping(value = "/create")

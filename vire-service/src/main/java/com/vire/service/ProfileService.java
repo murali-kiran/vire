@@ -1,5 +1,6 @@
 package com.vire.service;
 
+
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
@@ -29,7 +30,9 @@ public class ProfileService {
   PasswordEncoder passwordEncoder;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
+
     verify(request.getEmailId(),request.getMobileNumber());
+
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
@@ -46,7 +49,9 @@ public class ProfileService {
     }
   }
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
+
     verify(request.getEmailId(),request.getMobileNumber());
+
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
