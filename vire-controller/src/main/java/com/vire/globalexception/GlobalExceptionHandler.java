@@ -52,6 +52,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ErrorInfo handleException(HttpServletRequest request, Exception ex) {
+        ex.printStackTrace();
         return new ErrorInfo(request, "Error: " + ex.getMessage());
     }
 }

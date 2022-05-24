@@ -13,6 +13,7 @@ import com.vire.repository.FileRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -38,24 +39,26 @@ public class FileService {
     FileRepository fileRepository;
     @Autowired
     AmazonS3 amazonS3;
+    @Value("${server.image.path}")
+    private String imagePath;
 
     public FileResponse uploadFile(final FileRequest request) {
 
         var dto = request.toDto(snowflake);
 
-        return FileResponse.fromDto(fileRepository.uploadFile(dto));
+        return FileResponse.fromDto(fileRepository.uploadFile(dto), imagePath);
     }
     public FileResponse deleteFile(final Long socialId) {
 
         return fileRepository.deleteFile(socialId)
-                .map(dto -> FileResponse.fromDto(dto))
+                .map(dto -> FileResponse.fromDto(dto, imagePath))
                 .get();
     }
 
     public FileResponse retrieveById(Long fileId) {
 
         return fileRepository.retrieveById(fileId)
-                .map(dto -> FileResponse.fromDto(dto))
+                .map(dto -> FileResponse.fromDto(dto, imagePath))
                 .get();
     }
     private void storeInAws(MultipartFile file, String fileName, String fileDirName){

@@ -27,8 +27,19 @@ public class VireConstants {
     public final static String EXPERIENCECOMMENT_REQUEST_PATH_API = "/api/experiencecomment";
     public final static String EXPERIENCECOMMENTREPLY_REQUEST_PATH_API = "/api/experiencecommentreply";
     public final static String EXPERIENCELIKES_REQUEST_PATH_API = "/api/experiencelikes";
-
+    public final static String PROFILE_PATH_API = "api/profile";
     public static final String JWT_TOKEN_PREFIX = "Bearer ";
     public static final String JWT_HEADER_STRING = "Authorization";
+
+    public final static String MASTERDETAILS_REQUEST_PATH_API = "/api/masterdetails";
+    public final static String PROFILEFOLLOWERS_REQUEST_PATH_API = "/api/profilefollowers";
+    public final static String CHANNEL_REQUEST_PATH_API = "/api/channel";
+    public final static String CHANNELPROFILE_REQUEST_PATH_API = "/api/channelprofile";
+    public final static String PROFILETHUMBSUP_REQUEST_PATH_API = "/api/profilethumbsup";
+    public final static String PROFILETHUMBSDOWN_REQUEST_PATH_API = "/api/profilethumbsdown";
+    public final static String SOCIALREPORT_REQUEST_PATH_API = "/api/socialreport";
+    public final static String FEEDREPORT_REQUEST_PATH_API = "/api/feedreport";
+    public final static String EXPERIENCEREPORT_REQUEST_PATH_API = "/api/experiencereport";
+    public final static String FEEDBACK_REQUEST_PATH_API = "/api/feedback";
 
 }

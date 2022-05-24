@@ -1,12 +1,10 @@
 package com.vire.repository;
 
-import com.vire.dao.CommentDao;
 import com.vire.dao.CommentReplyDao;
 import com.vire.dto.CommentReplyDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

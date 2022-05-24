@@ -11,11 +11,11 @@ public class FileResponse {
     private Long fileSize;
     private Long createdTime;
     private Long updatedTime;
-    public static FileResponse fromDto(final FileDto dto) {
+    public static FileResponse fromDto(final FileDto dto, final String relativeUrl) {
         var response = new FileResponse();
         response.setFileId(dto.getFileId().toString());
         response.setMimeType(dto.getMimeType());
-        response.setFileCommonPath(dto.getFileCommonPath());
+        response.setFileCommonPath(relativeUrl + dto.getFileCommonPath());
         response.setFileSize(dto.getFileSize());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());

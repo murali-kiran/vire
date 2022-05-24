@@ -1,4 +1,9 @@
 spring:
+  mvc:
+    static-path-pattern: /content/**
+  web:
+    resources:
+      static-locations: "file:${file.path}"
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -22,13 +27,14 @@ spring:
 
 server:
   port: 8090
-
+  image:
+    path: "http://3.111.232.13:8090/content/"
 file:
   path: "D:\\image_files\\"
   type: "images"
 
 auth:
-  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/create**/**,/api/v1/personalProfile/create**/**,/file/**,/api/master/search**/**"
+  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/create**/**,/api/v1/personalProfile/create**/**,/file/**,/api/master/search**/**,/content/**"
 
 
 
