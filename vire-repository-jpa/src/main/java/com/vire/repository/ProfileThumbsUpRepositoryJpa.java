@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfileThumbsUpRepositoryJpa
-    extends JpaRepository<ProfileThumbsUpDao, Long>, JpaSpecificationExecutor<ProfileThumbsUpDao> {}
+    extends JpaRepository<ProfileThumbsUpDao, Long>, JpaSpecificationExecutor<ProfileThumbsUpDao> {
+
+    long countByProfileId(Long profileId);
+}

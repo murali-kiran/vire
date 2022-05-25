@@ -1,10 +1,12 @@
 package com.vire.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vire.dto.ProfileDto;
 import com.vire.enumeration.Gender;
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileResponse {
 
     private String token;
@@ -20,32 +22,15 @@ public class ProfileResponse {
     private Gender gender;
     private String fileId;
     private String firstLogin;
+    private Long thumbsUpCount;
+    private Long thumbsDownCount;
+    private Long friendsCount;
+    private Long starsCount;
+
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
 
 
-    /*
-    public static ProfileResponse fromDto(final ProfileDto dto){
-
-        var loginResponse = new ProfileResponse();
-        loginResponse.setProfileId(dto.getProfileId().toString());
-        loginResponse.setAadhar(dto.getAadhar());
-        loginResponse.setEmailId(dto.getEmailId());
-        loginResponse.setName(dto.getName());
-        loginResponse.setMobileNumber(dto.getMobileNumber());
-
-        if(dto.getPersonalProfile()!=null){
-            PersonalProfileResponse personalProfileResponse = new ModelMapper().map(dto.getPersonalProfile(), PersonalProfileResponse.class);
-            loginResponse.setPersonalProfile(personalProfileResponse);
-        }else {
-            FirmProfileResponse firmProfileResponse = new ModelMapper().map(dto.getFirmProfile(), FirmProfileResponse.class);
-            loginResponse.setFirmProfile(firmProfileResponse);
-        }
-
-        return loginResponse;
-    }
-
-     */
 
     public static ProfileResponse fromDto(final ProfileDto dto) {
 

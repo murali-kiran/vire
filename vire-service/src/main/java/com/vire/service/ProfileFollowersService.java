@@ -65,4 +65,8 @@ public class ProfileFollowersService {
             .map(dto -> ProfileFollowersResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+    public long getFriendCountOfProfile(Long profileId) {
+      return profileFollowersRepository.getFriendCountOfProfile(profileId,true);
+    }
 }

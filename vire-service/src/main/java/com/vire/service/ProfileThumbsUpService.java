@@ -65,4 +65,9 @@ public class ProfileThumbsUpService {
             .map(dto -> ProfileThumbsUpResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+  public long getThumbsUpCountOfProfile(Long profileId){
+    return profileThumbsUpRepository.getThumbsUpCountOfProfile(profileId);
+  }
+
 }

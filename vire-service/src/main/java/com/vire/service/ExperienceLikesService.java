@@ -65,4 +65,8 @@ public class ExperienceLikesService {
             .map(dto -> ExperienceLikesResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+    public long getLikesCountOfProfile(Long profileId) {
+      return experienceLikesRepository.getLikesCountOfProfile(profileId);
+    }
 }

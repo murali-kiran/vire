@@ -127,6 +127,11 @@ public class ProfileService {
   }
 
   public Optional<ProfileResponse> retrieveProfileById(final Long profileId) {
-    return profileRepository.retrieveProfileById(profileId).map(dto -> ProfileResponse.fromDto(dto));
+
+    return profileRepository.retrieveProfileById(profileId).map(dto -> {
+      var profileResponse =  ProfileResponse.fromDto(dto);
+          profileResponse.setType(null);
+      return profileResponse;
+    });
   }
 }
