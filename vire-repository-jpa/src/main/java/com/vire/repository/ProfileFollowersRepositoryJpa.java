@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfileFollowersRepositoryJpa
-    extends JpaRepository<ProfileFollowersDao, Long>, JpaSpecificationExecutor<ProfileFollowersDao> {}
+    extends JpaRepository<ProfileFollowersDao, Long>, JpaSpecificationExecutor<ProfileFollowersDao> {
+
+    long countDistinctFollowerIdByProfileIdAndIsFriend(Long id,Boolean isFriend);
+}

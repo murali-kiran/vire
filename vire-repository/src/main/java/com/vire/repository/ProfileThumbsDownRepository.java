@@ -69,4 +69,8 @@ public class ProfileThumbsDownRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+    public long getThumbsDownCountOfProfile(Long profileId) {
+      return profileThumbsDownRepositoryJpa.countByProfileId(profileId);
+    }
 }

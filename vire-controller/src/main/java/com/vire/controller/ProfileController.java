@@ -2,7 +2,7 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.response.ProfileResponse;
-import com.vire.service.ProfileService;
+import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,6 +25,18 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
+    @Autowired
+    ProfileThumbsDownService profileThumbsDownService;
+
+    @Autowired
+    ProfileThumbsUpService profileThumbsUpService;
+
+    @Autowired
+    ProfileFollowersService profileFollowersService;
+
+    @Autowired
+    ExperienceLikesService experienceLikesService;
+
     @Operation(summary = "Retrieve profile by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieve Profile by ID Successful",
@@ -35,9 +47,24 @@ public class ProfileController {
     @GetMapping("/{profileid}")
     public ResponseEntity<?> retrieveProfileById(@PathVariable(name = "profileid") Long profileId) {
         var response = profileService.retrieveProfileById(profileId);
+
+
         return response
                 .stream()
-                .map(profileResponse -> new ResponseEntity<>(profileResponse, HttpStatus.OK))
+                .map(profileResponse -> {
+
+                    var thumbsDownCount = profileThumbsDownService.getThumbsDownCountOfProfile(profileId);
+                    var thumbsUpCount = profileThumbsUpService.getThumbsUpCountOfProfile(profileId);
+                    var friendsCount = profileFollowersService.getFriendCountOfProfile(profileId);
+                    var starsCount = experienceLikesService.getLikesCountOfProfile(profileId);
+
+                    profileResponse.setThumbsDownCount(thumbsDownCount);
+                    profileResponse.setThumbsUpCount(thumbsUpCount);
+                    profileResponse.setFriendsCount(friendsCount);
+                    profileResponse.setStarsCount(starsCount);
+
+                    return new ResponseEntity<>(profileResponse, HttpStatus.OK);
+                })
                 .findFirst()
                 .orElse(new ResponseEntity(HttpStatus.UNAUTHORIZED));
     }

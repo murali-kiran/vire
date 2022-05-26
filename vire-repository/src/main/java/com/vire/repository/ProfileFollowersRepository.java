@@ -69,4 +69,8 @@ public class ProfileFollowersRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+    public long getFriendCountOfProfile(Long profileId,Boolean isFriend) {
+      return profileFollowersRepositoryJpa.countDistinctFollowerIdByProfileIdAndIsFriend(profileId,isFriend);
+    }
 }

@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExperienceLikesRepositoryJpa
-    extends JpaRepository<ExperienceLikesDao, Long>, JpaSpecificationExecutor<ExperienceLikesDao> {}
+    extends JpaRepository<ExperienceLikesDao, Long>, JpaSpecificationExecutor<ExperienceLikesDao> {
+
+    long countByLikerProfileId(Long id);
+}

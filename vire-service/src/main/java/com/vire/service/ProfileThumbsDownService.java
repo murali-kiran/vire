@@ -65,4 +65,8 @@ public class ProfileThumbsDownService {
             .map(dto -> ProfileThumbsDownResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+  public long getThumbsDownCountOfProfile(Long profileId){
+    return profileThumbsDownRepository.getThumbsDownCountOfProfile(profileId);
+  }
 }

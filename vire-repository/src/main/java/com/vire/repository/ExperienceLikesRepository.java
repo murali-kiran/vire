@@ -70,4 +70,8 @@ public class ExperienceLikesRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+    public long getLikesCountOfProfile(Long profileId) {
+        return experienceLikesRepositoryJpa.countByLikerProfileId(profileId);
+    }
 }
