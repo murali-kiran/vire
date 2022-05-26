@@ -69,4 +69,8 @@ public class ProfileFollowersService {
     public long getFriendCountOfProfile(Long profileId) {
       return profileFollowersRepository.getFriendCountOfProfile(profileId,true);
     }
+
+  /*public void getFriendsOfProfile(Long profileId) {
+    return profileFollowersRepository.getFriendsOfProfile(profileId,true);
+  }*/
 }
