@@ -42,4 +42,6 @@ public class VireConstants {
     public final static String EXPERIENCEREPORT_REQUEST_PATH_API = "/api/experiencereport";
     public final static String FEEDBACK_REQUEST_PATH_API = "/api/feedback";
 
+    public final static String SOCIALCATEGORYMASTER_REQUEST_PATH_API = "/api/socialcategorymaster";
+    public final static String PROFILESETTING_REQUEST_PATH_API = "/api/profilesetting";
 }
