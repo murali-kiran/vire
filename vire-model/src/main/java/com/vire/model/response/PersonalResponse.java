@@ -9,7 +9,7 @@ public class PersonalResponse {
 
     private String profileId;
     private String name;
-    private String password;
+    //private String password;
     private String emailId;
     private String mobileNumber;
     private String aadhar;
@@ -17,6 +17,10 @@ public class PersonalResponse {
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
+    private Long thumbsUpCount;
+    private Long thumbsDownCount;
+    private Long friendsCount;
+    private Long starsCount;
     private PersonalProfileResponse personalProfile;
     //private FirmProfileResponse firmProfile;
 
@@ -25,7 +29,7 @@ public class PersonalResponse {
         var personalResponse = new PersonalResponse();
         personalResponse.setProfileId(dto.getProfileId().toString());
         personalResponse.setName(dto.getName());
-        personalResponse.setPassword(dto.getPassword());
+        //personalResponse.setPassword(dto.getPassword());
         personalResponse.setEmailId(dto.getEmailId());
         personalResponse.setMobileNumber(dto.getMobileNumber());
         personalResponse.setAadhar(dto.getAadhar());

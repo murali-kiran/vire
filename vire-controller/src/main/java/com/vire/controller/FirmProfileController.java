@@ -4,8 +4,7 @@ import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.response.FirmResponse;
-import com.vire.model.response.PersonalResponse;
-import com.vire.service.ProfileService;
+import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @Validated
@@ -28,7 +26,17 @@ public class FirmProfileController {
 
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ProfileThumbsDownService profileThumbsDownService;
 
+    @Autowired
+    ProfileThumbsUpService profileThumbsUpService;
+
+    @Autowired
+    ProfileFollowersService profileFollowersService;
+
+    @Autowired
+    ExperienceLikesService experienceLikesService;
     @Operation(summary = "Create personal profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created firm profile successfully",
@@ -77,9 +85,26 @@ public class FirmProfileController {
             @ApiResponse(responseCode = "404", description = "Firm profile with this ID not exist",
                     content = @Content) })
     @GetMapping(value = "get/{profileid}")
-    public ResponseEntity<FirmResponse> retrieveFirmProfileById(@PathVariable(value = "profileid") Long profileId) {
+    public ResponseEntity retrieveFirmProfileById(@PathVariable(value = "profileid") Long profileId) {
         Optional<FirmResponse> firmResponse = profileService.retrieveFirmProfileById(profileId);
-        return firmResponse.isPresent() ? new ResponseEntity<>(firmResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
+        //return firmResponse.isPresent() ? new ResponseEntity<>(firmResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
+        return firmResponse
+                .stream()
+                .map(profile -> {
+                    var thumbsDownCount = profileThumbsDownService.getThumbsDownCountOfProfile(profileId);
+                    var thumbsUpCount = profileThumbsUpService.getThumbsUpCountOfProfile(profileId);
+                    var friendsCount = profileFollowersService.getFriendCountOfProfile(profileId);
+                    var starsCount = experienceLikesService.getLikesCountOfProfile(profileId);
+
+                    profile.setThumbsDownCount(thumbsDownCount);
+                    profile.setThumbsUpCount(thumbsUpCount);
+                    profile.setFriendsCount(friendsCount);
+                    profile.setStarsCount(starsCount);
+
+                    return new ResponseEntity<>(profile, HttpStatus.OK);
+                })
+                .findFirst()
+                .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 
    /* @GetMapping(value="/search")

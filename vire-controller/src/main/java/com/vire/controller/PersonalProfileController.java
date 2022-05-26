@@ -4,7 +4,7 @@ import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.PersonalResponse;
-import com.vire.service.ProfileService;
+import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +26,17 @@ public class PersonalProfileController {
 
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ProfileThumbsDownService profileThumbsDownService;
 
+    @Autowired
+    ProfileThumbsUpService profileThumbsUpService;
+
+    @Autowired
+    ProfileFollowersService profileFollowersService;
+
+    @Autowired
+    ExperienceLikesService experienceLikesService;
     @Operation(summary = "Create personal profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "created personal profile successfully",
@@ -81,11 +91,23 @@ public class PersonalProfileController {
             @ApiResponse(responseCode = "404", description = "Personal profile with this ID not exist",
                     content = @Content) })
     @GetMapping(value = "get/{profileid}")
-    public ResponseEntity<PersonalResponse> retrievePersonalProfileById(@PathVariable(value = "profileid") Long profileId) {
+    public ResponseEntity retrievePersonalProfileById(@PathVariable(value = "profileid") Long profileId) {
         Optional<PersonalResponse> profileResponse = profileService.retrievePersonalProfileById(profileId);
         return profileResponse
                 .stream()
-                .map(profile -> new ResponseEntity<>(profile, HttpStatus.OK))
+                .map(profile -> {
+                    var thumbsDownCount = profileThumbsDownService.getThumbsDownCountOfProfile(profileId);
+                    var thumbsUpCount = profileThumbsUpService.getThumbsUpCountOfProfile(profileId);
+                    var friendsCount = profileFollowersService.getFriendCountOfProfile(profileId);
+                    var starsCount = experienceLikesService.getLikesCountOfProfile(profileId);
+
+                    profile.setThumbsDownCount(thumbsDownCount);
+                    profile.setThumbsUpCount(thumbsUpCount);
+                    profile.setFriendsCount(friendsCount);
+                    profile.setStarsCount(starsCount);
+
+                    return new ResponseEntity<>(profile, HttpStatus.OK);
+                })
                 .findFirst()
                 .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
     }
