@@ -70,6 +70,8 @@ public class ProfileRepository {
 
         if (optionalProfile.isPresent()) {
             ProfileDao profileDao = ProfileDao.fromDto(profileDto);
+            profileDao.setPassword(optionalProfile.get().getPassword());
+            profileDao.setFirstLogin(optionalProfile.get().getFirstLogin());
             profileDao.onPreUpdate();
 
             if (profileDto.getPersonalProfile() != null) {

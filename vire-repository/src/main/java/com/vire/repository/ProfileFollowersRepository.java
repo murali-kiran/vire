@@ -73,4 +73,8 @@ public class ProfileFollowersRepository {
     public long getFriendCountOfProfile(Long profileId,Boolean isFriend) {
       return profileFollowersRepositoryJpa.countDistinctFollowerIdByProfileIdAndIsFriend(profileId,isFriend);
     }
+
+
+  /*public void getFriendsOfProfile(Long profileId, boolean b) {
+  }*/
 }

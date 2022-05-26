@@ -13,7 +13,7 @@ public class FirmRequest {
     private String profileId;
     @NotBlank(message = "Name required")
     private String name;
-    @NotBlank(message = "Password required")
+    //@NotBlank(message = "Password required")
     private String password;
     @NotBlank(message = "Profile required")
     @Pattern(regexp="^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" +

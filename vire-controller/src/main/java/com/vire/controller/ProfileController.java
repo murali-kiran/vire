@@ -69,6 +69,22 @@ public class ProfileController {
                 .orElse(new ResponseEntity(HttpStatus.UNAUTHORIZED));
     }
 
+    /*@Operation(summary = "Retrieve friends of specific profileID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieve Profile by ID Successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProfileResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Retrieve of friends by Profile ID Failed",
+                    content = @Content)})
+    @GetMapping("/{profileid}")
+    public ResponseEntity<?> retrieveFriendsofSpecificProfileById(@PathVariable(name = "profileid") Long profileId) {
+
+        profileFollowersService.getFriendsOfProfile(profileId);
+        return null;
+    }*/
+
+
+
    /* @Operation(summary = "Search Profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Seach Profile Successful",
