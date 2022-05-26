@@ -79,7 +79,7 @@ public class FileController {
     @GetMapping("/downloadFile/{fileid}")
     public ResponseEntity<Resource> downloadFile(@PathVariable(value = "fileid") Long fileid) {
             FileResponse fileResponse = fileService.retrieveById(fileid);
-            String filePath = this.filePath + File.separator + fileResponse.getFileCommonPath();
+            String filePath = this.filePath + File.separator + fileResponse.getDownloadPath();
             return fileService.retrieveFile(filePath);
     }
 
