@@ -16,16 +16,16 @@ public class MasterDetailsDao {
     @Id
     @Column(name = "master_details_id")
     private Long masterDetailsId;
-    
-
-    @Column(name = "master_id", nullable = false)
-    private Long masterId;
 
     @Column(name = "detail_type", nullable = false)
     private String detailType;
 
     @Column(name = "detail_value", nullable = false)
     private String detailValue;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "master_id")
+    private MasterDao master;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -50,7 +50,7 @@ public class MasterDetailsDao {
 
         dto.setMasterDetailsId(this.getMasterDetailsId());
         
-        dto.setMasterId(this.getMasterId());
+        dto.setMasterId(this.getMaster().getMasterId());
         dto.setDetailType(this.getDetailType());
         dto.setDetailValue(this.getDetailValue());
 
@@ -65,8 +65,6 @@ public class MasterDetailsDao {
         var masterDetails = new MasterDetailsDao();
 
         masterDetails.setMasterDetailsId(dto.getMasterDetailsId());
-        
-        masterDetails.setMasterId(dto.getMasterId());
         masterDetails.setDetailType(dto.getDetailType());
         masterDetails.setDetailValue(dto.getDetailValue());
 

@@ -134,7 +134,7 @@ public class SocialService {
                     interestSearchString.append(" OR ");
                 } else {
                     interestSearchString.append(" type:")
-                            .append("INTERESTS")
+                            .append("Interests")
                             .append(" AND ( ");
                 }
                 interestSearchString.append("( value:" + personalProfileInterestResponse.getInterest() + " )");
@@ -142,9 +142,9 @@ public class SocialService {
             }
             interestSearchString.append(" )");
 
-            String desigSearchStr = "type:DESIGNATION AND ( value:" + personalResponse.get().getPersonalProfile().getDesignation() + " )";
-            String fpbSearchStr = "type:FIELDPROFESSIONBUSINESS AND ( value:" + personalResponse.get().getPersonalProfile().getFieldProfessionBusiness() + " )";
-            String locationSearchStr = "type:LOCATION AND ( value:" + personalResponse.get().getPersonalProfile().getPresentAddress().getCityTownVillage() + " )";
+            String desigSearchStr = "type:Designation AND ( value:" + personalResponse.get().getPersonalProfile().getDesignation() + " )";
+            String fpbSearchStr = "type:Field_Profession_Business AND ( value:" + personalResponse.get().getPersonalProfile().getFieldProfessionBusiness() + " )";
+            String locationSearchStr = "type:Location AND ( value:" + personalResponse.get().getPersonalProfile().getPresentAddress().getCityTownVillage() + " )";
             //log.info("Search Interests String::::"+interestSearchString);
             List<String> searchStringList = new ArrayList<>();
             searchStringList.add(interestSearchString.toString());

@@ -24,6 +24,9 @@ public class MasterDao {
     @Column(name = "master_value", nullable = false)
     private String masterValue;
 
+    @OneToMany(mappedBy = "master", cascade = CascadeType.ALL)
+    private List<MasterDetailsDao> masterDetails;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 

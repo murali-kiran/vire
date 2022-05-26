@@ -13,4 +13,5 @@ public class MasterDto {
     private String masterValue;
     public Long createdTime;
     public Long updatedTime;
+    private  List<MasterDetailsDto> sendTo;
 }
