@@ -4,6 +4,7 @@ import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.response.FirmResponse;
+import com.vire.model.response.PersonalResponse;
 import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +50,9 @@ public class FirmProfileController {
                     content = @Content) })
     @PostMapping(value = "/create")
     public ResponseEntity<FirmResponse> createFirmProfile(@Valid @RequestBody FirmRequest request) {
-        return new ResponseEntity<>(profileService.createFirmProfile(request), HttpStatus.CREATED);
+        FirmResponse firmResponse = profileService.createFirmProfile(request);
+        setProfileCounts(Long.valueOf(firmResponse.getProfileId()),firmResponse);
+        return new ResponseEntity<>(firmResponse, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update personal profile")
@@ -61,7 +64,9 @@ public class FirmProfileController {
                     content = @Content) })
     @PutMapping(value = "/update")
     public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmRequest request) {
-        return new ResponseEntity<>(profileService.updateFirmProfile(request), HttpStatus.OK);
+        FirmResponse firmResponse = profileService.updateFirmProfile(request);
+        setProfileCounts(Long.valueOf(firmResponse.getProfileId()),firmResponse);
+        return new ResponseEntity<>(firmResponse, HttpStatus.OK);
     }
 
     @Operation(summary = "Delete firm profile")
@@ -91,15 +96,8 @@ public class FirmProfileController {
         return firmResponse
                 .stream()
                 .map(profile -> {
-                    var thumbsDownCount = profileThumbsDownService.getThumbsDownCountOfProfile(profileId);
-                    var thumbsUpCount = profileThumbsUpService.getThumbsUpCountOfProfile(profileId);
-                    var friendsCount = profileFollowersService.getFriendCountOfProfile(profileId);
-                    var starsCount = experienceLikesService.getLikesCountOfProfile(profileId);
 
-                    profile.setThumbsDownCount(thumbsDownCount);
-                    profile.setThumbsUpCount(thumbsUpCount);
-                    profile.setFriendsCount(friendsCount);
-                    profile.setStarsCount(starsCount);
+                    setProfileCounts(profileId,profile);
 
                     return new ResponseEntity<>(profile, HttpStatus.OK);
                 })
@@ -112,5 +110,14 @@ public class FirmProfileController {
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(profileService.searchProfiles(searchString), HttpStatus.OK);
     }*/
+
+    private void setProfileCounts(final Long profileId, FirmResponse response){
+
+        response.setThumbsDownCount(profileThumbsDownService.getThumbsDownCountOfProfile(profileId));
+        response.setThumbsUpCount(profileThumbsUpService.getThumbsUpCountOfProfile(profileId));
+        response.setFriendsCount(profileFollowersService.getFriendCountOfProfile(profileId));
+        response.setStarsCount(experienceLikesService.getLikesCountOfProfile(profileId));
+
+    }
 
 }

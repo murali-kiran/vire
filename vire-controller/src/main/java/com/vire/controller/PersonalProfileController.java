@@ -49,7 +49,9 @@ public class PersonalProfileController {
                     content = @Content) })
     @PostMapping(value = "/create")
     public ResponseEntity<PersonalResponse> createPersonalProfile(@Valid @RequestBody PersonalRequest request) {
-        return new ResponseEntity<>(profileService.createPersonalProfile(request), HttpStatus.CREATED);
+        PersonalResponse personalResponse = profileService.createPersonalProfile(request);
+        setProfileCounts(Long.valueOf(personalResponse.getProfileId()),personalResponse);
+        return new ResponseEntity<>(personalResponse, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update personal profile")
@@ -61,7 +63,10 @@ public class PersonalProfileController {
                     content = @Content) })
     @PutMapping(value = "/update")
     public ResponseEntity<PersonalResponse> updatePersonalProfile(@Valid @RequestBody PersonalRequest request) {
-        return new ResponseEntity<>(profileService.updatePersonalProfile(request), HttpStatus.OK);
+
+        PersonalResponse personalResponse = profileService.updatePersonalProfile(request);
+        setProfileCounts(Long.valueOf(personalResponse.getProfileId()),personalResponse);
+        return new ResponseEntity<>(personalResponse, HttpStatus.OK);
     }
 
     @Operation(summary = "Delete personal profile")
@@ -96,15 +101,7 @@ public class PersonalProfileController {
         return profileResponse
                 .stream()
                 .map(profile -> {
-                    var thumbsDownCount = profileThumbsDownService.getThumbsDownCountOfProfile(profileId);
-                    var thumbsUpCount = profileThumbsUpService.getThumbsUpCountOfProfile(profileId);
-                    var friendsCount = profileFollowersService.getFriendCountOfProfile(profileId);
-                    var starsCount = experienceLikesService.getLikesCountOfProfile(profileId);
-
-                    profile.setThumbsDownCount(thumbsDownCount);
-                    profile.setThumbsUpCount(thumbsUpCount);
-                    profile.setFriendsCount(friendsCount);
-                    profile.setStarsCount(starsCount);
+                    setProfileCounts(profileId,profile);
 
                     return new ResponseEntity<>(profile, HttpStatus.OK);
                 })
@@ -116,5 +113,14 @@ public class PersonalProfileController {
     public ResponseEntity<List<PersonalResponse>> searchPersonalProfiles(
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(profileService.searchProfiles(searchString), HttpStatus.OK);
+    }
+
+    private void setProfileCounts(final Long profileId,PersonalResponse response){
+
+        response.setThumbsDownCount(profileThumbsDownService.getThumbsDownCountOfProfile(profileId));
+        response.setThumbsUpCount(profileThumbsUpService.getThumbsUpCountOfProfile(profileId));
+        response.setFriendsCount(profileFollowersService.getFriendCountOfProfile(profileId));
+        response.setStarsCount(experienceLikesService.getLikesCountOfProfile(profileId));
+
     }
 }
