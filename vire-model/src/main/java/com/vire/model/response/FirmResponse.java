@@ -14,10 +14,10 @@ public class FirmResponse {
     private String aadhar;
     private String isAadharVerified;
     private String fileId;
-    private Long thumbsUpCount;
-    private Long thumbsDownCount;
-    private Long friendsCount;
-    private Long starsCount;
+    private Long thumbsUpCount = 0l;
+    private Long thumbsDownCount = 0l;
+    private Long friendsCount = 0l;
+    private Long starsCount = 0l;
     private FirmProfileResponse firmProfile;
 
     public static FirmResponse fromDto(final ProfileDto dto) {
@@ -31,8 +31,8 @@ public class FirmResponse {
         firmResponse.setAadhar(dto.getAadhar());
         firmResponse.setIsAadharVerified(dto.getIsAadharVerified());
         firmResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
-        firmResponse.setFileId(String.valueOf(dto.getFileId()));
-        return  firmResponse;
+        firmResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
+        return firmResponse;
         //return new ModelMapper().map(dto, FirmResponse.class);
     }
 }

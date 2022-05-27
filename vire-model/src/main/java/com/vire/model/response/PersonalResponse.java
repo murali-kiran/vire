@@ -17,10 +17,10 @@ public class PersonalResponse {
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
-    private Long thumbsUpCount;
-    private Long thumbsDownCount;
-    private Long friendsCount;
-    private Long starsCount;
+    private Long thumbsUpCount = 0l;
+    private Long thumbsDownCount = 0l;
+    private Long friendsCount = 0l;
+    private Long starsCount = 0l;
     private PersonalProfileResponse personalProfile;
     //private FirmProfileResponse firmProfile;
 
@@ -36,7 +36,7 @@ public class PersonalResponse {
         personalResponse.setIsAadharVerified(dto.getIsAadharVerified());
         personalResponse.setDateOfBirth(dto.getDateOfBirth());
         personalResponse.setGender(dto.getGender());
-        personalResponse.setFileId(String.valueOf(dto.getFileId()));
+        personalResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         personalResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
 
 
