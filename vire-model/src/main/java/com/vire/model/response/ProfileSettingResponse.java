@@ -7,11 +7,9 @@ import lombok.Data;
 public class ProfileSettingResponse {
 
     private String profileSettingId;
-    
     private String settingType;
     private Boolean isEnable;
-    private Long createdTime;
-    private Long updatedTime;
+
 
     public static ProfileSettingResponse fromDto(final ProfileSettingDto dto) {
 
@@ -20,8 +18,6 @@ public class ProfileSettingResponse {
         profileSetting.setProfileSettingId(String.valueOf(dto.getProfileSettingId()));
         profileSetting.setSettingType(dto.getSettingType());
         profileSetting.setIsEnable(dto.getIsEnable());
-        profileSetting.setCreatedTime(dto.getCreatedTime());
-        profileSetting.setUpdatedTime(dto.getUpdatedTime());
 
         return profileSetting;
     }

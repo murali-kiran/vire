@@ -3,6 +3,8 @@ package com.vire.dto;
 import com.vire.enumeration.Gender;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ProfileDto {
     private Long profileId;
@@ -17,7 +19,7 @@ public class ProfileDto {
     private Gender gender;
     private Long fileId;
     private String firstLogin;
-    //private Boolean isPersonalProfile;
+    private List<ProfileSettingDto> profileSettings;
     private PersonalProfileDto personalProfile;
     private FirmProfileDto firmProfile;
 }

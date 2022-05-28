@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "profile")
@@ -48,6 +50,9 @@ public class ProfileDao {
 
     @Column(name = "file_id", nullable = true)
     private Long fileId;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileSettingDao> profileSettings;
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -90,6 +95,18 @@ public class ProfileDao {
         profileDao.setMobileNumber(dto.getMobileNumber());
         profileDao.setFileId(dto.getFileId());
         profileDao.setFirstLogin(dto.getFirstLogin());
+
+        if (dto.getProfileSettings()!=null && !dto.getProfileSettings().isEmpty()) {
+            var profileSettings = new ArrayList<ProfileSettingDao>();
+            for (var profileSettingDto : dto.getProfileSettings()) {
+                var profileSettingDao = new ProfileSettingDao();
+                profileSettingDao.setProfileSettingId(profileSettingDto.getProfileSettingId());
+                profileSettingDao.setSettingType(profileSettingDto.getSettingType());
+                profileSettingDao.setIsEnable(profileSettingDto.getIsEnable());
+                profileSettings.add(profileSettingDao);
+            }
+            profileDao.setProfileSettings(profileSettings);
+        }
 
         if(!StringUtils.isBlank(dto.getDateOfBirth())){
             profileDao.setDateOfBirth(dto.getDateOfBirth());

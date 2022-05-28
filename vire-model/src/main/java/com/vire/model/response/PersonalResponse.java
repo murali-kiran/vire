@@ -4,6 +4,9 @@ import com.vire.dto.ProfileDto;
 import com.vire.enumeration.Gender;
 import lombok.Data;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 public class PersonalResponse {
 
@@ -21,6 +24,7 @@ public class PersonalResponse {
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
     private Long starsCount = 0l;
+    private List<ProfileSettingResponse> profileSettingTypes;
     private PersonalProfileResponse personalProfile;
     //private FirmProfileResponse firmProfile;
 
@@ -37,6 +41,10 @@ public class PersonalResponse {
         personalResponse.setDateOfBirth(dto.getDateOfBirth());
         personalResponse.setGender(dto.getGender());
         personalResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
+
+        var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
+        personalResponse.setProfileSettingTypes(profileSettingResponse);
+
         personalResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
 
 

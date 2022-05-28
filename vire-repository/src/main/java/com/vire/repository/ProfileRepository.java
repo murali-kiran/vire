@@ -2,6 +2,7 @@ package com.vire.repository;
 
 import com.vire.dao.AddressDao;
 import com.vire.dao.ProfileDao;
+import com.vire.dao.ProfileSettingDao;
 import com.vire.dto.ProfileDto;
 import com.vire.repository.search.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +32,13 @@ public class ProfileRepository {
 
         var profileDao = ProfileDao.fromDto(profileDto);
         profileDao.onPrePersist();
+
+        if (!CollectionUtils.isEmpty(profileDao.getProfileSettings())) {
+            for (var profileSettingType : profileDao.getProfileSettings()) {
+                profileSettingType.onPrePersist();
+                profileSettingType.setProfile(profileDao);
+            }
+        }
 
         if (profileDto.getPersonalProfile() != null) {
             profileDao.getPersonalProfile().onPrePersist();
@@ -73,6 +80,16 @@ public class ProfileRepository {
             profileDao.setPassword(optionalProfile.get().getPassword());
             profileDao.setFirstLogin(optionalProfile.get().getFirstLogin());
             profileDao.onPreUpdate();
+
+            if (!CollectionUtils.isEmpty(optionalProfile.get().getProfileSettings())) {
+                profileDao.setProfileSettings(optionalProfile.get().getProfileSettings()
+                        .stream()
+                        .map(profileSettingDto -> {
+                            var profileSettingDao = ProfileSettingDao.fromDto(profileSettingDto);
+                            profileSettingDao.setProfile(profileDao);
+                            return profileSettingDao;
+                        }).collect(Collectors.toList()));
+            }
 
             if (profileDto.getPersonalProfile() != null) {
                 profileDao.getPersonalProfile().onPreUpdate();

@@ -70,4 +70,11 @@ public class MasterRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+  public List<MasterDto> findByMasterType(String masterType) {
+    return masterRepositoryJpa.findByMasterType(masterType).stream()
+            .map(dao->dao.toDto())
+            .collect(Collectors.toList());
+  }
+
 }

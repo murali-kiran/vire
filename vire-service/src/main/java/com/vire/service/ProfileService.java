@@ -1,25 +1,34 @@
 package com.vire.service;
 
 
+import com.vire.cacheHandler.GenericCacheHandler;
+import com.vire.dao.MasterDao;
+import com.vire.dto.MasterDto;
+import com.vire.dto.ProfileDto;
+import com.vire.dto.ProfileSettingDto;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.model.response.ProfileResponse;
+import com.vire.repository.MasterRepository;
 import com.vire.repository.ProfileRepository;
+import com.vire.repository.ProfileSettingRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+// https://stackoverflow.com/questions/56471247/how-to-cache-data-during-application-startup-in-spring-boot-application
 @Service
 public class ProfileService {
+
   @Autowired
   Snowflake snowflake;
 
@@ -27,7 +36,12 @@ public class ProfileService {
   ProfileRepository profileRepository;
 
   @Autowired
+  GenericCacheHandler genericCacheHandler;
+
+  @Autowired
   PasswordEncoder passwordEncoder;
+
+
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
 
@@ -37,6 +51,7 @@ public class ProfileService {
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
+    setProfileSettingTypes(dto);
     dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
     dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
     return FirmResponse.fromDto(profileRepository.createProfile(dto));
@@ -52,10 +67,14 @@ public class ProfileService {
 
     verify(request.getEmailId(),request.getMobileNumber());
 
+
+
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
+
+    setProfileSettingTypes(dto);
 
     var personalProfileDto = dto.getPersonalProfile();
     personalProfileDto.setPersonalProfileId(snowflake.nextId());
@@ -133,5 +152,22 @@ public class ProfileService {
           profileResponse.setType(null);
       return profileResponse;
     });
+  }
+
+  private void setProfileSettingTypes(ProfileDto profileDto){
+    List<MasterDto> masterDtos = genericCacheHandler.getProfileSettingTypes();
+
+    if(!CollectionUtils.isEmpty(masterDtos)){
+      var profileSettings = new ArrayList<ProfileSettingDto>();
+      for(var masterDto : masterDtos){
+        var profileSetting = new ProfileSettingDto();
+        profileSetting.setProfileSettingId(snowflake.nextId());
+        profileSetting.setSettingType(masterDto.getMasterValue());
+        profileSetting.setIsEnable(false);
+        profileSettings.add(profileSetting);
+      }
+      profileDto.setProfileSettings(profileSettings);
+    }
+
   }
 }

@@ -3,6 +3,9 @@ package com.vire.model.response;
 import com.vire.dto.ProfileDto;
 import lombok.Data;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 public class FirmResponse {
 
@@ -18,6 +21,7 @@ public class FirmResponse {
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
     private Long starsCount = 0l;
+    private List<ProfileSettingResponse> profileSettingTypes;
     private FirmProfileResponse firmProfile;
 
     public static FirmResponse fromDto(final ProfileDto dto) {
@@ -32,6 +36,10 @@ public class FirmResponse {
         firmResponse.setIsAadharVerified(dto.getIsAadharVerified());
         firmResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
         firmResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
+
+        var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
+        firmResponse.setProfileSettingTypes(profileSettingResponse);
+
         return firmResponse;
         //return new ModelMapper().map(dto, FirmResponse.class);
     }
