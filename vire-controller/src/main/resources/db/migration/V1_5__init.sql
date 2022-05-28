@@ -10,7 +10,7 @@ CREATE TABLE socail_call_request (
 );
 
 
-ALTER TABLE socail_call_request ADD CONSTRAINT fk_socail_call_request_socail_id FOREIGN KEY (social_id) REFERENCES social(social_id);
+ALTER TABLE socail_call_request ADD CONSTRAINT fk_socail_call_request_socail_id FOREIGN KEY (social_id) REFERENCES t_social(social_id);
 
 replace into master (master_id, master_type, master_value, created_time, updated_time) values (3454, 'Profile_Setting_Type', 'Basic Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
 replace into master (master_id, master_type, master_value, created_time, updated_time) values (3455, 'Profile_Setting_Type', 'Contact Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));

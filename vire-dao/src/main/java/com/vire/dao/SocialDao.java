@@ -49,6 +49,8 @@ public class SocialDao {
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
 
+    @OneToMany(mappedBy = "social", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SocialCallRequestDao> socialCallRequestList;
     @PrePersist
     public void onPrePersist() {
         this.setCreatedTime(Instant.now().toEpochMilli());
@@ -96,6 +98,13 @@ public class SocialDao {
                     .collect(Collectors.toList())
             );
         }
+        if (this.getSocialCallRequestList() != null && !this.getSocialCallRequestList().isEmpty()) {
+            dto.setSocialCallRequestList(this.getSocialCallRequestList()
+                    .stream()
+                    .map(child -> child.toDto())
+                    .collect(Collectors.toList()));
+        }
+
         return dto;
     }
 
@@ -120,6 +129,15 @@ public class SocialDao {
                     .map(sendToDto -> SocialSendToDao.fromDto(sendToDto))
                     .collect(Collectors.toList())
             );
+        }
+        if (dto.getSocialCallRequestList() != null && !dto.getSocialCallRequestList().isEmpty()) {
+            dao.setSocialCallRequestList(dto.getSocialCallRequestList()
+                    .stream()
+                    .map(child -> {
+                        var childDao = SocialCallRequestDao.fromDto(child);
+                        childDao.setSocial(dao);
+                        return childDao;
+                    })                    .collect(Collectors.toList()));
         }
         return dao;
     }

@@ -5,8 +5,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name="socail_call_request")
@@ -30,8 +28,6 @@ public class SocialCallRequestDao {
     @ManyToOne
     @JoinColumn(name="social_id", nullable=false)
     private SocialDao social;
-
-
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;

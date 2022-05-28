@@ -24,6 +24,7 @@ public class SocialResponse {
     private  Long createdTime;
     private  Long updatedTime;
     private List<SocialSendToResponse> sendTo;
+    private List<SocialCallRequestResponse> socialCallRequestList;
 
     public static SocialResponse fromDto(SocialDto dto){
         var response = new SocialResponse();
@@ -44,6 +45,12 @@ public class SocialResponse {
                     .map(sendToDto -> SocialSendToResponse.fromDto(sendToDto))
                     .collect(Collectors.toList())
             );
+        }
+        if (dto.getSocialCallRequestList() != null && !dto.getSocialCallRequestList().isEmpty()) {
+            response.setSocialCallRequestList(dto.getSocialCallRequestList()
+                    .stream()
+                    .map(child -> SocialCallRequestResponse.fromDto(child))
+                    .collect(Collectors.toList()));
         }
         return response;
     }

@@ -10,8 +10,8 @@ public class SocialCallRequestResponse {
 
     private String socialCallRequestId;
     
-    private Long profileId;
-    private Long requesterProfileId;
+    private String profileId;
+    private String requesterProfileId;
     private String status;
     private Long createdTime;
     private Long updatedTime;
@@ -21,8 +21,8 @@ public class SocialCallRequestResponse {
         var socialCallRequest = new SocialCallRequestResponse();
 
         socialCallRequest.setSocialCallRequestId(String.valueOf(dto.getSocialCallRequestId()));
-        socialCallRequest.setProfileId(dto.getProfileId());
-        socialCallRequest.setRequesterProfileId(dto.getRequesterProfileId());
+        socialCallRequest.setProfileId(dto.getProfileId() == null ? null : String.valueOf(dto.getProfileId()));
+        socialCallRequest.setRequesterProfileId(dto.getRequesterProfileId() == null ? null : String.valueOf(dto.getRequesterProfileId()));
         socialCallRequest.setStatus(dto.getStatus());
         socialCallRequest.setCreatedTime(dto.getCreatedTime());
         socialCallRequest.setUpdatedTime(dto.getUpdatedTime());

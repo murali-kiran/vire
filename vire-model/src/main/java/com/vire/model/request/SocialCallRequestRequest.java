@@ -12,8 +12,8 @@ public class SocialCallRequestRequest {
 
     private String socialCallRequestId;
     
-    private Long profileId;
-    private Long requesterProfileId;
+    private String profileId;
+    private String requesterProfileId;
     private String status;
 
     public SocialCallRequestDto toDto(Snowflake snowflake) {
@@ -26,8 +26,8 @@ public class SocialCallRequestRequest {
             dto.setSocialCallRequestId(snowflake.nextId());
         }
         
-        dto.setProfileId(this.getProfileId());
-        dto.setRequesterProfileId(this.getRequesterProfileId());
+        dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
+        dto.setRequesterProfileId(this.getRequesterProfileId() == null ? null : Long.valueOf(this.getRequesterProfileId()));
         dto.setStatus(this.getStatus());
 
         return dto;

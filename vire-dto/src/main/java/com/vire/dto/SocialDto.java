@@ -18,4 +18,5 @@ public class SocialDto{
     private  Long createdTime;
     private  Long updatedTime;
     private  List<SocialSendToDto> sendTo;
+    private  List<SocialCallRequestDto> socialCallRequestList;
 }
