@@ -1,11 +1,8 @@
 package com.vire.model.request;
 
-import com.vire.utils.Snowflake;
 import com.vire.dto.SocialCallRequestDto;
+import com.vire.utils.Snowflake;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class SocialCallRequestRequest {
@@ -15,6 +12,7 @@ public class SocialCallRequestRequest {
     private String profileId;
     private String requesterProfileId;
     private String status;
+    private String socialId;
 
     public SocialCallRequestDto toDto(Snowflake snowflake) {
 
@@ -27,6 +25,7 @@ public class SocialCallRequestRequest {
         }
         
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
+        dto.setSocialId(this.getSocialId() == null ? null : Long.valueOf(this.getSocialId()));
         dto.setRequesterProfileId(this.getRequesterProfileId() == null ? null : Long.valueOf(this.getRequesterProfileId()));
         dto.setStatus(this.getStatus());
 
