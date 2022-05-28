@@ -71,7 +71,7 @@ public class SocialCallRequestDao {
         socialCallRequest.setProfileId(dto.getProfileId());
         socialCallRequest.setRequesterProfileId(dto.getRequesterProfileId());
         socialCallRequest.setStatus(dto.getStatus());
-
+        //socialCallRequest.setSocial();
         return socialCallRequest;
     }
 }

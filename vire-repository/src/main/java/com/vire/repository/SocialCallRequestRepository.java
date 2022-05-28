@@ -14,10 +14,13 @@ public class SocialCallRequestRepository {
 
   @Autowired
   SocialCallRequestRepositoryJpa socialCallRequestRepositoryJpa;
+  @Autowired
+  SocialRepositoryJpa socialRepositoryJpa;
 
   public SocialCallRequestDto create(final SocialCallRequestDto socialCallRequestDto) {
 
     var socialCallRequestDao = SocialCallRequestDao.fromDto(socialCallRequestDto);
+    socialCallRequestDao.setSocial(socialRepositoryJpa.getById(socialCallRequestDto.getSocialId()));
     socialCallRequestDao.onPrePersist();
 
     return socialCallRequestRepositoryJpa.save(socialCallRequestDao).toDto();
