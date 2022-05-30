@@ -12,6 +12,7 @@ public class SocialResponse {
 
     private  String socialId;
     private  String profileId;
+    private  MinimalProfileResponse minimalProfileResponse;
     private  String categoryId;
     private  String type;
     private  String subject;
