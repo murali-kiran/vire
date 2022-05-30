@@ -15,16 +15,22 @@ public class GenericCacheHandlerImpl implements  GenericCacheHandler {
     @Autowired
     MasterRepository masterRepository;
 
-    List<MasterDto> profileSettingTypes = new ArrayList<>();
+    List<MasterDto> personalProfileSettingTypes = new ArrayList<>();
+    List<MasterDto> firmProfileSettingTypes = new ArrayList<>();
 
     @PostConstruct
     private void loadPrerequisiteData() {
-        profileSettingTypes = masterRepository.findByMasterType("Profile_Setting_Type");
-        System.out.println(profileSettingTypes);
+        personalProfileSettingTypes = masterRepository.findByMasterType("Personal_Profile_Setting_Type");
+        firmProfileSettingTypes = masterRepository.findByMasterType("Firm_Profile_Setting_Type");
     }
 
     @Override
-    public List<MasterDto> getProfileSettingTypes() {
-        return profileSettingTypes;
+    public List<MasterDto> getPersonalProfileSettingTypes() {
+        return personalProfileSettingTypes;
+    }
+
+    @Override
+    public List<MasterDto> getFirmProfileSettingTypes(){
+        return firmProfileSettingTypes;
     }
 }

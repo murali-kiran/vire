@@ -51,7 +51,7 @@ public class ProfileService {
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
-    setProfileSettingTypes(dto);
+    setProfileSettingTypes(dto, false);
     dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
     dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
     return FirmResponse.fromDto(profileRepository.createProfile(dto));
@@ -74,7 +74,7 @@ public class ProfileService {
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
 
-    setProfileSettingTypes(dto);
+    setProfileSettingTypes(dto,true);
 
     var personalProfileDto = dto.getPersonalProfile();
     personalProfileDto.setPersonalProfileId(snowflake.nextId());
@@ -154,8 +154,8 @@ public class ProfileService {
     });
   }
 
-  private void setProfileSettingTypes(ProfileDto profileDto){
-    List<MasterDto> masterDtos = genericCacheHandler.getProfileSettingTypes();
+  private void setProfileSettingTypes(ProfileDto profileDto, Boolean isPersonalProfile){
+    List<MasterDto> masterDtos = isPersonalProfile? genericCacheHandler.getPersonalProfileSettingTypes() : genericCacheHandler.getFirmProfileSettingTypes();
 
     if(!CollectionUtils.isEmpty(masterDtos)){
       var profileSettings = new ArrayList<ProfileSettingDto>();

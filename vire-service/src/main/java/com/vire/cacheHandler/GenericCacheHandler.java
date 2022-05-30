@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface GenericCacheHandler {
 
-    public List<MasterDto> getProfileSettingTypes();
+    public List<MasterDto> getPersonalProfileSettingTypes();
+    public List<MasterDto> getFirmProfileSettingTypes();
+
 }
