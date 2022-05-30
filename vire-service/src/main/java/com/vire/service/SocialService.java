@@ -116,7 +116,9 @@ public class SocialService {
         log.info("****************duration:" + elapsedTimeInSecond);
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
-            socialPostResponses.add(retrieveSocialDetailsById(Long.valueOf(socialId)));
+            var socialPostResponse = retrieveSocialDetailsById(Long.valueOf(socialId));
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;
     }

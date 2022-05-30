@@ -5,7 +5,10 @@ import com.vire.dao.ProfileDao;
 import com.vire.dao.ProfileSettingDao;
 import com.vire.dto.ProfileDto;
 import com.vire.repository.search.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProfileRepository {
 
     @Autowired
@@ -71,6 +75,7 @@ public class ProfileRepository {
     }
 
     @Transactional
+    @CachePut(value="profileDto", key="#result.profileId")
     public ProfileDto updateProfile(final ProfileDto profileDto) {
 
         var optionalProfile = retrieveProfileById(profileDto.getProfileId());
@@ -147,6 +152,12 @@ public class ProfileRepository {
 
     public boolean isFirmProfileExists(final Long profileId){
         return firmProfileRepositoryJpa.existsById(profileId);
+    }
+
+    @Cacheable(value="profileDto", key="#profileId")
+    public ProfileDto retrieveProfileDtoById(final Long profileId) {
+        log.info("Sravan in cache");
+        return retrieveProfileById(profileId).get();
     }
 
     public Optional<ProfileDto> retrieveProfileById(final Long profileId) {

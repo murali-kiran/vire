@@ -10,6 +10,7 @@ import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
 import com.vire.model.response.FirmResponse;
+import com.vire.model.response.MinimalProfileResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.model.response.ProfileResponse;
 import com.vire.repository.MasterRepository;
@@ -152,6 +153,12 @@ public class ProfileService {
           profileResponse.setType(null);
       return profileResponse;
     });
+  }
+  public MinimalProfileResponse retrieveProfileDtoById(final Long profileId) {
+
+    var dto = profileRepository.retrieveProfileDtoById(profileId);
+    return MinimalProfileResponse.fromDto(dto);
+
   }
 
   private void setProfileSettingTypes(ProfileDto profileDto){
