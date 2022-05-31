@@ -3,6 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.PersonalRequest;
+import com.vire.model.request.PersonalUpdateRequest;
 import com.vire.model.response.PersonalResponse;
 import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +63,7 @@ public class PersonalProfileController {
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PutMapping(value = "/update")
-    public ResponseEntity<PersonalResponse> updatePersonalProfile(@Valid @RequestBody PersonalRequest request) {
+    public ResponseEntity<PersonalResponse> updatePersonalProfile(@Valid @RequestBody PersonalUpdateRequest request) {
 
         PersonalResponse personalResponse = profileService.updatePersonalProfile(request);
         setProfileCounts(Long.valueOf(personalResponse.getProfileId()),personalResponse);
