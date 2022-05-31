@@ -26,6 +26,10 @@ public class SocialPostResponse {
     private List<CommentResponse> comments;
     private List<CommentReplyResponse> commentsReply;
     private List<LikesResponse> likes;
+    private String categoryName;
+    private String categoryColorCode;
+    private String createdTimeStr;
+    private String location;
     //private List<SocialPostSentResponse> sendTo;
 
     public static SocialPostResponse fromDto(final SocialDto dto) {

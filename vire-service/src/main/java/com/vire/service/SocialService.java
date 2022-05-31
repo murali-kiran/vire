@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,10 @@ public class SocialService {
     ProfileService profileService;
     @Autowired
     SocialSendToService socialSendToService;
+    @Autowired
+    SocialCategoryMasterService socialCategoryMasterService;
 
+    private String LOCATION = null;
     public SocialResponse createSocial(final SocialRequest request) {
 
         var dto = request.toDto();
@@ -84,12 +89,19 @@ public class SocialService {
         SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
                 .map(dto -> SocialPostResponse.fromDto(dto))
                 .get();
+        SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
         List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
         List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:" + socialId);
         List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setCommentsReply(commentReplyList);
         socialPostResponse.setLikes(likesList);
+        DateFormat sdf2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
+        if(categoryMasterResponse != null) {
+            socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
+            socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
+        }
         return socialPostResponse;
     }
 
@@ -118,6 +130,7 @@ public class SocialService {
         for (String socialId : socialIds) {
             var socialPostResponse = retrieveSocialDetailsById(Long.valueOf(socialId));
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            socialPostResponse.setLocation(LOCATION);
             socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;
@@ -143,10 +156,10 @@ public class SocialService {
 
             }
             interestSearchString.append(" )");
-
+            LOCATION = personalResponse.get().getPersonalProfile().getPresentAddress().getCityTownVillage();
             String desigSearchStr = "type:Designation AND ( value:" + personalResponse.get().getPersonalProfile().getDesignation() + " )";
             String fpbSearchStr = "type:Field_Profession_Business AND ( value:" + personalResponse.get().getPersonalProfile().getFieldProfessionBusiness() + " )";
-            String locationSearchStr = "type:Location AND ( value:" + personalResponse.get().getPersonalProfile().getPresentAddress().getCityTownVillage() + " )";
+            String locationSearchStr = "type:Location AND ( value:" + LOCATION + " )";
             //log.info("Search Interests String::::"+interestSearchString);
             List<String> searchStringList = new ArrayList<>();
             searchStringList.add(interestSearchString.toString());
