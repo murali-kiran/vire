@@ -3,6 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.FirmRequest;
+import com.vire.model.request.FirmUpdateRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.service.*;
@@ -63,7 +64,7 @@ public class FirmProfileController {
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PutMapping(value = "/update")
-    public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmRequest request) {
+    public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmUpdateRequest request) {
         FirmResponse firmResponse = profileService.updateFirmProfile(request);
         setProfileCounts(Long.valueOf(firmResponse.getProfileId()),firmResponse);
         return new ResponseEntity<>(firmResponse, HttpStatus.OK);

@@ -86,7 +86,7 @@ public class ProfileRepository {
             profileDao.setFirstLogin(optionalProfile.get().getFirstLogin());
             profileDao.onPreUpdate();
 
-            if (!CollectionUtils.isEmpty(optionalProfile.get().getProfileSettings())) {
+/*            if (!CollectionUtils.isEmpty(optionalProfile.get().getProfileSettings())) {
                 profileDao.setProfileSettings(optionalProfile.get().getProfileSettings()
                         .stream()
                         .map(profileSettingDto -> {
@@ -95,6 +95,20 @@ public class ProfileRepository {
                             return profileSettingDao;
                         }).collect(Collectors.toList()));
             }
+*/
+
+            if (!CollectionUtils.isEmpty(profileDto.getProfileSettings())) {
+                profileDao.setProfileSettings(profileDto.getProfileSettings()
+                        .stream()
+                        .map(profileSettingDto -> {
+                            var profileSettingDao = ProfileSettingDao.fromDto(profileSettingDto);
+                            profileSettingDao.setProfile(profileDao);
+                            profileSettingDao.onPreUpdate();
+                            return profileSettingDao;
+                        }).collect(Collectors.toList()));
+            }
+
+
 
             if (profileDto.getPersonalProfile() != null) {
                 profileDao.getPersonalProfile().onPreUpdate();

@@ -8,7 +8,9 @@ import com.vire.dto.ProfileDto;
 import com.vire.dto.ProfileSettingDto;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
+import com.vire.model.request.FirmUpdateRequest;
 import com.vire.model.request.PersonalRequest;
+import com.vire.model.request.PersonalUpdateRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.model.response.PersonalResponse;
@@ -68,8 +70,6 @@ public class ProfileService {
 
     verify(request.getEmailId(),request.getMobileNumber());
 
-
-
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
@@ -91,11 +91,11 @@ public class ProfileService {
     return PersonalResponse.fromDto(profileRepository.createProfile(dto));
   }
 
-  public PersonalResponse updatePersonalProfile(final PersonalRequest request) {
+  public PersonalResponse updatePersonalProfile(final PersonalUpdateRequest request) {
     return PersonalResponse.fromDto(profileRepository.updateProfile(request.toDto()));
   }
 
-  public FirmResponse updateFirmProfile(final FirmRequest request) {
+  public FirmResponse updateFirmProfile(final FirmUpdateRequest request) {
     return FirmResponse.fromDto(profileRepository.updateProfile(request.toDto()));
   }
 
