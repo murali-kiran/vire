@@ -24,6 +24,12 @@ public class CommunityProfileDao {
     @Column(name="community_id", nullable=false)
     private Long communityId;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @Column(name="is_admin", nullable=false)
+    private Boolean isAdmin;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -49,6 +55,8 @@ public class CommunityProfileDao {
         
         dto.setProfileId(this.getProfileId());
         dto.setCommunityId(this.getCommunityId());
+        dto.setStatus(this.getStatus());
+        dto.setIsAdmin(this.getIsAdmin());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -62,7 +70,8 @@ public class CommunityProfileDao {
         communityProfile.setCommunityProfileId(dto.getCommunityProfileId());
         communityProfile.setCommunityId(dto.getCommunityId());
         communityProfile.setProfileId(dto.getProfileId());
-
+        communityProfile.setStatus(dto.getStatus());
+        communityProfile.setIsAdmin(dto.getIsAdmin());
         return communityProfile;
     }
 }

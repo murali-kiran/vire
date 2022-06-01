@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 public class CommunityProfileResponse {
 
     private String communityProfileId;
-    
+    private String communityId;
     private String profileId;
+    private String status;
+    private Boolean isAdmin;
     private Long createdTime;
     private Long updatedTime;
 
@@ -19,8 +21,10 @@ public class CommunityProfileResponse {
         var communityProfile = new CommunityProfileResponse();
 
         communityProfile.setCommunityProfileId(String.valueOf(dto.getCommunityProfileId()));
-        
+        communityProfile.setCommunityId(String.valueOf(dto.getCommunityId()));
         communityProfile.setProfileId(String.valueOf(dto.getProfileId()));
+        communityProfile.setStatus(dto.getStatus());
+        communityProfile.setIsAdmin(dto.getIsAdmin());
         communityProfile.setCreatedTime(dto.getCreatedTime());
         communityProfile.setUpdatedTime(dto.getUpdatedTime());
 

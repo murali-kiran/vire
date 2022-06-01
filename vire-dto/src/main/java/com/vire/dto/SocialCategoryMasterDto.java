@@ -11,6 +11,7 @@ public class SocialCategoryMasterDto {
     private Long socialCategoryMasterId;
     private String category;
     private String colorCode;
+    private Boolean isPersonal;
     private List<SocialCategoryTypeMasterDto> categoryTypeList;
     private List<SocialCategorySentToMasterDto> categorySendToList;
     public Long createdTime;

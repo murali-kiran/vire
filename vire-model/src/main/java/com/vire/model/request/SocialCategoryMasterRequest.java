@@ -14,6 +14,7 @@ public class SocialCategoryMasterRequest {
     
     private String category;
     private String colorCode;
+    private Boolean isPersonal;
     private List<SocialCategoryTypeMasterRequest> categoryTypeList;
     private List<SocialCategorySentToMasterRequest> categorySendToList;
 
@@ -29,7 +30,7 @@ public class SocialCategoryMasterRequest {
         
         dto.setCategory(this.getCategory());
         dto.setColorCode(this.getColorCode());
-
+        dto.setIsPersonal(this.getIsPersonal());
         if (this.getCategoryTypeList() != null && !this.getCategoryTypeList().isEmpty()) {
             dto.setCategoryTypeList(this.getCategoryTypeList()
                     .stream()

@@ -459,3 +459,7 @@ CREATE TABLE social_file (
 );
 ALTER TABLE social_file ADD CONSTRAINT fk_social_file_social_id FOREIGN KEY (social_id) REFERENCES t_social(social_id);
 ALTER TABLE community ADD COLUMN member_proof_required TINYINT(1) NULL DEFAULT 0 AFTER rules;
+
+ALTER TABLE social_category_master ADD COLUMN is_personal TINYINT(1) NULL DEFAULT 1 AFTER color_code;
+ALTER TABLE community_profile ADD COLUMN status VARCHAR(45) NULL AFTER community_id, ADD COLUMN is_admin TINYINT(1) NULL DEFAULT 0 AFTER status;
+ALTER TABLE channel_profile ADD COLUMN status VARCHAR(45) NULL AFTER profile_id;

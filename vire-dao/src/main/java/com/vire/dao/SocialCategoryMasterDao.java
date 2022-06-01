@@ -24,6 +24,9 @@ public class SocialCategoryMasterDao {
     @Column(name = "color_code", nullable = false)
     private String colorCode;
 
+    @Column(name = "is_personal", nullable = false)
+    private Boolean isPersonal;
+
     @OneToMany(mappedBy = "socialCategoryMaster", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialCategoryTypeMasterDao> categoryTypeList;
 
@@ -55,7 +58,7 @@ public class SocialCategoryMasterDao {
         
         dto.setCategory(this.getCategory());
         dto.setColorCode(this.getColorCode());
-
+        dto.setIsPersonal(this.getIsPersonal());
         if (this.getCategoryTypeList() != null && !this.getCategoryTypeList().isEmpty()) {
             dto.setCategoryTypeList(this.getCategoryTypeList()
                     .stream()
@@ -86,7 +89,7 @@ public class SocialCategoryMasterDao {
         
         socialCategoryMaster.setCategory(dto.getCategory());
         socialCategoryMaster.setColorCode(dto.getColorCode());
-
+        socialCategoryMaster.setIsPersonal(dto.getIsPersonal());
         if (dto.getCategoryTypeList() != null && !dto.getCategoryTypeList().isEmpty()) {
             socialCategoryMaster.setCategoryTypeList(dto.getCategoryTypeList()
                     .stream()

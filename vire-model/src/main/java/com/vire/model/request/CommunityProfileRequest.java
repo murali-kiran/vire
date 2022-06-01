@@ -20,7 +20,8 @@ public class CommunityProfileRequest {
     @NotBlank(message = "Profile id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Profile id must be numeric")
     private String profileId;
-
+    private String status;
+    private Boolean isAdmin;
     public CommunityProfileDto toDto(Snowflake snowflake) {
 
         var dto = new CommunityProfileDto();
@@ -33,7 +34,8 @@ public class CommunityProfileRequest {
         
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
         dto.setCommunityId(this.getCommunityId() == null ? null : Long.valueOf(this.getCommunityId()));
-
+        dto.setStatus(this.getStatus());
+        dto.setIsAdmin(this.getIsAdmin());
         return dto;
     }
 

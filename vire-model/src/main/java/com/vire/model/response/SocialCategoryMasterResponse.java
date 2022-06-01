@@ -12,6 +12,7 @@ public class SocialCategoryMasterResponse {
     
     private String category;
     private String colorCode;
+    private Boolean isPersonal;
     private List<SocialCategoryTypeMasterResponse> categoryTypeList;
     private List<SocialCategorySentToMasterResponse> categorySendToList;
     private Long createdTime;
@@ -24,7 +25,7 @@ public class SocialCategoryMasterResponse {
         socialCategoryMaster.setSocialCategoryMasterId(String.valueOf(dto.getSocialCategoryMasterId()));
         socialCategoryMaster.setCategory(dto.getCategory());
         socialCategoryMaster.setColorCode(dto.getColorCode());
-
+        socialCategoryMaster.setIsPersonal(dto.getIsPersonal());
         if (dto.getCategoryTypeList() != null && !dto.getCategoryTypeList().isEmpty()) {
             socialCategoryMaster.setCategoryTypeList(dto.getCategoryTypeList()
                     .stream()

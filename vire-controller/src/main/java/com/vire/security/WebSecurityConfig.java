@@ -1,6 +1,5 @@
 package com.vire.security;
 
-import com.vire.constant.VireConstants;
 import com.vire.security.jwt.AuthEntryPointJwt;
 import com.vire.security.jwt.AuthTokenFilter;
 import com.vire.security.services.UserDetailsServiceImpl;
