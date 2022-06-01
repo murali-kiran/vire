@@ -1,6 +1,7 @@
 package com.vire.model.request;
 
 import com.vire.dto.ProfileDto;
+import com.vire.dto.ProfileSettingDto;
 import com.vire.enumeration.Gender;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -36,7 +39,7 @@ public class PersonalRequest {
     @Pattern(regexp="^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-((18|19|2[0-9])[0-9]{2})$", message = "Invalid date of birth format")
     private String dateOfBirth;
     private Gender gender;
-
+    private List<ProfileSettingRequest> profileSettingTypes;
     @Valid
     private PersonalProfileRequest personalProfile;
 
@@ -54,7 +57,17 @@ public class PersonalRequest {
         profileDto.setGender(this.gender);
         profileDto.setFileId(this.getFileId() == null || !StringUtils.isNumeric(this.getFileId())? null : Long.valueOf(this.getFileId()));
         profileDto.setPersonalProfile(this.personalProfile.toDto());
-
+        if(this.getProfileSettingTypes()!=null && !this.getProfileSettingTypes().isEmpty()){
+            var profileSettingsDtos = new ArrayList<ProfileSettingDto>();
+            for(var profileSetting : this.getProfileSettingTypes()){
+                ProfileSettingDto profileSettingDto = new ProfileSettingDto();
+                profileSettingDto.setProfileSettingId(Long.valueOf(profileSetting.getProfileSettingId()));
+                profileSettingDto.setSettingType(profileSetting.getSettingType());
+                profileSettingDto.setIsEnable(profileSetting.getIsEnable());
+                profileSettingsDtos.add(profileSettingDto);
+            }
+            profileDto.setProfileSettings(profileSettingsDtos);
+        }
         return profileDto;
 
         //return  new ModelMapper().map(this,ProfileDto.class);

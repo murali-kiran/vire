@@ -37,8 +37,8 @@ public class SocialDao {
     @Column(name = "alternate_contact", length = 20)
     private String alternateContact;
 
-    @Column(name = "file_id")
-    private Long fileId;
+    /*@Column(name = "file_id")
+    private Long fileId;*/
 
     @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)
     private List<SocialSendToDao> sendTo;
@@ -51,6 +51,10 @@ public class SocialDao {
 
     @OneToMany(mappedBy = "social", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialCallRequestDao> socialCallRequestList;
+
+    @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)
+    private List<SocialFileDao> socialFileList;
+
     @PrePersist
     public void onPrePersist() {
         this.setCreatedTime(Instant.now().toEpochMilli());
@@ -61,6 +65,7 @@ public class SocialDao {
     public void onPreUpdate() {
         this.setUpdatedTime(Instant.now().toEpochMilli());
     }
+
     @Override
     public String toString() {
         return "SocialDao{" +
@@ -72,8 +77,11 @@ public class SocialDao {
                 ", description='" + description + '\'' +
                 ", contact='" + contact + '\'' +
                 ", alternateContact='" + alternateContact + '\'' +
-                ", fileId='" + fileId + '\'' +
-                ", sendTo=" + sendTo+
+                ", sendTo=" + sendTo +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                ", socialCallRequestList=" + socialCallRequestList +
+                ", socialFileList=" + socialFileList +
                 '}';
     }
 
@@ -87,7 +95,7 @@ public class SocialDao {
         dto.setDescription(this.getDescription());
         dto.setContact(this.getContact());
         dto.setAlternateContact(this.getAlternateContact());
-        dto.setFileId(this.getFileId());
+        //dto.setFileId(this.getFileId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -95,6 +103,13 @@ public class SocialDao {
             dto.setSendTo(this.getSendTo()
                     .stream()
                     .map(sendTo -> sendTo.toDto())
+                    .collect(Collectors.toList())
+            );
+        }
+        if (this.getSocialFileList() != null && !this.getSocialFileList().isEmpty()) {
+            dto.setSocialFileList(this.getSocialFileList()
+                    .stream()
+                    .map(socialFile -> socialFile.toDto())
                     .collect(Collectors.toList())
             );
         }
@@ -119,7 +134,7 @@ public class SocialDao {
         dao.setDescription(dto.getDescription());
         dao.setContact(dto.getContact());
         dao.setAlternateContact(dto.getAlternateContact());
-        dao.setFileId(dto.getFileId());
+        //dao.setFileId(dto.getFileId());
         dao.setCreatedTime(dto.getCreatedTime());
         dao.setUpdatedTime(dto.getUpdatedTime());
 
@@ -127,6 +142,13 @@ public class SocialDao {
             dao.setSendTo(dto.getSendTo()
                     .stream()
                     .map(sendToDto -> SocialSendToDao.fromDto(sendToDto))
+                    .collect(Collectors.toList())
+            );
+        }
+        if (dto.getSocialFileList() != null && !dto.getSocialFileList().isEmpty()) {
+            dao.setSocialFileList(dto.getSocialFileList()
+                    .stream()
+                    .map(socialFileDto -> SocialFileDao.fromDto(socialFileDto))
                     .collect(Collectors.toList())
             );
         }

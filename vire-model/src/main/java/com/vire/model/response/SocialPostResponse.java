@@ -42,7 +42,7 @@ public class SocialPostResponse {
         response.setDescription(dto.getDescription());
         response.setContact(dto.getContact());
         response.setAlternateContact(dto.getAlternateContact());
-        response.setFileId(String.valueOf(dto.getFileId()));
+        //response.setFileId(String.valueOf(dto.getFileId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getSendTo() != null && !dto.getSendTo().isEmpty()) {

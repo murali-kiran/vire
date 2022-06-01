@@ -1,6 +1,7 @@
 package com.vire.globalexception;
 
 import com.vire.exception.FileStorageException;
+import com.vire.exception.LoginException;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -28,22 +29,31 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IOException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorInfo handleIOException(HttpServletRequest request, Exception ex) {
-        return new ErrorInfo(request, "IO Error: " + ex.getMessage());
+        ex.printStackTrace();
+        return new ErrorInfo(request, "IO Error: IOException ");
     }
     @ExceptionHandler(FileStorageException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorInfo handleFileUploadException(HttpServletRequest request, Exception ex){
+        ex.printStackTrace();
         return new ErrorInfo(request, "FILE UPLOAD DOWNLOAD Error: " + ex.getMessage());
     }
     @ExceptionHandler(VerifyEmailMobileNumberException.class)
     @ResponseStatus(HttpStatus.FOUND)
     public ErrorInfo handleEmailMobileNumberException(HttpServletRequest request, Exception ex){
+        ex.printStackTrace();
         return new ErrorInfo(request, "ALREADY EXISTS Error: " + ex.getMessage());
+    }
+    @ExceptionHandler(LoginException.class)
+    @ResponseStatus(HttpStatus.FOUND)
+    public ErrorInfo handleLoginException(HttpServletRequest request, Exception ex){
+        ex.printStackTrace();
+        return new ErrorInfo(request, "Error: " + ex.getMessage());
     }
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorInfo handleException(HttpServletRequest request, Exception ex) {
         ex.printStackTrace();
-        return new ErrorInfo(request, "Error: " + ex.getMessage());
+        return new ErrorInfo(request, "Error: Something Went Wrong!");
     }
 }

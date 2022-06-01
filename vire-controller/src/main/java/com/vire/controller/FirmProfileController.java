@@ -3,15 +3,14 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.FirmRequest;
-import com.vire.model.request.FirmUpdateRequest;
 import com.vire.model.response.FirmResponse;
-import com.vire.model.response.PersonalResponse;
 import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping(VireConstants.FIRM_PROFILE_REQUEST_PATH_API)
+@Slf4j
 public class FirmProfileController {
 
     @Autowired
@@ -51,6 +51,7 @@ public class FirmProfileController {
                     content = @Content) })
     @PostMapping(value = "/create")
     public ResponseEntity<FirmResponse> createFirmProfile(@Valid @RequestBody FirmRequest request) {
+        log.info("*********createFirmProfile***************: "+request);
         FirmResponse firmResponse = profileService.createFirmProfile(request);
         setProfileCounts(Long.valueOf(firmResponse.getProfileId()),firmResponse);
         return new ResponseEntity<>(firmResponse, HttpStatus.CREATED);
@@ -64,7 +65,8 @@ public class FirmProfileController {
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PutMapping(value = "/update")
-    public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmUpdateRequest request) {
+    public ResponseEntity<FirmResponse> updateFirmProfile(@Valid @RequestBody FirmRequest request) {
+        log.info("*********updateFirmProfile***************: "+request);
         FirmResponse firmResponse = profileService.updateFirmProfile(request);
         setProfileCounts(Long.valueOf(firmResponse.getProfileId()),firmResponse);
         return new ResponseEntity<>(firmResponse, HttpStatus.OK);

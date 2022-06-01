@@ -128,7 +128,7 @@ public class SocialController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Social by profile by ID Successful",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class))}),
+                            schema = @Schema(implementation = SocialPostResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Find Social by profile by ID Failed",
                     content = @Content)})
     @GetMapping("socialposts/{profileid}")

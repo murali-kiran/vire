@@ -2,22 +2,17 @@ package com.vire.service;
 
 
 import com.vire.cacheHandler.GenericCacheHandler;
-import com.vire.dao.MasterDao;
 import com.vire.dto.MasterDto;
 import com.vire.dto.ProfileDto;
 import com.vire.dto.ProfileSettingDto;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
-import com.vire.model.request.FirmUpdateRequest;
 import com.vire.model.request.PersonalRequest;
-import com.vire.model.request.PersonalUpdateRequest;
 import com.vire.model.response.FirmResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.model.response.ProfileResponse;
-import com.vire.repository.MasterRepository;
 import com.vire.repository.ProfileRepository;
-import com.vire.repository.ProfileSettingRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -91,11 +86,11 @@ public class ProfileService {
     return PersonalResponse.fromDto(profileRepository.createProfile(dto));
   }
 
-  public PersonalResponse updatePersonalProfile(final PersonalUpdateRequest request) {
+  public PersonalResponse updatePersonalProfile(final PersonalRequest request) {
     return PersonalResponse.fromDto(profileRepository.updateProfile(request.toDto()));
   }
 
-  public FirmResponse updateFirmProfile(final FirmUpdateRequest request) {
+  public FirmResponse updateFirmProfile(final FirmRequest request) {
     return FirmResponse.fromDto(profileRepository.updateProfile(request.toDto()));
   }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vire.dao.ProfileDao;
+import com.vire.exception.LoginException;
 import com.vire.model.request.LoginRequest;
 import com.vire.model.response.ProfileResponse;
 import com.vire.repository.ProfileRepository;
@@ -59,13 +60,17 @@ public class LoginService {
 
      */
 
-    public Optional<ProfileResponse> login(LoginRequest loginRequest) {
+    public Optional<ProfileResponse> login(LoginRequest loginRequest) throws LoginException{
 
         Optional<ProfileResponse> loginResponse = Optional.empty();
         Authentication authentication = null;
         if(Utility.isEmailValid(loginRequest.getEmailOrphonenumber()) || Utility.isPhoneNumberValid(loginRequest.getEmailOrphonenumber())){
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrphonenumber(), loginRequest.getPassword()));
+            try {
+                authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(loginRequest.getEmailOrphonenumber(), loginRequest.getPassword()));
+            }catch (Exception e){
+                throw new LoginException(e.getMessage());
+            }
         }else{
             return Optional.empty();
         }

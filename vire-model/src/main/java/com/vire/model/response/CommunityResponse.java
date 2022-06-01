@@ -15,6 +15,7 @@ public class CommunityResponse {
     private String creatorProfileId;
     private String fileId;
     private String rules;
+    private Boolean memberProofRequired;
     //private List<CommunityProfileResponse> profiles;
     private Long createdTime;
     private Long updatedTime;
@@ -30,7 +31,7 @@ public class CommunityResponse {
         community.setCreatorProfileId(String.valueOf(dto.getCreatorProfileId()));
         community.setFileId(String.valueOf(dto.getFileId()));
         community.setRules(dto.getRules());
-
+        community.setMemberProofRequired(dto.getMemberProofRequired());
         /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             community.setProfiles(dto.getProfiles()
                     .stream()

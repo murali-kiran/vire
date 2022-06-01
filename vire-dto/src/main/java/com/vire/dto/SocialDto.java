@@ -14,9 +14,10 @@ public class SocialDto{
     private  String description;
     private  String contact;
     private  String alternateContact;
-    private  Long fileId;
+    //private  Long fileId;
     private  Long createdTime;
     private  Long updatedTime;
     private  List<SocialSendToDto> sendTo;
     private  List<SocialCallRequestDto> socialCallRequestList;
+    private List<SocialFileDto> socialFileList;
 }

@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.exception.LoginException;
 import com.vire.model.request.LoginRequest;
 import com.vire.model.response.ProfileResponse;
 import com.vire.service.LoginService;
@@ -42,7 +43,7 @@ public class LoginController {
             @ApiResponse(responseCode = "401", description = "Incorrect credentials",
                     content = @Content) })
     @PostMapping
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws LoginException {
 
         var response = loginService.login(loginRequest);
         return response

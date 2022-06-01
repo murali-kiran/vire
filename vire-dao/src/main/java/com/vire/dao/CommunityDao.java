@@ -33,6 +33,9 @@ public class CommunityDao {
     @Column(name = "rules", nullable = false)
     private String rules;
 
+    @Column(name = "member_proof_required", nullable = false)
+    private Boolean memberProofRequired;
+
     /*@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityProfileDao> profiles;*/
 
@@ -64,7 +67,7 @@ public class CommunityDao {
         dto.setCreatorProfileId(this.getCreatorProfileId());
         dto.setFileId(this.getFileId());
         dto.setRules(this.getRules());
-
+        dto.setMemberProofRequired(this.getMemberProofRequired());
         /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()
@@ -90,7 +93,7 @@ public class CommunityDao {
         community.setCreatorProfileId(dto.getCreatorProfileId());
         community.setFileId(dto.getFileId());
         community.setRules(dto.getRules());
-
+        community.setMemberProofRequired(dto.getMemberProofRequired());
         /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             community.setProfiles(dto.getProfiles()
                     .stream()

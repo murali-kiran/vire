@@ -1,27 +1,26 @@
 package com.vire.dao;
 
-import com.vire.dto.SocialSendToDto;
-import com.vire.enumeration.SendToEnum;
+import com.vire.dto.SocialFileDto;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "t_social_post_send_to")
+@Table(name="social_file")
 @Data
-public class SocialSendToDao extends BaseDao{
+public class SocialFileDao {
+
     @Id
-    @Column(name = "social_post_send_to_id", nullable = false)
-    private Long sendToId;
+    @Column(name = "social_file_id")
+    private Long socialFileId;
+    
 
-
-    @Column(name = "type", nullable = false)
-    private String type;
-
-    @Column(name = "value", length = 191)
-    private String value;
+    @Column(name = "file_id", nullable = false)
+    private Long fileId;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "social_id")
@@ -45,22 +44,28 @@ public class SocialSendToDao extends BaseDao{
         this.setUpdatedTime(Instant.now().toEpochMilli());
     }
 
-    public SocialSendToDto toDto(){
-        var dto = new SocialSendToDto();
-        dto.setSendToId(this.getSendToId());
-        dto.setType(this.getType());
-        dto.setValue(this.getValue());
-        dto.setSocialId(this.getSocial().getSocialId());
+    public SocialFileDto toDto() {
+
+        var dto = new SocialFileDto();
+
+        dto.setSocialFileId(this.getSocialFileId());
+        
+        dto.setFileId(this.getFileId());
+
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
+
         return dto;
     }
 
-    public static SocialSendToDao fromDto(SocialSendToDto dto){
-        var dao = new SocialSendToDao();
-        dao.setSendToId(dto.getSendToId());
-        dao.setType(dto.getType());
-        dao.setValue(dto.getValue());
-        return dao;
+    public static SocialFileDao fromDto(final SocialFileDto dto) {
+
+        var socialFile = new SocialFileDao();
+
+        socialFile.setSocialFileId(dto.getSocialFileId());
+        
+        socialFile.setFileId(dto.getFileId());
+
+        return socialFile;
     }
 }

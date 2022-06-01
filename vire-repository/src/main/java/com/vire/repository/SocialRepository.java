@@ -35,6 +35,12 @@ public class SocialRepository {
                 sendToDto.onPrePersist();
             }
         }
+        if (!CollectionUtils.isEmpty(socialDao.getSocialFileList())) {
+            for (var socialFile : socialDao.getSocialFileList()) {
+                socialFile.setSocial(socialDao);
+                socialFile.onPrePersist();
+            }
+        }
         socialDao.onPrePersist();
         log.info("social object:::" + socialDao);
         return socialRepositoryJpa.save(socialDao).toDto();

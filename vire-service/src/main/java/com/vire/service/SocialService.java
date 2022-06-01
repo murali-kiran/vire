@@ -44,12 +44,17 @@ public class SocialService {
     private String LOCATION = null;
     public SocialResponse createSocial(final SocialRequest request) {
 
-        var dto = request.toDto();
+        var dto = request.toDto(snowflake);
         dto.setSocialId(snowflake.nextId());
 
         if (!CollectionUtils.isEmpty(dto.getSendTo())) {
             for (var sendToDto : dto.getSendTo()) {
                 sendToDto.setSendToId(snowflake.nextId());
+            }
+        }
+        if (!CollectionUtils.isEmpty(dto.getSocialFileList())) {
+            for (var socialFileDto : dto.getSocialFileList()) {
+                socialFileDto.setSocialFileId(snowflake.nextId());
             }
         }
 
@@ -58,7 +63,7 @@ public class SocialService {
 
     public SocialResponse updateSocial(final SocialRequest request) {
 
-        var dto = request.toDto();
+        var dto = request.toDto(snowflake);
 
         return SocialResponse.fromDto(socialRepo.updateSocial(dto));
     }

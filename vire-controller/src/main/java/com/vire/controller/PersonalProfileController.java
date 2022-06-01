@@ -3,7 +3,6 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.globalexception.ErrorInfo;
 import com.vire.model.request.PersonalRequest;
-import com.vire.model.request.PersonalUpdateRequest;
 import com.vire.model.response.PersonalResponse;
 import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping(VireConstants.PERSONAL_PROFILE_REQUEST_PATH_API)
+@Slf4j
 public class PersonalProfileController {
 
     @Autowired
@@ -50,6 +51,7 @@ public class PersonalProfileController {
                     content = @Content) })
     @PostMapping(value = "/create")
     public ResponseEntity<PersonalResponse> createPersonalProfile(@Valid @RequestBody PersonalRequest request) {
+        log.info("*********createPersonalProfile***************: "+request);
         PersonalResponse personalResponse = profileService.createPersonalProfile(request);
         setProfileCounts(Long.valueOf(personalResponse.getProfileId()),personalResponse);
         return new ResponseEntity<>(personalResponse, HttpStatus.CREATED);
@@ -63,8 +65,8 @@ public class PersonalProfileController {
             @ApiResponse(responseCode = "500", description = "Invalid supplied input",
                     content = @Content) })
     @PutMapping(value = "/update")
-    public ResponseEntity<PersonalResponse> updatePersonalProfile(@Valid @RequestBody PersonalUpdateRequest request) {
-
+    public ResponseEntity<PersonalResponse> updatePersonalProfile(@Valid @RequestBody PersonalRequest request) {
+        log.info("*********updatePersonalProfile***************: "+request);
         PersonalResponse personalResponse = profileService.updatePersonalProfile(request);
         setProfileCounts(Long.valueOf(personalResponse.getProfileId()),personalResponse);
         return new ResponseEntity<>(personalResponse, HttpStatus.OK);

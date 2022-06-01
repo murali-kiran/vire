@@ -12,12 +12,12 @@ public class SocialResponse {
 
     private  String socialId;
     private  String profileId;
-    private  MinimalProfileResponse minimalProfileResponse;
+    //private  MinimalProfileResponse minimalProfileResponse;
     private  String categoryId;
     private  String type;
     private  String subject;
     private  String description;
-    private  String fileId;
+    //private  String fileId;
     private  String contact;
     private  String alternateContact;
     private int shareContact;
@@ -26,6 +26,7 @@ public class SocialResponse {
     private  Long updatedTime;
     private List<SocialSendToResponse> sendTo;
     private List<SocialCallRequestResponse> socialCallRequestList;
+    private List<SocialFileResponse> socialFileList;
 
     public static SocialResponse fromDto(SocialDto dto){
         var response = new SocialResponse();
@@ -37,7 +38,7 @@ public class SocialResponse {
         response.setDescription(dto.getDescription());
         response.setContact(dto.getContact());
         response.setAlternateContact(dto.getAlternateContact());
-        response.setFileId(String.valueOf(dto.getFileId()));
+        //response.setFileId(String.valueOf(dto.getFileId()));
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getSendTo() != null && !dto.getSendTo().isEmpty()) {
@@ -51,6 +52,12 @@ public class SocialResponse {
             response.setSocialCallRequestList(dto.getSocialCallRequestList()
                     .stream()
                     .map(child -> SocialCallRequestResponse.fromDto(child))
+                    .collect(Collectors.toList()));
+        }
+        if (dto.getSocialFileList() != null && !dto.getSocialFileList().isEmpty()) {
+            response.setSocialFileList(dto.getSocialFileList()
+                    .stream()
+                    .map(child -> SocialFileResponse.fromDto(child))
                     .collect(Collectors.toList()));
         }
         return response;

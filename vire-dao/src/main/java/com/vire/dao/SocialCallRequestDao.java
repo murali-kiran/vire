@@ -2,6 +2,7 @@ package com.vire.dao;
 
 import com.vire.dto.SocialCallRequestDto;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -27,6 +28,7 @@ public class SocialCallRequestDao {
 
     @ManyToOne
     @JoinColumn(name="social_id", nullable=false)
+    @ToString.Exclude
     private SocialDao social;
 
     @Column(name = "created_time", nullable = false , updatable = false)

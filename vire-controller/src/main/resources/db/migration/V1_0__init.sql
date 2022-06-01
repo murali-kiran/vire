@@ -1,3 +1,4 @@
+-- v1_0
 create table profile (
   profile_id bigint(20) not null,
   aadhar varchar(255) not null,
@@ -209,13 +210,13 @@ CREATE TABLE community_profile (
     PRIMARY KEY (community_profile_id)
 );
 
-CREATE TABLE `t_master_data` (
-  `master_data_id` BIGINT NOT NULL,
-  `master_data_type` BIGINT NOT NULL,
-  `master_data_value` BIGINT NOT NULL,
-  `created_time` BIGINT NOT NULL,
-  `updated_time` BIGINT NULL,
-  PRIMARY KEY (`master_data_id`)
+CREATE TABLE t_master_data (
+  master_data_id BIGINT NOT NULL,
+  master_data_type BIGINT NOT NULL,
+  master_data_value BIGINT NOT NULL,
+  created_time BIGINT NOT NULL,
+  updated_time BIGINT NULL,
+  PRIMARY KEY (master_data_id)
   );
 CREATE TABLE community (
     community_id BIGINT NOT NULL,
@@ -278,4 +279,183 @@ CREATE TABLE experience_comment_reply (
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (experience_comment_reply_id)
 );
-  ALTER TABLE community_profile ADD CONSTRAINT fk_community_profile_community_id FOREIGN KEY (community_id) REFERENCES community(community_id);
+ALTER TABLE community_profile ADD CONSTRAINT fk_community_profile_community_id FOREIGN KEY (community_id) REFERENCES community(community_id);
+
+-- v1_1
+ALTER TABLE profile ADD COLUMN first_login VARCHAR(10) NOT NULL AFTER gender;
+ALTER TABLE profile ADD COLUMN file_id varchar(191) NULL AFTER date_of_birth;
+AlTER TABLE profile ADD UNIQUE (email_id, mobile_number);
+
+
+CREATE TABLE master_details (
+    master_details_id BIGINT NOT NULL,
+    master_id BIGINT NOT NULL,
+    detail_type VARCHAR(191) NOT NULL,
+    detail_value VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (master_details_id)
+);
+
+CREATE TABLE profile_thumbsdown (
+    profile_thumbsdown_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    thumbs_up_by BIGINT NOT NULL,
+    thumbs_up_reason VARCHAR(30) NOT NULL,
+    thumbs_up_description VARCHAR(30) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (profile_thumbsdown_id)
+);
+
+CREATE TABLE profile_thumbsup (
+    profile_thumbsup_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    thumbs_up_by BIGINT NOT NULL,
+    thumbs_up_reason VARCHAR(30) NOT NULL,
+    thumbs_up_description VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (profile_thumbsup_id)
+);
+
+CREATE TABLE Feedback (
+    feedback_id BIGINT NOT NULL,
+    feedback_provider_id BIGINT NOT NULL,
+    rating TINYINT NOT NULL,
+    description VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (feedback_id)
+);
+
+CREATE TABLE experience_report (
+    experience_report_id BIGINT NOT NULL,
+    experience_id BIGINT NOT NULL,
+    reporter_id BIGINT NOT NULL,
+    report_reason VARCHAR(30) NOT NULL,
+    reportDescription VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (experience_report_id)
+);
+
+CREATE TABLE channel (
+    channel_id BIGINT NOT NULL,
+    name VARCHAR(191) NOT NULL,
+    description VARCHAR(20) NOT NULL,
+    creator_profile_id BIGINT NOT NULL,
+    file_id BIGINT NOT NULL,
+    rules VARCHAR(20) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (channel_id)
+);
+
+CREATE TABLE profile_followers (
+    profile_followers_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    follower_id BIGINT NOT NULL,
+    is_friend TINYINT(1) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (profile_followers_id)
+);
+
+CREATE TABLE Feed_report (
+    feed_report_id BIGINT NOT NULL,
+    feed_id BIGINT NOT NULL,
+    reporter_id BIGINT NOT NULL,
+    report_reason VARCHAR(30) NOT NULL,
+    reportDescription VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (feed_report_id)
+);
+
+CREATE TABLE channel_profile (
+    channel_profile_id BIGINT NOT NULL,
+    channel_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (channel_profile_id)
+);
+
+CREATE TABLE social_report (
+    social_report_id BIGINT NOT NULL,
+    social_id BIGINT NOT NULL,
+    reporter_id BIGINT NOT NULL,
+    report_reason VARCHAR(30) NOT NULL,
+    reportDescription VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (social_report_id)
+);
+ALTER TABLE channel_profile ADD CONSTRAINT fk_channel_profile_profile_id FOREIGN KEY (channel_id) REFERENCES channel(channel_id);
+
+
+CREATE TABLE social_category_send_to_master (
+    social_category_send_to_master_id BIGINT NOT NULL,
+    category_send_to VARCHAR(191) NOT NULL,
+    social_category_master_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (social_category_send_to_master_id)
+);
+
+CREATE TABLE social_category_type_master (
+    social_category_type_master_id BIGINT NOT NULL,
+    category_type VARCHAR(191) NOT NULL,
+    social_category_master_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (social_category_type_master_id)
+);
+
+CREATE TABLE profile_settings (
+    profile_settings_id BIGINT NOT NULL,
+    setting_type VARCHAR(191) NOT NULL,
+    is_enabled TINYINT(1) NOT NULL,
+    profile_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (profile_settings_id)
+);
+
+CREATE TABLE social_category_master (
+    social_category_master_id BIGINT NOT NULL,
+    category VARCHAR(191) NOT NULL,
+    color_code VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (social_category_master_id)
+);
+ALTER TABLE profile_settings ADD CONSTRAINT fk_profile_settings_profile_id FOREIGN KEY (profile_id) REFERENCES profile(profile_id);
+ALTER TABLE social_category_type_master ADD CONSTRAINT fk_social_category_type_master_social_category_master_id FOREIGN KEY (social_category_master_id) REFERENCES social_category_master(social_category_master_id);
+ALTER TABLE social_category_send_to_master ADD CONSTRAINT fk_social_category_send_to_master_social_category_master_id FOREIGN KEY (social_category_master_id) REFERENCES social_category_master(social_category_master_id);
+
+
+CREATE TABLE socail_call_request (
+    socail_call_request_id BIGINT NOT NULL,
+    social_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    requester_profile_id BIGINT NOT NULL,
+    status VARCHAR(191) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (socail_call_request_id)
+);
+ALTER TABLE socail_call_request ADD CONSTRAINT fk_socail_call_request_socail_id FOREIGN KEY (social_id) REFERENCES t_social(social_id);
+
+
+CREATE TABLE social_file (
+    social_file_id BIGINT NOT NULL,
+    social_id BIGINT NOT NULL,
+    file_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (social_file_id)
+);
+ALTER TABLE social_file ADD CONSTRAINT fk_social_file_social_id FOREIGN KEY (social_id) REFERENCES t_social(social_id);
+ALTER TABLE community ADD COLUMN member_proof_required TINYINT(1) NULL DEFAULT 0 AFTER rules;

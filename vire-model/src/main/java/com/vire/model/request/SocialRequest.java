@@ -2,6 +2,7 @@ package com.vire.model.request;
 
 //import com.vire.customvalidation.ContactNumberConstraint;
 import com.vire.dto.SocialDto;
+import com.vire.utils.Snowflake;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -24,9 +25,9 @@ public class SocialRequest {
     private  String subject;
     @NotBlank(message = "Description required")
     private  String description;
-    @NotBlank(message = "File id required")
+    /*@NotBlank(message = "File id required")
     @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
-    private  String fileId;
+    private  String fileId;*/
     @Pattern(regexp="(^$|[0-9]{10})", message = "Contact must be numeric and 10 digits")
     private  String contact;
     @Pattern(regexp="(^$|[0-9]{10})", message = "Alternate contact must be numeric and 10 digits")
@@ -34,8 +35,8 @@ public class SocialRequest {
     private  Long createdTime;
     private  Long updatedTime;
     private List<SocialSendToRequest> sendTo;
-
-    public SocialDto toDto(){
+    private List<SocialFileRequest> socialFileList;
+    public SocialDto toDto(Snowflake snowflake){
         var dto = new SocialDto();
         dto.setSocialId(this.getSocialId() == null ? null : Long.valueOf(this.getSocialId()));
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
@@ -45,7 +46,7 @@ public class SocialRequest {
         dto.setDescription(this.getDescription());
         dto.setContact(this.getContact());
         dto.setAlternateContact(this.getAlternateContact());
-        dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        //dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
         if (this.getSendTo() != null && !this.getSendTo().isEmpty()) {
@@ -55,6 +56,13 @@ public class SocialRequest {
                     .collect(Collectors.toList())
             );
         }
+        if (this.getSocialFileList() != null && !this.getSocialFileList().isEmpty()) {
+            dto.setSocialFileList(this.getSocialFileList()
+                    .stream()
+                    .map(child -> child.toDto(snowflake))
+                    .collect(Collectors.toList()));
+        }
+
         return dto;
     }
 }
