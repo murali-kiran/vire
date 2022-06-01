@@ -13,55 +13,80 @@ import java.util.stream.Collectors;
 @Service
 public class CommunityService {
 
-  @Autowired
-  CommunityRepository communityRepository;
-  @Autowired
-  Snowflake snowflake;
+    @Autowired
+    CommunityRepository communityRepository;
 
-  public CommunityResponse create(final CommunityRequest request) {
+    @Autowired
+    ProfileService profileService;
 
-    var dto = request.toDto(snowflake);
+    @Autowired
+    Snowflake snowflake;
 
-    return CommunityResponse.fromDto(communityRepository.create(dto));
-  }
+    public CommunityResponse create(final CommunityRequest request) {
 
-  public CommunityResponse update(final CommunityRequest request) {
+        var dto = request.toDto(snowflake);
 
-    var dto = request.toDto();
+        return CommunityResponse.fromDto(communityRepository.create(dto));
+    }
 
-    return CommunityResponse.fromDto(communityRepository.update(dto));
-  }
+    public CommunityResponse update(final CommunityRequest request) {
 
-  public CommunityResponse delete(final Long communityId) {
+        var dto = request.toDto();
 
-    return communityRepository.delete(communityId)
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .get();
-  }
+        return CommunityResponse.fromDto(communityRepository.update(dto));
+    }
 
-  public List<CommunityResponse> getAll() {
+    public CommunityResponse delete(final Long communityId) {
 
-    return communityRepository
-            .getAll()
-            .stream()
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .collect(Collectors.toList());
-  }
+        return communityRepository.delete(communityId)
+                .map(dto -> CommunityResponse.fromDto(dto))
+                .get();
+    }
 
-  public CommunityResponse retrieveById(Long communityId) {
+    public List<CommunityResponse> getAll() {
 
-    return communityRepository
-            .retrieveById(communityId)
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .get();
-  }
+        return communityRepository
+                .getAll()
+                .stream()
+                .map(dto -> CommunityResponse.fromDto(dto))
+                .collect(Collectors.toList());
+    }
 
-  public List<CommunityResponse> search(final String searchString) {
+    public CommunityResponse retrieveById(Long communityId) {
 
-    return communityRepository
-            .search(searchString)
-            .stream()
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .collect(Collectors.toList());
-  }
+        return communityRepository
+                .retrieveById(communityId)
+                .map(dto -> CommunityResponse.fromDto(dto))
+                .get();
+    }
+
+    public List<CommunityResponse> search(final String searchString) {
+
+        return communityRepository
+                .search(searchString)
+                .stream()
+                .map(dto -> CommunityResponse.fromDto(dto))
+                .collect(Collectors.toList());
+    }
+
+    private CommunityResponse profileLoader(CommunityResponse response) {
+
+        if (response.getCreatorProfile() != null
+                && response.getCreatorProfile().getProfileId() != null) {
+            response.getCreatorProfile().cloneProperties(
+                    profileService.retrieveProfileDtoById(
+                            Long.valueOf(response.getCreatorProfile().getProfileId())));
+        }
+
+        if (response.getCreatorProfile() != null) {
+            for (var communityProfiles : response.getCommunityProfiles()) {
+                if (communityProfiles.getProfile() != null) {
+                    communityProfiles.getProfile().cloneProperties(
+                            profileService.retrieveProfileDtoById(
+                                    Long.valueOf(communityProfiles.getProfile().getProfileId())));
+                }
+            }
+        }
+        return response;
+    }
 }

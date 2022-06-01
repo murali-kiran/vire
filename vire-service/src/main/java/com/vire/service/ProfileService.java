@@ -149,6 +149,7 @@ public class ProfileService {
       return profileResponse;
     });
   }
+  
   public MinimalProfileResponse retrieveProfileDtoById(final Long profileId) {
 
     var dto = profileRepository.retrieveProfileDtoById(profileId);

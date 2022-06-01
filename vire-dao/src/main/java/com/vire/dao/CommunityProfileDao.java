@@ -16,13 +16,16 @@ public class CommunityProfileDao {
     @Id
     @Column(name = "community_profile_id")
     private Long communityProfileId;
-    
 
     @Column(name = "profile_id", nullable = false)
     private Long profileId;
 
     @Column(name="community_id", nullable=false)
     private Long communityId;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "community_id")
+    private CommunityDao community;
 
     @Column(name = "status", nullable = false)
     private String status;

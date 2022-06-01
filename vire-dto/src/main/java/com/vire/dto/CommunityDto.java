@@ -15,7 +15,7 @@ public class CommunityDto {
     private Long fileId;
     private String rules;
     private Boolean memberProofRequired;
-    //private List<CommunityProfileDto> profiles;
+    private List<CommunityProfileDto> communityProfiles;
     public Long createdTime;
     public Long updatedTime;
 }
