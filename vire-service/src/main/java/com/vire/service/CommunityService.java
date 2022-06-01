@@ -90,6 +90,7 @@ public class CommunityService {
                                     Long.valueOf(communityProfile.getProfile().getProfileId())));
                 }
             }
+            response.setCommunityProfiles(communityProfileList);
         }
         return response;
     }
