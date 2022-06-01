@@ -23,10 +23,6 @@ public class CommunityProfileDao {
     @Column(name="community_id", nullable=false)
     private Long communityId;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "community_id")
-    private CommunityDao community;
-
     @Column(name = "status", nullable = false)
     private String status;
 

@@ -17,6 +17,7 @@ public class CommunityDao {
     @Column(name = "community_id")
     private Long communityId;
 
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -35,8 +36,8 @@ public class CommunityDao {
     @Column(name = "member_proof_required", nullable = false)
     private Boolean memberProofRequired;
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommunityProfileDao> communityProfiles;
+    /*@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityProfileDao> profiles;*/
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -67,13 +68,13 @@ public class CommunityDao {
         dto.setFileId(this.getFileId());
         dto.setRules(this.getRules());
         dto.setMemberProofRequired(this.getMemberProofRequired());
-
-        if (this.getCommunityProfiles() != null && !this.getCommunityProfiles().isEmpty()) {
-            dto.setCommunityProfiles(this.getCommunityProfiles()
+        /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
+            dto.setProfiles(this.getProfiles()
                     .stream()
                     .map(child -> child.toDto())
                     .collect(Collectors.toList()));
-        }
+        }*/
+
 
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());

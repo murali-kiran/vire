@@ -20,6 +20,9 @@ public class CommunityService {
     ProfileService profileService;
 
     @Autowired
+    CommunityProfileService communityProfileService;
+
+    @Autowired
     Snowflake snowflake;
 
     public CommunityResponse create(final CommunityRequest request) {
@@ -39,7 +42,7 @@ public class CommunityService {
     public CommunityResponse delete(final Long communityId) {
 
         return communityRepository.delete(communityId)
-                .map(dto -> CommunityResponse.fromDto(dto))
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
                 .get();
     }
 
@@ -48,7 +51,7 @@ public class CommunityService {
         return communityRepository
                 .getAll()
                 .stream()
-                .map(dto -> CommunityResponse.fromDto(dto))
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +59,7 @@ public class CommunityService {
 
         return communityRepository
                 .retrieveById(communityId)
-                .map(dto -> CommunityResponse.fromDto(dto))
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
                 .get();
     }
 
@@ -65,7 +68,7 @@ public class CommunityService {
         return communityRepository
                 .search(searchString)
                 .stream()
-                .map(dto -> CommunityResponse.fromDto(dto))
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
                 .collect(Collectors.toList());
     }
 
@@ -78,12 +81,13 @@ public class CommunityService {
                             Long.valueOf(response.getCreatorProfile().getProfileId())));
         }
 
-        if (response.getCreatorProfile() != null) {
-            for (var communityProfiles : response.getCommunityProfiles()) {
-                if (communityProfiles.getProfile() != null) {
-                    communityProfiles.getProfile().cloneProperties(
+        var communityProfileList = communityProfileService.retrieveByCommunityId(response.getCommunityId());
+        if (communityProfileList != null) {
+            for (var communityProfile : communityProfileList) {
+                if (communityProfile.getProfile() != null) {
+                    communityProfile.getProfile().cloneProperties(
                             profileService.retrieveProfileDtoById(
-                                    Long.valueOf(communityProfiles.getProfile().getProfileId())));
+                                    Long.valueOf(communityProfile.getProfile().getProfileId())));
                 }
             }
         }
