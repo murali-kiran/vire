@@ -24,6 +24,7 @@ public class ProfileResponse {
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
+    private Integer profileWeightage;
     private String firstLogin;
     private Long thumbsUpCount = 0l;
     private Long thumbsDownCount = 0l;
@@ -49,6 +50,7 @@ public class ProfileResponse {
         profileResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         profileResponse.setDateOfBirth(dto.getDateOfBirth());
         profileResponse.setFirstLogin(dto.getFirstLogin());
+        profileResponse.setProfileWeightage(dto.getProfileWeightage());
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         profileResponse.setProfileSettingTypes(profileSettingResponse);
 

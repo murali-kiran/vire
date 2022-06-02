@@ -20,6 +20,7 @@ public class PersonalResponse {
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
+    private Integer profileWeightage;
     private Long thumbsUpCount = 0l;
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
@@ -41,6 +42,7 @@ public class PersonalResponse {
         personalResponse.setDateOfBirth(dto.getDateOfBirth());
         personalResponse.setGender(dto.getGender());
         personalResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
+        personalResponse.setProfileWeightage(dto.getProfileWeightage());
 
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         personalResponse.setProfileSettingTypes(profileSettingResponse);

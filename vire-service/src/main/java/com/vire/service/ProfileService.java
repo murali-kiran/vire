@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,12 @@ public class ProfileService {
 
     verify(request.getEmailId(),request.getMobileNumber());
 
+    request.getProfileSettingTypes().clear();
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
+    dto.setProfileWeightage(calculateFirmProfileWeightage(request));
     setProfileSettingTypes(dto, false);
     dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
     dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
@@ -65,10 +68,12 @@ public class ProfileService {
 
     verify(request.getEmailId(),request.getMobileNumber());
 
+    request.getProfileSettingTypes().clear();
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
+    dto.setProfileWeightage(calculatePersonalProfileWeightage(request));
 
     setProfileSettingTypes(dto,true);
 
@@ -87,11 +92,15 @@ public class ProfileService {
   }
 
   public PersonalResponse updatePersonalProfile(final PersonalRequest request) {
-    return PersonalResponse.fromDto(profileRepository.updateProfile(request.toDto()));
+    var dto = request.toDto();
+    dto.setProfileWeightage(calculatePersonalProfileWeightage(request));
+    return PersonalResponse.fromDto(profileRepository.updateProfile(dto));
   }
 
   public FirmResponse updateFirmProfile(final FirmRequest request) {
-    return FirmResponse.fromDto(profileRepository.updateProfile(request.toDto()));
+    var dto = request.toDto();
+    dto.setProfileWeightage(calculateFirmProfileWeightage(request));
+    return FirmResponse.fromDto(profileRepository.updateProfile(dto));
   }
 
   public Optional<PersonalResponse> deletePersonalProfile(final Long profileId) {
@@ -172,5 +181,67 @@ public class ProfileService {
       profileDto.setProfileSettings(profileSettings);
     }
 
+  }
+
+  private int calculatePersonalProfileWeightage(PersonalRequest request){
+
+    int totalCount = 27;
+    int count=0;
+
+    if(!StringUtils.isBlank(request.getName())) count++;
+    if(!StringUtils.isBlank(request.getEmailId())) count++;
+    if(!StringUtils.isBlank(request.getMobileNumber())) count++;
+    if(!StringUtils.isBlank(request.getAadhar())) count++;
+    if(!StringUtils.isBlank(request.getIsAadharVerified())) count++;
+    if(!StringUtils.isBlank(request.getFileId())) count++;
+    if(!StringUtils.isBlank(request.getDateOfBirth())) count++;
+    if(!StringUtils.isBlank(request.getGender().name())) count++;
+
+    var personalProfileRequest = request.getPersonalProfile();
+
+    if(!StringUtils.isBlank(personalProfileRequest.getSchoolBoard())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getSchoolName())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getIntermediateBoard())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getIntermediateCollegeName())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getGraduationBoard())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getGraduationCollegeName())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getPostGraduationBoard())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getPostGraduationCollegeName())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getWorkStatus().name())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getFieldProfessionBusiness())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getProductOrService())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getDesignation())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getOrganizationLocation())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getOrganizationName())) count++;
+    if(!StringUtils.isBlank(personalProfileRequest.getBloodGroup())) count++;
+
+    if(!StringUtils.isBlank(personalProfileRequest.getBloodDonateWillingness().name())) count++;
+    if(personalProfileRequest.getPresentAddress()!=null) count++;
+    if(personalProfileRequest.getPermanentAddress()!=null) count++;
+    if(!CollectionUtils.isEmpty(personalProfileRequest.getInterests())) count++;
+
+    return (count/totalCount)*100;
+  }
+
+
+  private int calculateFirmProfileWeightage(FirmRequest request){
+    int totalCount = 10;
+    int count=0;
+
+    if(!StringUtils.isBlank(request.getName())) count++;
+    if(!StringUtils.isBlank(request.getEmailId())) count++;
+    if(!StringUtils.isBlank(request.getMobileNumber())) count++;
+    if(!StringUtils.isBlank(request.getAadhar())) count++;
+    if(!StringUtils.isBlank(request.getIsAadharVerified())) count++;
+    if(!StringUtils.isBlank(request.getFileId())) count++;
+
+    var firmProfileRequest = request.getFirmProfile();
+
+    if(!StringUtils.isBlank(firmProfileRequest.getFirmAddress())) count++;
+    if(!StringUtils.isBlank(firmProfileRequest.getFieldOfBusiness())) count++;
+    if(!StringUtils.isBlank(firmProfileRequest.getProductOrService())) count++;
+    if(firmProfileRequest.getAddress()!=null) count++;
+
+    return (count/totalCount)*100;
   }
 }

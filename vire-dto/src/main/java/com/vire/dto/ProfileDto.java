@@ -19,6 +19,7 @@ public class ProfileDto {
     private Gender gender;
     private Long fileId;
     private String firstLogin;
+    private Integer profileWeightage;
     private List<ProfileSettingDto> profileSettings;
     private PersonalProfileDto personalProfile;
     private FirmProfileDto firmProfile;
