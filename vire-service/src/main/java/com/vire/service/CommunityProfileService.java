@@ -57,6 +57,10 @@ public class CommunityProfileService {
             .get();
   }
 
+  public List<CommunityProfileResponse> retrieveByCommunityId(String communityId) {
+    return this.search("communityId:"+communityId);
+  }
+
   public List<CommunityProfileResponse> search(final String searchString) {
 
     return communityProfileRepository

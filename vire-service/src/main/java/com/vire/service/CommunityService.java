@@ -13,55 +13,85 @@ import java.util.stream.Collectors;
 @Service
 public class CommunityService {
 
-  @Autowired
-  CommunityRepository communityRepository;
-  @Autowired
-  Snowflake snowflake;
+    @Autowired
+    CommunityRepository communityRepository;
 
-  public CommunityResponse create(final CommunityRequest request) {
+    @Autowired
+    ProfileService profileService;
 
-    var dto = request.toDto(snowflake);
+    @Autowired
+    CommunityProfileService communityProfileService;
 
-    return CommunityResponse.fromDto(communityRepository.create(dto));
-  }
+    @Autowired
+    Snowflake snowflake;
 
-  public CommunityResponse update(final CommunityRequest request) {
+    public CommunityResponse create(final CommunityRequest request) {
 
-    var dto = request.toDto();
+        var dto = request.toDto(snowflake);
 
-    return CommunityResponse.fromDto(communityRepository.update(dto));
-  }
+        return CommunityResponse.fromDto(communityRepository.create(dto));
+    }
 
-  public CommunityResponse delete(final Long communityId) {
+    public CommunityResponse update(final CommunityRequest request) {
 
-    return communityRepository.delete(communityId)
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .get();
-  }
+        var dto = request.toDto();
 
-  public List<CommunityResponse> getAll() {
+        return CommunityResponse.fromDto(communityRepository.update(dto));
+    }
 
-    return communityRepository
-            .getAll()
-            .stream()
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .collect(Collectors.toList());
-  }
+    public CommunityResponse delete(final Long communityId) {
 
-  public CommunityResponse retrieveById(Long communityId) {
+        return communityRepository.delete(communityId)
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .get();
+    }
 
-    return communityRepository
-            .retrieveById(communityId)
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .get();
-  }
+    public List<CommunityResponse> getAll() {
 
-  public List<CommunityResponse> search(final String searchString) {
+        return communityRepository
+                .getAll()
+                .stream()
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+    }
 
-    return communityRepository
-            .search(searchString)
-            .stream()
-            .map(dto -> CommunityResponse.fromDto(dto))
-            .collect(Collectors.toList());
-  }
+    public CommunityResponse retrieveById(Long communityId) {
+
+        return communityRepository
+                .retrieveById(communityId)
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .get();
+    }
+
+    public List<CommunityResponse> search(final String searchString) {
+
+        return communityRepository
+                .search(searchString)
+                .stream()
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+    }
+
+    private CommunityResponse profileLoader(CommunityResponse response) {
+
+        if (response.getCreatorProfile() != null
+                && response.getCreatorProfile().getProfileId() != null) {
+            response.getCreatorProfile().cloneProperties(
+                    profileService.retrieveProfileDtoById(
+                            Long.valueOf(response.getCreatorProfile().getProfileId())));
+        }
+
+        var communityProfileList = communityProfileService.retrieveByCommunityId(response.getCommunityId());
+        if (communityProfileList != null) {
+            for (var communityProfile : communityProfileList) {
+                if (communityProfile.getProfile() != null) {
+                    communityProfile.getProfile().cloneProperties(
+                            profileService.retrieveProfileDtoById(
+                                    Long.valueOf(communityProfile.getProfile().getProfileId())));
+                }
+            }
+            response.setCommunityProfiles(communityProfileList);
+        }
+        return response;
+    }
 }

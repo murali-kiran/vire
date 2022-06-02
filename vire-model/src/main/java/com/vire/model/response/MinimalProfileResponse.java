@@ -25,4 +25,9 @@ public class MinimalProfileResponse {
         return profileResponse;
     }
 
+    public void cloneProperties(MinimalProfileResponse response){
+        this.setProfileId(response.getProfileId());
+        this.setName(response.getName());
+        this.setFileId(response.getFileId());
+    }
 }

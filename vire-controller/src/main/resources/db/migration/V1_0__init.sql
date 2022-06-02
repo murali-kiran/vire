@@ -279,6 +279,7 @@ CREATE TABLE experience_comment_reply (
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (experience_comment_reply_id)
 );
+
 ALTER TABLE community_profile ADD CONSTRAINT fk_community_profile_community_id FOREIGN KEY (community_id) REFERENCES community(community_id);
 
 -- v1_1
@@ -461,5 +462,6 @@ ALTER TABLE social_file ADD CONSTRAINT fk_social_file_social_id FOREIGN KEY (soc
 ALTER TABLE community ADD COLUMN member_proof_required TINYINT(1) NULL DEFAULT 0 AFTER rules;
 
 ALTER TABLE social_category_master ADD COLUMN is_personal TINYINT(1) NULL DEFAULT 1 AFTER color_code;
-ALTER TABLE community_profile ADD COLUMN status VARCHAR(45) NULL AFTER community_id, ADD COLUMN is_admin TINYINT(1) NULL DEFAULT 0 AFTER status;
+ALTER TABLE community_profile ADD COLUMN status VARCHAR(45) NULL AFTER community_id;
+ALTER TABLE community_profile ADD COLUMN is_admin TINYINT(1) NULL DEFAULT 0 AFTER status;
 ALTER TABLE channel_profile ADD COLUMN status VARCHAR(45) NULL AFTER profile_id;

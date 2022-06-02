@@ -16,7 +16,7 @@ public class CommunityDao {
     @Id
     @Column(name = "community_id")
     private Long communityId;
-    
+
 
     @Column(name = "name", nullable = false)
     private String name;

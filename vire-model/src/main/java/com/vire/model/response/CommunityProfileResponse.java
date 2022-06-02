@@ -2,6 +2,7 @@ package com.vire.model.response;
 
 import com.vire.dto.CommunityProfileDto;
 import lombok.Data;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,7 @@ public class CommunityProfileResponse {
 
     private String communityProfileId;
     private String communityId;
-    private String profileId;
+    private MinimalProfileResponse profile;
     private String status;
     private Boolean isAdmin;
     private Long createdTime;
@@ -22,7 +23,13 @@ public class CommunityProfileResponse {
 
         communityProfile.setCommunityProfileId(String.valueOf(dto.getCommunityProfileId()));
         communityProfile.setCommunityId(String.valueOf(dto.getCommunityId()));
-        communityProfile.setProfileId(String.valueOf(dto.getProfileId()));
+
+        if (dto.getProfileId() != null) {
+            var minProfileRes = new MinimalProfileResponse();
+            minProfileRes.setProfileId(String.valueOf(dto.getProfileId()));
+            communityProfile.setProfile(minProfileRes);
+        }
+
         communityProfile.setStatus(dto.getStatus());
         communityProfile.setIsAdmin(dto.getIsAdmin());
         communityProfile.setCreatedTime(dto.getCreatedTime());
