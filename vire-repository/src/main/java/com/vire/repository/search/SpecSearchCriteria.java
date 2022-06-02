@@ -52,6 +52,10 @@ public class SpecSearchCriteria {
     }
     this.key = key;
     this.operation = op;
-    this.value = value;
+    if("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)){
+      this.value=Boolean.valueOf(value);
+    }else {
+      this.value = value;
+    }
   }
 }
