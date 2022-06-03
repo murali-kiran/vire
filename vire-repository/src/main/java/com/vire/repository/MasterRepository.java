@@ -5,6 +5,7 @@ import com.vire.dto.MasterDto;
 import com.vire.repository.MasterRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +72,7 @@ public class MasterRepository {
             .collect(Collectors.toList());
   }
 
+  @Cacheable(value="masterDto", key="#masterType")
   public List<MasterDto> findByMasterType(String masterType) {
     return masterRepositoryJpa.findByMasterType(masterType).stream()
             .map(dao->dao.toDto())

@@ -1,7 +1,6 @@
 package com.vire.service;
 
 
-import com.vire.cacheHandler.GenericCacheHandler;
 import com.vire.dto.MasterDto;
 import com.vire.dto.ProfileDto;
 import com.vire.dto.ProfileSettingDto;
@@ -12,6 +11,7 @@ import com.vire.model.response.FirmResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.model.response.PersonalResponse;
 import com.vire.model.response.ProfileResponse;
+import com.vire.repository.MasterRepository;
 import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +35,10 @@ public class ProfileService {
   ProfileRepository profileRepository;
 
   @Autowired
-  GenericCacheHandler genericCacheHandler;
+  MasterRepository masterRepository;
 
   @Autowired
   PasswordEncoder passwordEncoder;
-
 
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
@@ -167,7 +166,7 @@ public class ProfileService {
   }
 
   private void setProfileSettingTypes(ProfileDto profileDto, Boolean isPersonalProfile){
-    List<MasterDto> masterDtos = isPersonalProfile? genericCacheHandler.getPersonalProfileSettingTypes() : genericCacheHandler.getFirmProfileSettingTypes();
+      List<MasterDto> masterDtos = isPersonalProfile? masterRepository.findByMasterType("Personal_Profile_Setting_Type") : masterRepository.findByMasterType("Firm_Profile_Setting_Type");
 
     if(!CollectionUtils.isEmpty(masterDtos)){
       var profileSettings = new ArrayList<ProfileSettingDto>();
