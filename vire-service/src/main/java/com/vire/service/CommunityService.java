@@ -1,11 +1,14 @@
 package com.vire.service;
 
+import com.vire.dto.CommunityProfileDto;
+import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.request.CommunityRequest;
 import com.vire.model.response.CommunityResponse;
 import com.vire.repository.CommunityRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,11 +28,21 @@ public class CommunityService {
     @Autowired
     Snowflake snowflake;
 
+    @Transactional
     public CommunityResponse create(final CommunityRequest request) {
 
-        var dto = request.toDto(snowflake);
+        var communityDto = request.toDto(snowflake);
+        communityDto =  communityRepository.create(communityDto);
 
-        return CommunityResponse.fromDto(communityRepository.create(dto));
+        var communityProfileRequest = new CommunityProfileRequest();
+
+        communityProfileRequest.setCommunityId(communityDto.getCommunityId().toString());
+        communityProfileRequest.setProfileId(communityDto.getCreatorProfileId().toString());
+        communityProfileRequest.setIsAdmin(true);
+        communityProfileRequest.setStatus("Accepted");
+        communityProfileService.create(communityProfileRequest);
+
+        return CommunityResponse.fromDto(communityDto);
     }
 
     public CommunityResponse update(final CommunityRequest request) {
