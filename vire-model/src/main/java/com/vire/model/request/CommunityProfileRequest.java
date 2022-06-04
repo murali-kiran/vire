@@ -22,6 +22,7 @@ public class CommunityProfileRequest {
     private String profileId;
     private String status;
     private Boolean isAdmin;
+    private String fileId;
     public CommunityProfileDto toDto(Snowflake snowflake) {
 
         var dto = new CommunityProfileDto();
@@ -35,6 +36,7 @@ public class CommunityProfileRequest {
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
         dto.setCommunityId(this.getCommunityId() == null ? null : Long.valueOf(this.getCommunityId()));
         dto.setStatus(this.getStatus());
+        dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setIsAdmin(this.getIsAdmin());
         return dto;
     }

@@ -45,4 +45,6 @@ public class VireConstants {
     public final static String SOCIALCATEGORYMASTER_REQUEST_PATH_API = "/api/socialcategorymaster";
     public final static String PROFILESETTING_REQUEST_PATH_API = "/api/profilesetting";
     public final static String SOCIALCALLREQUEST_REQUEST_PATH_API = "/api/socialcallrequest";
+
+    public final static String LOCATIONMASTER_REQUEST_PATH_API = "/api/locationmaster";
 }

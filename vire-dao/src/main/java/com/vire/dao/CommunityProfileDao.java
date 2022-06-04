@@ -29,6 +29,9 @@ public class CommunityProfileDao {
     @Column(name="is_admin", nullable=false)
     private Boolean isAdmin;
 
+    @Column(name = "file_id")
+    private Long fileId;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -56,6 +59,7 @@ public class CommunityProfileDao {
         dto.setCommunityId(this.getCommunityId());
         dto.setStatus(this.getStatus());
         dto.setIsAdmin(this.getIsAdmin());
+        dto.setFileId(this.getFileId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -71,6 +75,7 @@ public class CommunityProfileDao {
         communityProfile.setProfileId(dto.getProfileId());
         communityProfile.setStatus(dto.getStatus());
         communityProfile.setIsAdmin(dto.getIsAdmin());
+        communityProfile.setFileId(dto.getFileId());
         return communityProfile;
     }
 }
