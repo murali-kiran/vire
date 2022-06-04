@@ -44,6 +44,19 @@ public class LocationMasterController {
     return new ResponseEntity<LocationMasterResponse>(locationMasterService.retrieveById(locationMasterId), HttpStatus.OK);
   }
 
+  /*@GetMapping(value = {"/state/{state}"})
+  public ResponseEntity<List<LocationMasterResponse>> retrieveDistrictsByState(@PathVariable String state) {
+    return new ResponseEntity<>(locationMasterService.retrieveDistrictsByState(state), HttpStatus.OK);
+  }*/
+
+  @GetMapping(value = {"/cities/{state}/{district}"})
+  public ResponseEntity<List<String>> retrieveCitiesByStateAndDist(@PathVariable String state, @PathVariable String district) {
+    return new ResponseEntity<>(locationMasterService.retrieveCitiesByStateAndDist(state, district), HttpStatus.OK);
+  }
+  @GetMapping(value = {"/districts/{state}"})
+  public ResponseEntity<List<String>> retrieveDistsByState(@PathVariable String state) {
+    return new ResponseEntity<>(locationMasterService.retrieveDistsByState(state), HttpStatus.OK);
+  }
   @GetMapping("search")
   public ResponseEntity<List<LocationMasterResponse>> search(
           @RequestParam(value = "search") String searchString) {

@@ -57,6 +57,20 @@ public class LocationMasterService {
             .get();
   }
 
+  public List<LocationMasterResponse> retrieveDistrictsByState(String state) {
+
+    return locationMasterRepository
+            .retrieveDistrictsByState(state)
+            .stream()
+            .map(dto -> LocationMasterResponse.fromDto(dto))
+            .collect(Collectors.toList());
+  }
+  public List<String> retrieveDistsByState(String state) {
+    return locationMasterRepository.retrieveDistsByState(state);
+  }
+  public List<String> retrieveCitiesByStateAndDist(String state, String district) {
+    return locationMasterRepository.retrieveCitiesByStateAndDist(state, district);
+  }
   public List<LocationMasterResponse> search(final String searchString) {
 
     return locationMasterRepository

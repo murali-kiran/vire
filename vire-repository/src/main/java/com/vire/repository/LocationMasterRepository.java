@@ -60,7 +60,19 @@ public class LocationMasterRepository {
 
     return locationMasterRepositoryJpa.findById(locationMasterId).map(dao -> dao.toDto());
   }
+  public List<LocationMasterDto> retrieveDistrictsByState(String state) {
 
+    return locationMasterRepositoryJpa.findDistinctDistrictByState(state)
+            .stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
+  public List<String> retrieveDistsByState(String state) {
+    return locationMasterRepositoryJpa.retrieveDistrictsByState(state);
+  }
+  public List<String> retrieveCitiesByStateAndDist(String state, String dist) {
+    return locationMasterRepositoryJpa.retrieveCitiesByStateAndDist(state, dist);
+  }
   public List<LocationMasterDto> search(final String searchString) {
 
     var spec = new CustomSpecificationResolver<LocationMasterDao>(searchString).resolve();
