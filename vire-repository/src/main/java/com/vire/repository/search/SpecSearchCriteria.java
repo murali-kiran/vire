@@ -55,7 +55,7 @@ public class SpecSearchCriteria {
     if("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)){
       this.value=Boolean.valueOf(value);
     }else {
-      this.value = value;
+      this.value = value.replaceAll("__", " ");
     }
   }
 }

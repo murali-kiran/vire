@@ -1,0 +1,1 @@
+ALTER TABLE profile ADD COLUMN weightage TINYINT  NULL AFTER first_login;

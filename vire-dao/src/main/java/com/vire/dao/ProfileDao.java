@@ -51,6 +51,9 @@ public class ProfileDao {
     @Column(name = "file_id", nullable = true)
     private Long fileId;
 
+    @Column(name = "weightage", nullable = true)
+    private Integer profileWeightage;
+
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileSettingDao> profileSettings;
 
@@ -95,6 +98,7 @@ public class ProfileDao {
         profileDao.setMobileNumber(dto.getMobileNumber());
         profileDao.setFileId(dto.getFileId());
         profileDao.setFirstLogin(dto.getFirstLogin());
+        profileDao.setProfileWeightage(dto.getProfileWeightage());
 
         if (dto.getProfileSettings()!=null && !dto.getProfileSettings().isEmpty()) {
             var profileSettings = new ArrayList<ProfileSettingDao>();

@@ -17,6 +17,7 @@ public class FirmResponse {
     private String aadhar;
     private String isAadharVerified;
     private String fileId;
+    private Integer profileWeightage;
     private Long thumbsUpCount = 0l;
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
@@ -36,6 +37,7 @@ public class FirmResponse {
         firmResponse.setIsAadharVerified(dto.getIsAadharVerified());
         firmResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
         firmResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
+        firmResponse.setProfileWeightage(dto.getProfileWeightage());
 
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         firmResponse.setProfileSettingTypes(profileSettingResponse);
