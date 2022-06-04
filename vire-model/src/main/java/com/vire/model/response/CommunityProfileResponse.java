@@ -14,6 +14,7 @@ public class CommunityProfileResponse {
     private MinimalProfileResponse profile;
     private String status;
     private Boolean isAdmin;
+    private String fileId;
     private Long createdTime;
     private Long updatedTime;
 
@@ -32,6 +33,7 @@ public class CommunityProfileResponse {
 
         communityProfile.setStatus(dto.getStatus());
         communityProfile.setIsAdmin(dto.getIsAdmin());
+        communityProfile.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         communityProfile.setCreatedTime(dto.getCreatedTime());
         communityProfile.setUpdatedTime(dto.getUpdatedTime());
 

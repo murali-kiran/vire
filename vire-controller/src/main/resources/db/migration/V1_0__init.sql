@@ -458,6 +458,19 @@ CREATE TABLE social_file (
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (social_file_id)
 );
+
+CREATE TABLE location_master (
+    location_master_id BIGINT NOT NULL,
+    country VARCHAR(50) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    district VARCHAR(50) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (location_master_id)
+);
+
+
 ALTER TABLE social_file ADD CONSTRAINT fk_social_file_social_id FOREIGN KEY (social_id) REFERENCES t_social(social_id);
 ALTER TABLE community ADD COLUMN member_proof_required TINYINT(1) NULL DEFAULT 0 AFTER rules;
 
@@ -465,3 +478,4 @@ ALTER TABLE social_category_master ADD COLUMN is_personal TINYINT(1) NULL DEFAUL
 ALTER TABLE community_profile ADD COLUMN status VARCHAR(45) NULL AFTER community_id;
 ALTER TABLE community_profile ADD COLUMN is_admin TINYINT(1) NULL DEFAULT 0 AFTER status;
 ALTER TABLE channel_profile ADD COLUMN status VARCHAR(45) NULL AFTER profile_id;
+ALTER TABLE community_profile ADD COLUMN file_id BIGINT NULL AFTER is_admin;

@@ -15,6 +15,7 @@ public class CommunityProfileDto {
     private Long communityId;
     private String status;
     private Boolean isAdmin;
+    private Long fileId;
     public Long createdTime;
     public Long updatedTime;
 }
