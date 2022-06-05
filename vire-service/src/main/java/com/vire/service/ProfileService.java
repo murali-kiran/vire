@@ -165,6 +165,14 @@ public class ProfileService {
 
   }
 
+  public List<MinimalProfileResponse> retrieveProfilesNotInGivenIds(final List<Long> profileIDs) {
+
+    var dtos = profileRepository.retrieveProfilesNotInGivenIds(profileIDs);
+    var profileMinimalDtos = dtos.stream().map(dto->MinimalProfileResponse.fromDto(dto)).collect(Collectors.toList());
+    return profileMinimalDtos;
+
+  }
+
   private void setProfileSettingTypes(ProfileDto profileDto, Boolean isPersonalProfile){
       List<MasterDto> masterDtos = isPersonalProfile? masterRepository.findByMasterType("Personal_Profile_Setting_Type") : masterRepository.findByMasterType("Firm_Profile_Setting_Type");
 

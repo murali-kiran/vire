@@ -4,6 +4,7 @@ import com.vire.dto.CommunityProfileDto;
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.request.CommunityRequest;
 import com.vire.model.response.CommunityResponse;
+import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.CommunityRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,12 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
+    public List<MinimalProfileResponse> retrieveProfilesNotPartOfCommunity(final Long communityId){
+        var communityProfiles = communityProfileService.retrieveByCommunityId(communityId+"");
+        var profileIDs = communityProfiles.stream().map(communityProfile->Long.valueOf(communityProfile.getProfile().getProfileId())).collect(Collectors.toList());
+        return profileService.retrieveProfilesNotInGivenIds(profileIDs);
+    }
+
     private CommunityResponse profileLoader(CommunityResponse response) {
 
         if (response.getCreatorProfile() != null
@@ -107,4 +114,7 @@ public class CommunityService {
         }
         return response;
     }
+
+
+
 }

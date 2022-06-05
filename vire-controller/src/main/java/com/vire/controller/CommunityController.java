@@ -3,6 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.model.request.CommunityRequest;
 import com.vire.model.response.CommunityResponse;
+import com.vire.model.response.MinimalProfileResponse;
 import com.vire.service.CommunityService;
 import com.vire.constant.VireConstants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,6 +88,18 @@ public class CommunityController {
   @GetMapping("/{communityId}")
   public ResponseEntity<CommunityResponse> retrieveById(@PathVariable Long communityId) {
     return new ResponseEntity<CommunityResponse>(communityService.retrieveById(communityId), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Retrieve participants of community by ID")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve participants of community by ID sucessfully",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MinimalProfileResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve participants of community failed",
+                  content = @Content) })
+  @GetMapping("/newParticipants/{communityId}")
+  public ResponseEntity<List<MinimalProfileResponse>> RetrieveParticipantsOfCommunity(@PathVariable Long communityId) {
+    return new ResponseEntity<>(communityService.retrieveProfilesNotPartOfCommunity(communityId), HttpStatus.OK);
   }
 
   @Operation(summary = "Searching of community")

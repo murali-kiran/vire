@@ -21,4 +21,9 @@ public interface ProfileRepositoryJpa
     Optional<ProfileDao> findByMobileNumber(final String phonenumber);
 
     List<ProfileDao> findByEmailIdOrMobileNumber(final String email, final String phonenumber);
+
+    List<ProfileDao> findByProfileIdNotIn(List<Long> profileIDs);
+
+    List<ProfileDao> findByProfileIdIn(List<Long> profileIDs);
+
 }

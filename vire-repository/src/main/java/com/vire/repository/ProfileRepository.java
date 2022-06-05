@@ -204,4 +204,15 @@ public class ProfileRepository {
     public  List<ProfileDao> findByEmailIdOrMobileNumber(final String email, final String mobileNumber){
         return profileRepositoryJpa.findByEmailIdOrMobileNumber(email, mobileNumber);
     }
+
+    public List<ProfileDto> retrieveProfilesNotInGivenIds(List<Long> profileIDs) {
+
+        var profileDaos= profileRepositoryJpa.findByProfileIdNotIn(profileIDs);
+        var profileDtos= profileDaos.stream()
+                .map(dao -> dao.toDto())
+                .collect(Collectors.toList());
+        return profileDtos;
+
+
+    }
 }
