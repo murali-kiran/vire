@@ -24,8 +24,11 @@ public class ProfileFollowersDao {
     @Column(name = "follower_id", nullable = false)
     private Long followerId;
 
-    @Column(name = "is_friend", nullable = false)
+    @Column(name = "is_friend")
     private Boolean isFriend;
+
+    @Column(name = "status", nullable = false)
+    private String status;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -53,7 +56,7 @@ public class ProfileFollowersDao {
         dto.setProfileId(this.getProfileId());
         dto.setFollowerId(this.getFollowerId());
         dto.setIsFriend(this.getIsFriend());
-
+        dto.setStatus(this.getStatus());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -69,7 +72,7 @@ public class ProfileFollowersDao {
         profileFollowers.setProfileId(dto.getProfileId());
         profileFollowers.setFollowerId(dto.getFollowerId());
         profileFollowers.setIsFriend(dto.getIsFriend());
-
+        profileFollowers.setStatus(dto.getStatus());
         return profileFollowers;
     }
 }

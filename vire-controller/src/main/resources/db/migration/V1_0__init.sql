@@ -479,3 +479,5 @@ ALTER TABLE community_profile ADD COLUMN status VARCHAR(45) NULL AFTER community
 ALTER TABLE community_profile ADD COLUMN is_admin TINYINT(1) NULL DEFAULT 0 AFTER status;
 ALTER TABLE channel_profile ADD COLUMN status VARCHAR(45) NULL AFTER profile_id;
 ALTER TABLE community_profile ADD COLUMN file_id BIGINT NULL AFTER is_admin;
+ALTER TABLE profile_followers ADD COLUMN status VARCHAR(45) NOT NULL AFTER is_friend;
+ALTER TABLE profile_followers CHANGE COLUMN is_friend is_friend TINYINT(1) NULL DEFAULT 1;

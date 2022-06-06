@@ -10,22 +10,24 @@ public class ProfileFollowersResponse {
 
     private String profileFollowersId;
     
-    private Long profileId;
-    private Long followerId;
-    private Boolean isFriend;
-    private Long createdTime;
-    private Long updatedTime;
+    private String profileId;
+    private String followerId;
+    //private Boolean isFriend;
+    private String status;
+    //private Long createdTime;
+    //private Long updatedTime;
 
     public static ProfileFollowersResponse fromDto(final ProfileFollowersDto dto) {
 
         var profileFollowers = new ProfileFollowersResponse();
 
         profileFollowers.setProfileFollowersId(String.valueOf(dto.getProfileFollowersId()));
-        profileFollowers.setProfileId(dto.getProfileId());
-        profileFollowers.setFollowerId(dto.getFollowerId());
-        profileFollowers.setIsFriend(dto.getIsFriend());
-        profileFollowers.setCreatedTime(dto.getCreatedTime());
-        profileFollowers.setUpdatedTime(dto.getUpdatedTime());
+        profileFollowers.setProfileId(dto.getProfileId() == null ? null : String.valueOf(dto.getProfileId()));
+        profileFollowers.setFollowerId(dto.getFollowerId() == null ? null : String.valueOf(dto.getFollowerId()));
+        //profileFollowers.setIsFriend(dto.getIsFriend());
+        profileFollowers.setStatus(dto.getStatus());
+        //profileFollowers.setCreatedTime(dto.getCreatedTime());
+        //profileFollowers.setUpdatedTime(dto.getUpdatedTime());
 
         return profileFollowers;
     }

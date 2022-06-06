@@ -12,10 +12,10 @@ public class ProfileFollowersRequest {
 
     private String profileFollowersId;
     
-    private Long profileId;
-    private Long followerId;
-    private Boolean isFriend;
-
+    private String profileId;
+    private String followerId;
+    //private Boolean isFriend;
+    private String status;
     public ProfileFollowersDto toDto(Snowflake snowflake) {
 
         var dto = new ProfileFollowersDto();
@@ -26,10 +26,10 @@ public class ProfileFollowersRequest {
             dto.setProfileFollowersId(snowflake.nextId());
         }
         
-        dto.setProfileId(this.getProfileId());
-        dto.setFollowerId(this.getFollowerId());
-        dto.setIsFriend(this.getIsFriend());
-
+        dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
+        dto.setFollowerId(this.getFollowerId() == null ? null : Long.valueOf(this.getFollowerId()));
+        //dto.setIsFriend(this.getIsFriend());
+        dto.setStatus(this.getStatus());
         return dto;
     }
 
