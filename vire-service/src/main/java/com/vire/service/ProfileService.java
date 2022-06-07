@@ -44,8 +44,8 @@ public class ProfileService {
   public FirmResponse createFirmProfile(final FirmRequest request) {
 
     verify(request.getEmailId(),request.getMobileNumber());
-
-    request.getProfileSettingTypes().clear();
+    if(request.getProfileSettingTypes() != null)
+        request.getProfileSettingTypes().clear();
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());
@@ -66,8 +66,8 @@ public class ProfileService {
   public PersonalResponse createPersonalProfile(final PersonalRequest request) {
 
     verify(request.getEmailId(),request.getMobileNumber());
-
-    request.getProfileSettingTypes().clear();
+    if(request.getProfileSettingTypes() != null)
+        request.getProfileSettingTypes().clear();
     var dto = request.toDto();
     dto.setPassword(passwordEncoder.encode(dto.getPassword()));
     dto.setProfileId(snowflake.nextId());

@@ -60,8 +60,7 @@ public class CommunityController {
           @ApiResponse(responseCode = "500", description = "community deletion failed",
                   content = @Content) })
   @DeleteMapping("/{communityId}")
-  public ResponseEntity<CommunityResponse> delete(
-          @PathVariable(value = "id") Long communityId) {
+  public ResponseEntity<CommunityResponse> delete(@PathVariable Long communityId) {
     return new ResponseEntity<>(communityService.delete(communityId), HttpStatus.OK);
   }
 

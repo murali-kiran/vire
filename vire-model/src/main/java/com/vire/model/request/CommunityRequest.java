@@ -21,9 +21,9 @@ public class CommunityRequest {
     @NotBlank(message = "Creator Profile id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Creator Profile id must be numeric")
     private String creatorProfileId;
-    //@NotBlank(message = "File id required")
-    //@Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
-    //private String fileId;
+    @NotBlank(message = "File id required")
+    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
+    private String fileId;
     private String rules;
     private Boolean memberProofRequired;
     private List<CommunityFileRequest> communityFileList;

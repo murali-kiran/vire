@@ -71,6 +71,6 @@ public class CommunityProfileService {
   }
 
     public List<CommunityProfileResponse> retrieveByProfileId(String profileId) {
-      return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
+      return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted ) AND ( isAdmin:false )");
     }
 }

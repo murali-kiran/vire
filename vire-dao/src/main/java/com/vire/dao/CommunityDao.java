@@ -27,8 +27,9 @@ public class CommunityDao {
     @Column(name = "creator_profile_id", nullable = false)
     private Long creatorProfileId;
 
-    /*@Column(name = "file_id", nullable = false)
-    private Long fileId;*/
+    @Column(name = "file_id", nullable = false)
+    private Long fileId;
+
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityFileDao> communityFileList;
 
@@ -67,7 +68,7 @@ public class CommunityDao {
         dto.setName(this.getName());
         dto.setDescription(this.getDescription());
         dto.setCreatorProfileId(this.getCreatorProfileId());
-        //dto.setFileId(this.getFileId());
+        dto.setFileId(this.getFileId());
         dto.setRules(this.getRules());
         dto.setMemberProofRequired(this.getMemberProofRequired());
         /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
@@ -98,7 +99,7 @@ public class CommunityDao {
         community.setName(dto.getName());
         community.setDescription(dto.getDescription());
         community.setCreatorProfileId(dto.getCreatorProfileId());
-        //community.setFileId(dto.getFileId());
+        community.setFileId(dto.getFileId());
         community.setRules(dto.getRules());
         community.setMemberProofRequired(dto.getMemberProofRequired());
         /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
