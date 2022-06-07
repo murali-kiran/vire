@@ -69,4 +69,12 @@ public class CommunityRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+    public List<CommunityDto> retrieveByIds(List<Long> communityIDs) {
+      var communityDaos= communityRepositoryJpa.findBycommunityIdIn(communityIDs);
+      var communityDtos= communityDaos.stream()
+              .map(dao -> dao.toDto())
+              .collect(Collectors.toList());
+      return communityDtos;
+    }
 }

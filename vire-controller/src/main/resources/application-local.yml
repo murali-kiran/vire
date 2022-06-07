@@ -22,7 +22,7 @@ spring:
 server:
   port: 8090
   image:
-    path: "http://3.111.232.13:8090/content/"
+    path: "http://localhost:8090/content/"
 file:
   path: "D:\\image_files\\"
   type: "images"

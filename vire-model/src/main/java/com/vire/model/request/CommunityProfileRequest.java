@@ -22,7 +22,8 @@ public class CommunityProfileRequest {
     private String profileId;
     private String status;
     private Boolean isAdmin;
-    private String fileId;
+    //private String fileId;
+    private List<CommunityProfileFileRequest> communityFileList;
     public CommunityProfileDto toDto(Snowflake snowflake) {
 
         var dto = new CommunityProfileDto();
@@ -36,7 +37,13 @@ public class CommunityProfileRequest {
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
         dto.setCommunityId(this.getCommunityId() == null ? null : Long.valueOf(this.getCommunityId()));
         dto.setStatus(this.getStatus());
-        dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        //dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        if (this.getCommunityFileList() != null && !this.getCommunityFileList().isEmpty()) {
+            dto.setCommunityFileList(this.getCommunityFileList()
+                    .stream()
+                    .map(child -> child.toDto(snowflake))
+                    .collect(Collectors.toList()));
+        }
         dto.setIsAdmin(this.getIsAdmin());
         return dto;
     }

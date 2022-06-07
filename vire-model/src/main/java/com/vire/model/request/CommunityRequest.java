@@ -22,10 +22,11 @@ public class CommunityRequest {
     @Pattern(regexp="(^[0-9]*$)", message = "Creator Profile id must be numeric")
     private String creatorProfileId;
     //@NotBlank(message = "File id required")
-    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
-    private String fileId;
+    //@Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
+    //private String fileId;
     private String rules;
     private Boolean memberProofRequired;
+    private List<CommunityFileRequest> communityFileList;
     //private List<CommunityProfileRequest> profiles;
 
     public CommunityDto toDto(Snowflake snowflake) {
@@ -41,9 +42,15 @@ public class CommunityRequest {
         dto.setName(this.getName());
         dto.setDescription(this.getDescription());
         dto.setCreatorProfileId(this.getCreatorProfileId() == null ? null : Long.valueOf(this.getCreatorProfileId()));
-        dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        //dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setRules(this.getRules());
         dto.setMemberProofRequired(this.getMemberProofRequired());
+        if (this.getCommunityFileList() != null && !this.getCommunityFileList().isEmpty()) {
+            dto.setCommunityFileList(this.getCommunityFileList()
+                    .stream()
+                    .map(child -> child.toDto(snowflake))
+                    .collect(Collectors.toList()));
+        }
         /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()

@@ -221,10 +221,10 @@ CREATE TABLE t_master_data (
 CREATE TABLE community (
     community_id BIGINT NOT NULL,
     name VARCHAR(191) NOT NULL,
-    description VARCHAR(20) NOT NULL,
+    description VARCHAR(191) NOT NULL,
     creator_profile_id BIGINT NOT NULL,
     file_id BIGINT NOT NULL,
-    rules VARCHAR(20) NOT NULL,
+    rules VARCHAR(191) NOT NULL,
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (community_id)
@@ -481,3 +481,7 @@ ALTER TABLE channel_profile ADD COLUMN status VARCHAR(45) NULL AFTER profile_id;
 ALTER TABLE community_profile ADD COLUMN file_id BIGINT NULL AFTER is_admin;
 ALTER TABLE profile_followers ADD COLUMN status VARCHAR(45) NOT NULL AFTER is_friend;
 ALTER TABLE profile_followers CHANGE COLUMN is_friend is_friend TINYINT(1) NULL DEFAULT 1;
+ALTER TABLE community CHANGE COLUMN description description VARCHAR(191) NOT NULL ;
+ALTER TABLE community CHANGE COLUMN rules rules VARCHAR(191) NULL ;
+
+ALTER TABLE t_file CHANGE COLUMN mime_type mime_type VARCHAR(100) NOT NULL ;

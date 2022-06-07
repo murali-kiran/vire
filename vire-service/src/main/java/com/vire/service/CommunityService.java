@@ -116,5 +116,13 @@ public class CommunityService {
     }
 
 
-
+    public List<CommunityResponse> retrieveCommunitiesJoined(Long profileId) {
+        var communityProfiles = communityProfileService.retrieveByProfileId(profileId+"");
+        var communityIDs = communityProfiles.stream().map(communityProfile->Long.valueOf(communityProfile.getCommunityId())).collect(Collectors.toList());
+        return communityRepository
+                .retrieveByIds(communityIDs)
+                .stream()
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+    }
 }

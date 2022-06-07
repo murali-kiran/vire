@@ -12,10 +12,11 @@ public class CommunityDto {
     private String name;
     private String description;
     private Long creatorProfileId;
-    private Long fileId;
+    //private Long fileId;
     private String rules;
     private Boolean memberProofRequired;
     private List<CommunityProfileDto> communityProfiles;
+    private List<CommunityFileDto> communityFileList;
     public Long createdTime;
     public Long updatedTime;
 }

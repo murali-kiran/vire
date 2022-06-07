@@ -192,8 +192,8 @@ public class ProfileService {
 
   private int calculatePersonalProfileWeightage(PersonalRequest request){
 
-    int totalCount = 27;
-    int count=0;
+    double totalCount = 27;
+    double count=0;
 
     if(!StringUtils.isBlank(request.getName())) count++;
     if(!StringUtils.isBlank(request.getEmailId())) count++;
@@ -226,8 +226,8 @@ public class ProfileService {
     if(personalProfileRequest.getPresentAddress()!=null) count++;
     if(personalProfileRequest.getPermanentAddress()!=null) count++;
     if(!CollectionUtils.isEmpty(personalProfileRequest.getInterests())) count++;
-
-    return (count/totalCount)*100;
+    //double temp = (count/totalCount)*100;
+    return (int) ((count/totalCount)*100);
   }
 
 

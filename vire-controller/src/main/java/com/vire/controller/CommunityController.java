@@ -102,6 +102,18 @@ public class CommunityController {
     return new ResponseEntity<>(communityService.retrieveProfilesNotPartOfCommunity(communityId), HttpStatus.OK);
   }
 
+  @Operation(summary = "Retrieve  communities joined by profile ID")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve  communities joined by profile ID successfully",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = CommunityResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve  communities joined by profile ID failed",
+                  content = @Content) })
+  @GetMapping("/joinedProfiles/{profileId}")
+  public ResponseEntity<List<CommunityResponse>> retrieveJoinedByProfileId(@PathVariable Long profileId) {
+    return new ResponseEntity<>(communityService.retrieveCommunitiesJoined(profileId), HttpStatus.OK);
+  }
+
   @Operation(summary = "Searching of community")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "searching community successfully",

@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -87,22 +88,22 @@ public class FileService {
     public String storeFile(MultipartFile file, String filePath, String fileDirName, Boolean isAmazonServer) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String relativePath = fileDirName+"/"+fileName;;
+        if(fileName.contains("..")) {
+            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+        }
+        log.info("Uploaded file name:"+fileName);
         try {
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
+            String fileNewName = String.valueOf(UUID.randomUUID()) + getFileExtension(fileName);
             if(isAmazonServer) {
-                storeInAws(file, fileName, fileDirName);
+                storeInAws(file, fileNewName, fileDirName);
             }else{
                 // Copy file to the target location (Replacing existing file with the same name)
                 Path pathDir = Paths.get(filePath, fileDirName).toAbsolutePath().normalize();
                 Files.createDirectories(pathDir);
-                Path targetLocation = pathDir.resolve(fileName);
-                Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(file.getInputStream(), pathDir.resolve(fileNewName), StandardCopyOption.REPLACE_EXISTING);
             }
-
-            return relativePath;
+            log.info("Generated file name:"+fileNewName);
+           return fileDirName + "/" + fileNewName;
         } catch (IOException ex) {
             log.info("**********************File Upload Failed*******************************");
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
@@ -111,7 +112,13 @@ public class FileService {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
-
+    private String getFileExtension(String fileName) {
+        int lastIndexOf = fileName.lastIndexOf(".");
+        if (lastIndexOf == -1) {
+            return "txt"; // empty extension
+        }
+        return fileName.substring(lastIndexOf);
+    }
     public ResponseEntity<Resource> retrieveFile(String fileCommonPath) {
         try {
             File file = new File(fileCommonPath);

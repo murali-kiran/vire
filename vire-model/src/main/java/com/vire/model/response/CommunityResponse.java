@@ -14,7 +14,8 @@ public class CommunityResponse {
     private String name;
     private String description;
     private MinimalProfileResponse creatorProfile;
-    private String fileId;
+    //private String fileId;
+    private List<CommunityFileResponse> communityFileList;
     private String rules;
     private Boolean memberProofRequired;
     private List<CommunityProfileResponse> communityProfiles;
@@ -35,7 +36,13 @@ public class CommunityResponse {
             community.setCreatorProfile(minProfileRes);
         }
 
-        community.setFileId(String.valueOf(dto.getFileId()));
+        //community.setFileId(String.valueOf(dto.getFileId()));
+        if (dto.getCommunityFileList() != null && !dto.getCommunityFileList().isEmpty()) {
+            community.setCommunityFileList(dto.getCommunityFileList()
+                    .stream()
+                    .map(child -> CommunityFileResponse.fromDto(child))
+                    .collect(Collectors.toList()));
+        }
         community.setRules(dto.getRules());
         community.setMemberProofRequired(dto.getMemberProofRequired());
 

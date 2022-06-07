@@ -29,8 +29,10 @@ public class CommunityProfileDao {
     @Column(name="is_admin", nullable=false)
     private Boolean isAdmin;
 
-    @Column(name = "file_id")
-    private Long fileId;
+    /*@Column(name = "file_id")
+    private Long fileId;*/
+    @OneToMany(mappedBy = "communityProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityProfileFileDao> communityFileList;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -59,7 +61,13 @@ public class CommunityProfileDao {
         dto.setCommunityId(this.getCommunityId());
         dto.setStatus(this.getStatus());
         dto.setIsAdmin(this.getIsAdmin());
-        dto.setFileId(this.getFileId());
+        //dto.setFileId(this.getFileId());
+        if (this.getCommunityFileList() != null && !this.getCommunityFileList().isEmpty()) {
+            dto.setCommunityFileList(this.getCommunityFileList()
+                    .stream()
+                    .map(child -> child.toDto())
+                    .collect(Collectors.toList()));
+        }
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -75,7 +83,16 @@ public class CommunityProfileDao {
         communityProfile.setProfileId(dto.getProfileId());
         communityProfile.setStatus(dto.getStatus());
         communityProfile.setIsAdmin(dto.getIsAdmin());
-        communityProfile.setFileId(dto.getFileId());
+        //communityProfile.setFileId(dto.getFileId());
+        if (dto.getCommunityFileList() != null && !dto.getCommunityFileList().isEmpty()) {
+            communityProfile.setCommunityFileList(dto.getCommunityFileList()
+                    .stream()
+                    .map(child -> {
+                        var childDao = CommunityProfileFileDao.fromDto(child);
+                        childDao.setCommunityProfile(communityProfile);
+                        return childDao;
+                    })                    .collect(Collectors.toList()));
+        }
         return communityProfile;
     }
 }

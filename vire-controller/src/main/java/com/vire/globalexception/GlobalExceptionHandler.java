@@ -5,6 +5,7 @@ import com.vire.exception.LoginException;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -50,6 +51,14 @@ public class GlobalExceptionHandler {
         ex.printStackTrace();
         return new ErrorInfo(request, "Error: " + ex.getMessage());
     }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorInfo handleValidationException(HttpServletRequest request, MethodArgumentNotValidException ex){
+        ex.printStackTrace();
+        return new ErrorInfo(request, "Error: " +ex.getBindingResult().getFieldErrors().stream().map(err -> err.getDefaultMessage())
+                .collect(java.util.stream.Collectors.joining(", ")));
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorInfo handleException(HttpServletRequest request, Exception ex) {

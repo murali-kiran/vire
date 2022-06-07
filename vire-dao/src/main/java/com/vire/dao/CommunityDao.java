@@ -27,8 +27,10 @@ public class CommunityDao {
     @Column(name = "creator_profile_id", nullable = false)
     private Long creatorProfileId;
 
-    @Column(name = "file_id", nullable = false)
-    private Long fileId;
+    /*@Column(name = "file_id", nullable = false)
+    private Long fileId;*/
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityFileDao> communityFileList;
 
     @Column(name = "rules", nullable = false)
     private String rules;
@@ -65,7 +67,7 @@ public class CommunityDao {
         dto.setName(this.getName());
         dto.setDescription(this.getDescription());
         dto.setCreatorProfileId(this.getCreatorProfileId());
-        dto.setFileId(this.getFileId());
+        //dto.setFileId(this.getFileId());
         dto.setRules(this.getRules());
         dto.setMemberProofRequired(this.getMemberProofRequired());
         /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
@@ -75,7 +77,12 @@ public class CommunityDao {
                     .collect(Collectors.toList()));
         }*/
 
-
+        if (this.getCommunityFileList() != null && !this.getCommunityFileList().isEmpty()) {
+            dto.setCommunityFileList(this.getCommunityFileList()
+                    .stream()
+                    .map(child -> child.toDto())
+                    .collect(Collectors.toList()));
+        }
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -91,7 +98,7 @@ public class CommunityDao {
         community.setName(dto.getName());
         community.setDescription(dto.getDescription());
         community.setCreatorProfileId(dto.getCreatorProfileId());
-        community.setFileId(dto.getFileId());
+        //community.setFileId(dto.getFileId());
         community.setRules(dto.getRules());
         community.setMemberProofRequired(dto.getMemberProofRequired());
         /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
@@ -100,7 +107,15 @@ public class CommunityDao {
                     .map(child -> CommunityProfileDao.fromDto(child))
                     .collect(Collectors.toList()));
         }*/
-
+        if (dto.getCommunityFileList() != null && !dto.getCommunityFileList().isEmpty()) {
+            community.setCommunityFileList(dto.getCommunityFileList()
+                    .stream()
+                    .map(child -> {
+                        var childDao = CommunityFileDao.fromDto(child);
+                        childDao.setCommunity(community);
+                        return childDao;
+                    })                    .collect(Collectors.toList()));
+        }
 
         return community;
     }

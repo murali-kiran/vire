@@ -69,4 +69,8 @@ public class CommunityProfileService {
             .map(dto -> CommunityProfileResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+    public List<CommunityProfileResponse> retrieveByProfileId(String profileId) {
+      return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
+    }
 }
