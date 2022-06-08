@@ -40,7 +40,7 @@ public class CommunityService {
         communityProfileRequest.setCommunityId(communityDto.getCommunityId().toString());
         communityProfileRequest.setProfileId(communityDto.getCreatorProfileId().toString());
         communityProfileRequest.setIsAdmin(true);
-        communityProfileRequest.setStatus("Accepted");
+        communityProfileRequest.setStatus("Admin");
         communityProfileService.create(communityProfileRequest);
 
         return CommunityResponse.fromDto(communityDto);
@@ -66,6 +66,18 @@ public class CommunityService {
                 .getAll()
                 .stream()
                 .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+    }
+    public List<CommunityResponse> getAll(String profileId) {
+
+        return communityRepository
+                .getAll()
+                .stream()
+                .map(dto -> {
+                    dto.setProfileId(profileId);
+                    var response = profileLoader(CommunityResponse.fromDto(dto));
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +112,12 @@ public class CommunityService {
                     profileService.retrieveProfileDtoById(
                             Long.valueOf(response.getCreatorProfile().getProfileId())));
         }
-
+        String status = "NA";
+        String loginProfileId = response.getLoginProfileId();
+        if(loginProfileId != null) {
+            status = "Join Community";
+        }
+        //var communityProfile = communityProfileService.search("( profileId:"+loginProfileId+" ) AND ( communityId:"+)
         var communityProfileList = communityProfileService.retrieveByCommunityId(response.getCommunityId());
         if (communityProfileList != null) {
             for (var communityProfile : communityProfileList) {
@@ -108,10 +125,14 @@ public class CommunityService {
                     communityProfile.getProfile().cloneProperties(
                             profileService.retrieveProfileDtoById(
                                     Long.valueOf(communityProfile.getProfile().getProfileId())));
+                    if(loginProfileId != null && loginProfileId.equals(communityProfile.getProfile().getProfileId())) {
+                        status = communityProfile.getStatus();
+                    }
                 }
             }
             response.setCommunityProfiles(communityProfileList);
         }
+        response.setProfileCommunityStatus(status);
         return response;
     }
 

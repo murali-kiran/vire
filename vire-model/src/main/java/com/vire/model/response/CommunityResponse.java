@@ -2,6 +2,7 @@ package com.vire.model.response;
 
 import com.vire.dto.CommunityDto;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,8 +20,11 @@ public class CommunityResponse {
     private String rules;
     private Boolean memberProofRequired;
     private List<CommunityProfileResponse> communityProfiles;
+    private String profileCommunityStatus;
+    private String loginProfileId;
     private Long createdTime;
     private Long updatedTime;
+
 
     public static CommunityResponse fromDto(final CommunityDto dto) {
 
@@ -29,7 +33,7 @@ public class CommunityResponse {
         community.setCommunityId(String.valueOf(dto.getCommunityId()));
         community.setName(dto.getName());
         community.setDescription(dto.getDescription());
-
+        community.setLoginProfileId(dto.getProfileId());
         if (dto.getCreatorProfileId() != null) {
             var minProfileRes = new MinimalProfileResponse();
             minProfileRes.setProfileId(String.valueOf(dto.getCreatorProfileId()));
@@ -45,7 +49,6 @@ public class CommunityResponse {
         }
         community.setRules(dto.getRules());
         community.setMemberProofRequired(dto.getMemberProofRequired());
-
         if (dto.getCommunityProfiles() != null && !dto.getCommunityProfiles().isEmpty()) {
             community.setCommunityProfiles(dto.getCommunityProfiles()
                     .stream()

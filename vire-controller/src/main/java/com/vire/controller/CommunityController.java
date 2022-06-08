@@ -69,17 +69,28 @@ public class CommunityController {
           @ApiResponse(responseCode = "200", description = "Successfully got all communities",
                   content = { @Content(mediaType = "application/json",
                           schema = @Schema(implementation = CommunityResponse.class)) }),
-          @ApiResponse(responseCode = "500", description = "communities retreival failed",
+          @ApiResponse(responseCode = "500", description = "communities retrieval failed",
                   content = @Content) })
   @GetMapping("/all")
   public ResponseEntity<List<CommunityResponse>> retrieveAll() {
     return new ResponseEntity<>(communityService.getAll(), HttpStatus.OK);
   }
+  @Operation(summary = "Get all communities with logged in profile id status")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Successfully got all communities",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = CommunityResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "communities retrieval failed",
+                  content = @Content) })
+  @GetMapping("loginProfileId/all/{profileId}")
+  public ResponseEntity<List<CommunityResponse>> retrieveAll(@PathVariable String profileId) {
+    return new ResponseEntity<>(communityService.getAll(profileId), HttpStatus.OK);
+  }
 
 
   @Operation(summary = "Retrieve community by ID")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Retrieved community by ID sucessfully",
+          @ApiResponse(responseCode = "200", description = "Retrieved community by ID successfully",
                   content = { @Content(mediaType = "application/json",
                           schema = @Schema(implementation = CommunityResponse.class)) }),
           @ApiResponse(responseCode = "500", description = "community retrieval failed",
@@ -91,7 +102,7 @@ public class CommunityController {
 
   @Operation(summary = "Retrieve participants of community by ID")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Retrieve participants of community by ID sucessfully",
+          @ApiResponse(responseCode = "200", description = "Retrieve participants of community by ID successfully",
                   content = { @Content(mediaType = "application/json",
                           schema = @Schema(implementation = MinimalProfileResponse.class)) }),
           @ApiResponse(responseCode = "500", description = "Retrieve participants of community failed",
