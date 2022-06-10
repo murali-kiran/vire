@@ -16,6 +16,7 @@ public class ChannelRequest {
     private String description;
     private Long creatorProfileId;
     private Long fileId;
+    private Long coverFileId;
     private String rules;
     private List<ChannelProfileRequest> profiles;
 
@@ -33,6 +34,7 @@ public class ChannelRequest {
         dto.setDescription(this.getDescription());
         dto.setCreatorProfileId(this.getCreatorProfileId());
         dto.setFileId(this.getFileId());
+        dto.setCoverFileId(this.getCoverFileId());
         dto.setRules(this.getRules());
 
         if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {

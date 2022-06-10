@@ -14,7 +14,8 @@ public class CommunityRepository {
 
   @Autowired
   CommunityRepositoryJpa communityRepositoryJpa;
-
+  @Autowired
+  CommunityProfileRepositoryJpa communityProfileRepositoryJpa;
   public CommunityDto create(final CommunityDto communityDto) {
 
     var communityDao = CommunityDao.fromDto(communityDto);
@@ -33,21 +34,23 @@ public class CommunityRepository {
 
     var communityDao = CommunityDao.fromDto(communityDto);
     communityDao.onPreUpdate();
-
+    if(communityDao.getCommunityFileList() == null) {
+      communityDao.setCommunityFileList(existingObject.get().getCommunityFileList());
+    }
     return communityRepositoryJpa.save(communityDao).toDto();
   }
 
   public Optional<CommunityDto> delete(final Long communityId) {
 
-    var optionalSocial = retrieveById(communityId);
-
-    if (optionalSocial.isPresent()) {
+    var optionalCommunity = retrieveById(communityId);
+    if (optionalCommunity.isPresent()) {
+      //communityProfileRepositoryJpa.deleteByCommunityId(communityId);
       communityRepositoryJpa.deleteById(communityId);
     } else {
       throw new RuntimeException("Object not exists in DB to delete");
     }
 
-    return optionalSocial;
+    return optionalCommunity;
   }
   public List<CommunityDto> getAll() {
 

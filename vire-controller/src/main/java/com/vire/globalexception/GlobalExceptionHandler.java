@@ -3,6 +3,8 @@ package com.vire.globalexception;
 import com.vire.exception.FileStorageException;
 import com.vire.exception.LoginException;
 import com.vire.exception.VerifyEmailMobileNumberException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +27,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorInfo handleMethodNotSupported(HttpServletRequest request) {
         return new ErrorInfo(request, "HTTP request method not supported for this operation.");
+    }
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ErrorInfo handleRuntimeException(HttpServletRequest request, RuntimeException re) {
+        re.printStackTrace();
+        return new ErrorInfo(request, re.getMessage());
     }
 
     @ExceptionHandler(IOException.class)

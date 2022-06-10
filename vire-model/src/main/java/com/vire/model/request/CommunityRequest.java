@@ -42,7 +42,7 @@ public class CommunityRequest {
         dto.setName(this.getName());
         dto.setDescription(this.getDescription());
         dto.setCreatorProfileId(this.getCreatorProfileId() == null ? null : Long.valueOf(this.getCreatorProfileId()));
-        //dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setRules(this.getRules());
         dto.setMemberProofRequired(this.getMemberProofRequired());
         if (this.getCommunityFileList() != null && !this.getCommunityFileList().isEmpty()) {

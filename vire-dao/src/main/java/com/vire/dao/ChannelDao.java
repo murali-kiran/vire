@@ -30,6 +30,9 @@ public class ChannelDao {
     @Column(name = "file_id", nullable = false)
     private Long fileId;
 
+    @Column(name = "cover_file_id", nullable = false)
+    private Long coverFileId;
+
     @Column(name = "rules", nullable = false)
     private String rules;
 
@@ -63,6 +66,7 @@ public class ChannelDao {
         dto.setDescription(this.getDescription());
         dto.setCreatorProfileId(this.getCreatorProfileId());
         dto.setFileId(this.getFileId());
+        dto.setCoverFileId(this.getCoverFileId());
         dto.setRules(this.getRules());
 
         if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
@@ -89,6 +93,8 @@ public class ChannelDao {
         channel.setDescription(dto.getDescription());
         channel.setCreatorProfileId(dto.getCreatorProfileId());
         channel.setFileId(dto.getFileId());
+        channel.setCoverFileId(dto.getCoverFileId()
+        );
         channel.setRules(dto.getRules());
 
         if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {

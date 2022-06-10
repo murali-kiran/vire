@@ -7,7 +7,9 @@ import com.vire.model.response.CommunityResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.CommunityRepository;
 import com.vire.utils.Snowflake;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +33,7 @@ public class CommunityService {
 
     @Transactional
     public CommunityResponse create(final CommunityRequest request) {
-
+        try{
         var communityDto = request.toDto(snowflake);
         communityDto =  communityRepository.create(communityDto);
 
@@ -43,7 +45,10 @@ public class CommunityService {
         communityProfileRequest.setStatus("Admin");
         communityProfileService.create(communityProfileRequest);
 
-        return CommunityResponse.fromDto(communityDto);
+        return CommunityResponse.fromDto(communityDto);}
+        catch(ConstraintViolationException e){
+            throw new RuntimeException("Record already exists. Please update instead of create.");
+        }
     }
 
     public CommunityResponse update(final CommunityRequest request) {
@@ -120,6 +125,7 @@ public class CommunityService {
         //var communityProfile = communityProfileService.search("( profileId:"+loginProfileId+" ) AND ( communityId:"+)
         var communityProfileList = communityProfileService.retrieveByCommunityId(response.getCommunityId());
         if (communityProfileList != null) {
+            int i = 1;
             for (var communityProfile : communityProfileList) {
                 if (communityProfile.getProfile() != null) {
                     communityProfile.getProfile().cloneProperties(
@@ -127,9 +133,14 @@ public class CommunityService {
                                     Long.valueOf(communityProfile.getProfile().getProfileId())));
                     if(loginProfileId != null && loginProfileId.equals(communityProfile.getProfile().getProfileId())) {
                         status = communityProfile.getStatus();
+                        response.setCommunityProfileIdOfLoginUser(communityProfile.getCommunityProfileId());
+                    }
+                    if("Accepted".equals(communityProfile.getStatus())){
+                        i++;
                     }
                 }
             }
+            response.setAcceptedUserCount(i);
             response.setCommunityProfiles(communityProfileList);
         }
         response.setProfileCommunityStatus(status);
@@ -138,8 +149,8 @@ public class CommunityService {
 
 
     public List<CommunityResponse> retrieveCommunitiesJoined(Long profileId) {
-        var communityProfiles = communityProfileService.retrieveByProfileId(profileId+"");
-        var communityIDs = communityProfiles.stream().map(communityProfile->Long.valueOf(communityProfile.getCommunityId())).collect(Collectors.toList());
+        var profileJoinedCommunities = communityProfileService.retrieveByProfileId(profileId+"");
+        var communityIDs = profileJoinedCommunities.stream().map(communityProfile->Long.valueOf(communityProfile.getCommunityId())).collect(Collectors.toList());
         return communityRepository
                 .retrieveByIds(communityIDs)
                 .stream()

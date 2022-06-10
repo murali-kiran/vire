@@ -34,7 +34,9 @@ public class CommunityProfileRepository {
 
     var communityProfileDao = CommunityProfileDao.fromDto(communityProfileDto);
     communityProfileDao.onPreUpdate();
-
+    if(communityProfileDao.getCommunityFileList() == null) {
+      communityProfileDao.setCommunityFileList(existingObject.get().getCommunityFileList());
+    }
     return communityProfileRepositoryJpa.save(communityProfileDao).toDto();
   }
 

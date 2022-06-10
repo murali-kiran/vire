@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.ChannelProfileRequest;
 import com.vire.model.response.ChannelProfileResponse;
+import com.vire.model.response.CommunityProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class ChannelProfileService {
 
   @Autowired
   ChannelProfileRepository channelProfileRepository;
+  @Autowired
+  ProfileService profileService;
 
   public ChannelProfileResponse create(final ChannelProfileRequest request) {
 
@@ -62,7 +65,14 @@ public class ChannelProfileService {
     return channelProfileRepository
             .search(searchString)
             .stream()
-            .map(dto -> ChannelProfileResponse.fromDto(dto))
+            .map(dto -> {
+              var channelProfileResponse = ChannelProfileResponse.fromDto(dto);
+              if(channelProfileResponse.getProfile() != null) {
+                channelProfileResponse.setProfile((profileService.retrieveProfileDtoById(
+                        Long.valueOf(channelProfileResponse.getProfile().getProfileId()))));
+              }
+              return channelProfileResponse;
+            })
             .collect(Collectors.toList());
   }
 }

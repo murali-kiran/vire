@@ -13,6 +13,7 @@ public class ChannelDto {
     private String description;
     private Long creatorProfileId;
     private Long fileId;
+    private Long coverFileId;
     private String rules;
     private List<ChannelProfileDto> profiles;
     public Long createdTime;

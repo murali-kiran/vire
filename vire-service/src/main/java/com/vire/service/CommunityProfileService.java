@@ -18,6 +18,8 @@ public class CommunityProfileService {
 
   @Autowired
   CommunityProfileRepository communityProfileRepository;
+  @Autowired
+  ProfileService profileService;
 
   public CommunityProfileResponse create(final CommunityProfileRequest request) {
 
@@ -66,7 +68,14 @@ public class CommunityProfileService {
     return communityProfileRepository
             .search(searchString)
             .stream()
-            .map(dto -> CommunityProfileResponse.fromDto(dto))
+            .map(dto -> {
+              var communityProfileResponse = CommunityProfileResponse.fromDto(dto);
+              if(communityProfileResponse.getProfile() != null) {
+                communityProfileResponse.setProfile((profileService.retrieveProfileDtoById(
+                        Long.valueOf(communityProfileResponse.getProfile().getProfileId()))));
+              }
+              return communityProfileResponse;
+            })
             .collect(Collectors.toList());
   }
 

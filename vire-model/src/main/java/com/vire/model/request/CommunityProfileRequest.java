@@ -2,6 +2,7 @@ package com.vire.model.request;
 
 import com.vire.utils.Snowflake;
 import com.vire.dto.CommunityProfileDto;
+import lombok.Builder;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -20,6 +21,7 @@ public class CommunityProfileRequest {
     @NotBlank(message = "Profile id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Profile id must be numeric")
     private String profileId;
+    @NotBlank(message = "Status required")
     private String status;
     private Boolean isAdmin;
     //private String fileId;
