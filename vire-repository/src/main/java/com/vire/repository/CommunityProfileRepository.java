@@ -76,4 +76,10 @@ public class CommunityProfileRepository {
     public Optional<CommunityProfileDto> retrieveByCommunityIdAndProfileId(Long communityId, Long profileId) {
       return communityProfileRepositoryJpa.findByCommunityIdAndProfileId(communityId,profileId).map(dao -> dao.toDto());
     }
+
+    public List<CommunityProfileDto> deleteByCommunityID(Long communityId) {
+      return communityProfileRepositoryJpa.deleteByCommunityId(communityId).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+    }
 }

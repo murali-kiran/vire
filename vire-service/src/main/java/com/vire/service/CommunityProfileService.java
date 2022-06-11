@@ -52,6 +52,10 @@ public class CommunityProfileService {
             .get();
   }
 
+  public List<CommunityProfileResponse> deleteByCommunityID(final Long communityId) {
+    return communityProfileRepository.deleteByCommunityID(communityId).stream().map(dto -> CommunityProfileResponse.fromDto(dto)).collect(Collectors.toList());
+  }
+
   public List<CommunityProfileResponse> getAll() {
 
     return communityProfileRepository
