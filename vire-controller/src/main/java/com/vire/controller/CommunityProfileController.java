@@ -49,6 +49,18 @@ public class CommunityProfileController {
     return new ResponseEntity<>(communityProfileService.update(request), HttpStatus.CREATED);
   }
 
+  @Operation(summary = "Update community profile status")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "201", description = "updated community profile status successfully",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = CommunityProfileResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "community profile status updation failed",
+                  content = @Content) })
+  @PutMapping("communityProfileStatus/update")
+  public ResponseEntity<CommunityProfileResponse> updateStatus(@Valid @RequestBody CommunityProfileRequest request) {
+    return new ResponseEntity<>(communityProfileService.updateCommunityProfileStatus(request), HttpStatus.CREATED);
+  }
+
   @Operation(summary = "Deletion of community profile")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "deletion of community profile successfully",

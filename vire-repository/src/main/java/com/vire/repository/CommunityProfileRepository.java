@@ -72,4 +72,8 @@ public class CommunityProfileRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+    public Optional<CommunityProfileDto> retrieveByCommunityIdAndProfileId(Long communityId, Long profileId) {
+      return communityProfileRepositoryJpa.findByCommunityIdAndProfileId(communityId,profileId).map(dao -> dao.toDto());
+    }
 }

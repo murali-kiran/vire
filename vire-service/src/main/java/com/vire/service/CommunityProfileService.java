@@ -34,6 +34,16 @@ public class CommunityProfileService {
 
     return CommunityProfileResponse.fromDto(communityProfileRepository.update(dto));
   }
+  public CommunityProfileResponse updateCommunityProfileStatus(final CommunityProfileRequest request) {
+    var communityProfile = communityProfileRepository
+            .retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
+    if(communityProfile != null) {
+      communityProfile.get().setStatus(request.getStatus());
+      return CommunityProfileResponse.fromDto(communityProfileRepository.update(communityProfile.get()));
+    }else{
+      throw new RuntimeException("No record found with given profile and community Ids.");
+    }
+  }
 
   public CommunityProfileResponse delete(final Long communityProfileId) {
 
