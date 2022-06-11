@@ -25,8 +25,7 @@ public class ChannelProfileDao {
     @JoinColumn(name="channel_id", nullable=false)
     private ChannelDao channel;
 
-    @Column(name = "status")
-    private String status;
+
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -52,7 +51,7 @@ public class ChannelProfileDao {
         dto.setChannelProfileId(this.getChannelProfileId());
         
         dto.setProfileId(this.getProfileId());
-        dto.setStatus(this.getStatus());
+
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -64,9 +63,9 @@ public class ChannelProfileDao {
         var channelProfile = new ChannelProfileDao();
 
         channelProfile.setChannelProfileId(dto.getChannelProfileId());
-        
+
         channelProfile.setProfileId(dto.getProfileId());
-        channelProfile.setStatus(dto.getStatus());
+
         return channelProfile;
     }
 }

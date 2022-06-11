@@ -3,16 +3,14 @@ package com.vire.model.request;
 import com.vire.utils.Snowflake;
 import com.vire.dto.ChannelProfileDto;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class ChannelProfileRequest {
 
     private String channelProfileId;
-    
-    private Long profileId;
+    private String channelId;
+    private String profileId;
+    private String status;
 
     public ChannelProfileDto toDto(Snowflake snowflake) {
 
@@ -23,8 +21,8 @@ public class ChannelProfileRequest {
         }else {
             dto.setChannelProfileId(snowflake.nextId());
         }
-        
-        dto.setProfileId(this.getProfileId());
+        dto.setStatus(this.getStatus());
+        dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
 
         return dto;
     }

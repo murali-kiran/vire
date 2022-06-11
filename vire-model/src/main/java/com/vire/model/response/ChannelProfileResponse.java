@@ -10,7 +10,7 @@ public class ChannelProfileResponse {
 
     private String channelProfileId;
     
-    private Long profileId;
+    private String profileId;
     private MinimalProfileResponse profile;
     private Long createdTime;
     private Long updatedTime;
@@ -23,8 +23,8 @@ public class ChannelProfileResponse {
             minProfileRes.setProfileId(String.valueOf(dto.getProfileId()));
             channelProfile.setProfile(minProfileRes);
         }
-        channelProfile.setChannelProfileId(String.valueOf(dto.getChannelProfileId()));
-        channelProfile.setProfileId(dto.getProfileId());
+        channelProfile.setChannelProfileId(dto.getChannelProfileId() == null ? null : String.valueOf(dto.getChannelProfileId()));
+        channelProfile.setProfileId(dto.getProfileId() == null ? null : String.valueOf(dto.getProfileId()));
         channelProfile.setCreatedTime(dto.getCreatedTime());
         channelProfile.setUpdatedTime(dto.getUpdatedTime());
 

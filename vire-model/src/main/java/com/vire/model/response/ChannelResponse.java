@@ -12,9 +12,9 @@ public class ChannelResponse {
     
     private String name;
     private String description;
-    private Long creatorProfileId;
-    private Long fileId;
-    private Long coverFileId;
+    private String creatorProfileId;
+    private String fileId;
+    private String coverFileId;
     private String rules;
     private List<ChannelProfileResponse> profiles;
     private Long createdTime;
@@ -27,9 +27,9 @@ public class ChannelResponse {
         channel.setChannelId(String.valueOf(dto.getChannelId()));
         channel.setName(dto.getName());
         channel.setDescription(dto.getDescription());
-        channel.setCreatorProfileId(dto.getCreatorProfileId());
-        channel.setFileId(dto.getFileId());
-        channel.setCoverFileId(dto.getCoverFileId());
+        channel.setCreatorProfileId(dto.getCreatorProfileId() == null ? null : String.valueOf(dto.getCreatorProfileId()));
+        channel.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
+        channel.setCoverFileId(dto.getCoverFileId() == null ? null : String.valueOf(dto.getCoverFileId()));
         channel.setRules(dto.getRules());
 
         if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
