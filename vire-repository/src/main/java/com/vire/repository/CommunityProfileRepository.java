@@ -72,4 +72,10 @@ public class CommunityProfileRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+  public List<CommunityProfileDto> deleteByCommunityID(Long communityId) {
+    return communityProfileRepositoryJpa.deleteByCommunityId(communityId).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
 }

@@ -58,7 +58,10 @@ public class CommunityService {
         return CommunityResponse.fromDto(communityRepository.update(dto));
     }
 
+    @Transactional
     public CommunityResponse delete(final Long communityId) {
+
+        communityProfileService.deleteByCommunityID(communityId);
 
         return communityRepository.delete(communityId)
                 .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))

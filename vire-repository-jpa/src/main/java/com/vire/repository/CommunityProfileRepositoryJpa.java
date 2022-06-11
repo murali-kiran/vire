@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface CommunityProfileRepositoryJpa
     extends JpaRepository<CommunityProfileDao, Long>, JpaSpecificationExecutor<CommunityProfileDao> {
-    void deleteByCommunityId(Long communityId);
+    List<CommunityProfileDao> deleteByCommunityId(Long communityId);
 }
