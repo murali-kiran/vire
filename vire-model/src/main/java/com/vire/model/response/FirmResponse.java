@@ -1,5 +1,6 @@
 package com.vire.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vire.dto.ProfileDto;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FirmResponse {
 
     private String profileId;
@@ -15,9 +17,10 @@ public class FirmResponse {
     private String emailId;
     private String mobileNumber;
     private String aadhar;
-    private String isAadharVerified;
+    private Boolean isAadharVerified;
     private String fileId;
     private Integer profileWeightage;
+    private String profileType;
     private Long thumbsUpCount = 0l;
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
@@ -38,6 +41,7 @@ public class FirmResponse {
         firmResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
         firmResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         firmResponse.setProfileWeightage(dto.getProfileWeightage());
+        firmResponse.setProfileType(dto.getProfileType());
 
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         firmResponse.setProfileSettingTypes(profileSettingResponse);

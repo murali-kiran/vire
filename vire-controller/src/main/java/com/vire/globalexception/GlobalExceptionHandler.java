@@ -71,6 +71,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorInfo handleException(HttpServletRequest request, Exception ex) {
         ex.printStackTrace();
-        return new ErrorInfo(request, "Error: Something Went Wrong!");
+        return new ErrorInfo(request, "Error: "+ex.getMessage());
     }
 }

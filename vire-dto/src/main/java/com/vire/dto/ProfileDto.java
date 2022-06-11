@@ -14,12 +14,13 @@ public class ProfileDto {
     private String emailId;
     private String mobileNumber;
     private String aadhar;
-    private String isAadharVerified;
+    private Boolean isAadharVerified;
     private String dateOfBirth;
     private Gender gender;
     private Long fileId;
     private String firstLogin;
     private Integer profileWeightage;
+    private String profileType;
     private List<ProfileSettingDto> profileSettings;
     private PersonalProfileDto personalProfile;
     private FirmProfileDto firmProfile;

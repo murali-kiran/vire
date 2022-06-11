@@ -2,6 +2,7 @@ package com.vire.model.request;
 
 import com.vire.dto.ProfileDto;
 import com.vire.dto.ProfileSettingDto;
+import com.vire.utils.Utility;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +27,7 @@ public class FirmRequest {
     private String mobileNumber;
     @Pattern(regexp="(^$|[0-9]{12})", message = "Invalid Aadhaar number")
     private String aadhar;
-    private String isAadharVerified;
+    private Boolean isAadharVerified;
     @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
     private String fileId;
     private FirmProfileRequest firmProfile;
@@ -42,7 +43,7 @@ public class FirmRequest {
         profileDto.setAadhar(this.aadhar);
         profileDto.setIsAadharVerified(this.isAadharVerified);
         profileDto.setFileId(this.fileId == null ? null : Long.valueOf(this.fileId));
-        profileDto.setFirmProfile(this.getFirmProfile().toDto());
+        profileDto.setFirmProfile(this.getFirmProfile() == null? null : this.getFirmProfile().toDto());
         if(this.getProfileSettingTypes()!=null && !this.getProfileSettingTypes().isEmpty()){
             var profileSettingsDtos = new ArrayList<ProfileSettingDto>();
             for(var profileSetting : this.getProfileSettingTypes()){
@@ -57,5 +58,25 @@ public class FirmRequest {
         return profileDto;
 
         //return  new ModelMapper().map(this,ProfileDto.class);
+    }
+
+    public boolean validate(){
+
+        boolean isValid = true;
+        StringBuffer exceptionMessage = new StringBuffer();
+        if(!StringUtils.isBlank(this.getAadhar()) && !Utility.isValidAadhar(this.getAadhar())){
+            exceptionMessage.append(" Aadhar must be numeric and 12 digits,");
+            isValid = false;
+        }
+
+        if(!StringUtils.isBlank(this.getFileId()) && !Utility.isValidFileID(this.getFileId())){
+            exceptionMessage.append(" File id must be numeric,");
+            isValid = false;
+        }
+
+        if(!isValid) throw  new RuntimeException(exceptionMessage.toString());
+
+        return true;
+
     }
 }

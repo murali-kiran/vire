@@ -20,11 +20,12 @@ public class ProfileResponse {
     private String emailId;
     private String mobileNumber;
     private String aadhar;
-    private String isAadharVerified;
+    private Boolean isAadharVerified;
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
     private Integer profileWeightage;
+    private String profileType;
     private String firstLogin;
     private Long thumbsUpCount = 0l;
     private Long thumbsDownCount = 0l;
@@ -51,6 +52,7 @@ public class ProfileResponse {
         profileResponse.setDateOfBirth(dto.getDateOfBirth());
         profileResponse.setFirstLogin(dto.getFirstLogin());
         profileResponse.setProfileWeightage(dto.getProfileWeightage());
+        profileResponse.setProfileType(dto.getProfileType());
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         profileResponse.setProfileSettingTypes(profileSettingResponse);
 

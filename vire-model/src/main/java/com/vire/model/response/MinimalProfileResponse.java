@@ -11,6 +11,7 @@ public class MinimalProfileResponse {
     private String profileId;
     private String name;
     private String fileId;
+    private String profileType;
 
 
     public static MinimalProfileResponse fromDto(final ProfileDto dto) {
@@ -18,9 +19,8 @@ public class MinimalProfileResponse {
         var profileResponse = new MinimalProfileResponse();
         profileResponse.setProfileId(dto.getProfileId().toString());
         profileResponse.setName(dto.getName());
-
+        profileResponse.setProfileType(dto.getProfileType());
         profileResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
-
 
         return profileResponse;
     }
@@ -29,5 +29,6 @@ public class MinimalProfileResponse {
         this.setProfileId(response.getProfileId());
         this.setName(response.getName());
         this.setFileId(response.getFileId());
+        this.setProfileType(response.getProfileType());
     }
 }

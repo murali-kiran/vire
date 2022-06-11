@@ -55,20 +55,26 @@ public class ProfileRepository {
             }
 
             //profileDao.getPersonalProfile().getPermanentAddress().onPrePersist();
-            var permanentAddressDao = profileDao.getPersonalProfile().getPermanentAddress();//AddressDao.fromDto(profileDto.getPersonalProfile().getPermanentAddress());
-            permanentAddressDao.onPrePersist();
-            addressRepositoryJpa.save(permanentAddressDao);
+            var permanentAddressDao = profileDao.getPersonalProfile().getPermanentAddress();
+            if(permanentAddressDao!=null) {
+                permanentAddressDao.onPrePersist();
+                addressRepositoryJpa.save(permanentAddressDao);
+            }
 
             //profileDao.getPersonalProfile().getPresentAddress().onPrePersist();
             var presentAddressDao = profileDao.getPersonalProfile().getPresentAddress();
-            presentAddressDao.onPrePersist();
-            addressRepositoryJpa.save(presentAddressDao);
+            if(presentAddressDao!=null) {
+                presentAddressDao.onPrePersist();
+                addressRepositoryJpa.save(presentAddressDao);
+            }
         } else {
             profileDao.getFirmProfile().onPrePersist();
 
             var addressDao = profileDao.getFirmProfile().getAddress();
-            addressDao.onPrePersist();
-            addressRepositoryJpa.save(addressDao);
+            if(addressDao!=null) {
+                addressDao.onPrePersist();
+                addressRepositoryJpa.save(addressDao);
+            }
         }
 
         return profileRepositoryJpa.save(profileDao).toDto();
@@ -84,18 +90,8 @@ public class ProfileRepository {
             ProfileDao profileDao = ProfileDao.fromDto(profileDto);
             profileDao.setPassword(optionalProfile.get().getPassword());
             profileDao.setFirstLogin(optionalProfile.get().getFirstLogin());
+            profileDao.setProfileType(optionalProfile.get().getProfileType());
             profileDao.onPreUpdate();
-
-/*            if (!CollectionUtils.isEmpty(optionalProfile.get().getProfileSettings())) {
-                profileDao.setProfileSettings(optionalProfile.get().getProfileSettings()
-                        .stream()
-                        .map(profileSettingDto -> {
-                            var profileSettingDao = ProfileSettingDao.fromDto(profileSettingDto);
-                            profileSettingDao.setProfile(profileDao);
-                            return profileSettingDao;
-                        }).collect(Collectors.toList()));
-            }
-*/
 
             if (!CollectionUtils.isEmpty(profileDto.getProfileSettings())) {
                 profileDao.setProfileSettings(profileDto.getProfileSettings()

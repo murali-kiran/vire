@@ -103,7 +103,7 @@ public class ProfilesControllerIntegrationTest {
             personalRequest.setEmailId("personalemail" + i + "gmail.com");
             personalRequest.setMobileNumber("754854128" + i);
             personalRequest.setAadhar("45612378457" + i);
-            personalRequest.setIsAadharVerified("yes");
+            personalRequest.setIsAadharVerified(true);
 
             PersonalProfileRequest personalProfileRequest = new PersonalProfileRequest();
             personalRequest.setPersonalProfile(personalProfileRequest);
@@ -170,7 +170,7 @@ public class ProfilesControllerIntegrationTest {
             firmRequest.setEmailId("firmemail"+i+"gmail.com");
             firmRequest.setMobileNumber("754854128"+i);
             firmRequest.setAadhar("45612378457"+i);
-            firmRequest.setIsAadharVerified("yes");
+            firmRequest.setIsAadharVerified(true);
 
             FirmProfileRequest firmProfileRequest = new FirmProfileRequest();
             firmRequest.setFirmProfile(firmProfileRequest);

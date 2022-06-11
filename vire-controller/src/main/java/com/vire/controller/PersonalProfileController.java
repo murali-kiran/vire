@@ -52,6 +52,7 @@ public class PersonalProfileController {
     @PostMapping(value = "/create")
     public ResponseEntity<PersonalResponse> createPersonalProfile(@Valid @RequestBody PersonalRequest request) {
         log.info("*********createPersonalProfile***************: "+request);
+        request.validate();
         PersonalResponse personalResponse = profileService.createPersonalProfile(request);
         setProfileCounts(Long.valueOf(personalResponse.getProfileId()),personalResponse);
         return new ResponseEntity<>(personalResponse, HttpStatus.CREATED);

@@ -32,11 +32,11 @@ public class ProfileDao {
     @Column(name = "mobile_number", nullable = false)
     private String mobileNumber;
 
-    @Column(name = "aadhar", nullable = false)
+    @Column(name = "aadhar", nullable = true)
     private String aadhar;
 
-    @Column(name = "is_aadhar_verified", nullable = false)
-    private String isAadharVerified;
+    @Column(name = "is_aadhar_verified", nullable = true)
+    private Boolean isAadharVerified;
 
     @Column(name = "date_of_birth", nullable = true)
     private String dateOfBirth;
@@ -53,6 +53,9 @@ public class ProfileDao {
 
     @Column(name = "weightage", nullable = true)
     private Integer profileWeightage;
+
+    @Column(name="profile_type", nullable = true)
+    private String profileType;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileSettingDao> profileSettings;
@@ -99,6 +102,7 @@ public class ProfileDao {
         profileDao.setFileId(dto.getFileId());
         profileDao.setFirstLogin(dto.getFirstLogin());
         profileDao.setProfileWeightage(dto.getProfileWeightage());
+        profileDao.setProfileType(dto.getProfileType());
 
         if (dto.getProfileSettings()!=null && !dto.getProfileSettings().isEmpty()) {
             var profileSettings = new ArrayList<ProfileSettingDao>();

@@ -1,9 +1,7 @@
 package com.vire.service;
 
 
-import com.vire.dto.MasterDto;
-import com.vire.dto.ProfileDto;
-import com.vire.dto.ProfileSettingDto;
+import com.vire.dto.*;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
@@ -51,9 +49,20 @@ public class ProfileService {
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
     dto.setProfileWeightage(calculateFirmProfileWeightage(request));
+    dto.setProfileType("firm");
     setProfileSettingTypes(dto, false);
-    dto.getFirmProfile().setFirmProfileId(snowflake.nextId());
-    dto.getFirmProfile().getAddress().setAddressId(snowflake.nextId());
+
+    var firmProfile = dto.getFirmProfile();
+
+    if(firmProfile == null){
+      firmProfile = new FirmProfileDto();
+      dto.setFirmProfile(firmProfile);
+    }
+    firmProfile.setFirmProfileId(snowflake.nextId());
+
+    if(firmProfile.getAddress()!=null)
+      firmProfile.getAddress().setAddressId(snowflake.nextId());
+
     return FirmResponse.fromDto(profileRepository.createProfile(dto));
   }
 
@@ -73,12 +82,22 @@ public class ProfileService {
     dto.setProfileId(snowflake.nextId());
     dto.setFirstLogin("true");
     dto.setProfileWeightage(calculatePersonalProfileWeightage(request));
+    dto.setProfileType("personal");
 
     setProfileSettingTypes(dto,true);
 
     var personalProfileDto = dto.getPersonalProfile();
+    if(personalProfileDto == null){
+      personalProfileDto = new PersonalProfileDto();
+      dto.setPersonalProfile(personalProfileDto);
+    }
+
     personalProfileDto.setPersonalProfileId(snowflake.nextId());
+
+    if(personalProfileDto.getPermanentAddress()!=null)
     personalProfileDto.getPermanentAddress().setAddressId(snowflake.nextId());
+
+    if(personalProfileDto.getPresentAddress()!=null)
     personalProfileDto.getPresentAddress().setAddressId(snowflake.nextId());
 
     if (!CollectionUtils.isEmpty(personalProfileDto.getInterests())) {
@@ -199,33 +218,35 @@ public class ProfileService {
     if(!StringUtils.isBlank(request.getEmailId())) count++;
     if(!StringUtils.isBlank(request.getMobileNumber())) count++;
     if(!StringUtils.isBlank(request.getAadhar())) count++;
-    if(!StringUtils.isBlank(request.getIsAadharVerified())) count++;
+    if(request.getIsAadharVerified()!=null) count++;
     if(!StringUtils.isBlank(request.getFileId())) count++;
     if(!StringUtils.isBlank(request.getDateOfBirth())) count++;
-    if(!StringUtils.isBlank(request.getGender().name())) count++;
+    if(request.getGender()!=null) count++;
 
     var personalProfileRequest = request.getPersonalProfile();
 
-    if(!StringUtils.isBlank(personalProfileRequest.getSchoolBoard())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getSchoolName())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getIntermediateBoard())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getIntermediateCollegeName())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getGraduationBoard())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getGraduationCollegeName())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getPostGraduationBoard())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getPostGraduationCollegeName())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getWorkStatus().name())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getFieldProfessionBusiness())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getProductOrService())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getDesignation())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getOrganizationLocation())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getOrganizationName())) count++;
-    if(!StringUtils.isBlank(personalProfileRequest.getBloodGroup())) count++;
+    if(personalProfileRequest!=null) {
+      if (!StringUtils.isBlank(personalProfileRequest.getSchoolBoard())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getSchoolName())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getIntermediateBoard())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getIntermediateCollegeName())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getGraduationBoard())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getGraduationCollegeName())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getPostGraduationBoard())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getPostGraduationCollegeName())) count++;
+      if (personalProfileRequest.getWorkStatus() != null) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getFieldProfessionBusiness())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getProductOrService())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getDesignation())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getOrganizationLocation())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getOrganizationName())) count++;
+      if (!StringUtils.isBlank(personalProfileRequest.getBloodGroup())) count++;
 
-    if(!StringUtils.isBlank(personalProfileRequest.getBloodDonateWillingness().name())) count++;
-    if(personalProfileRequest.getPresentAddress()!=null) count++;
-    if(personalProfileRequest.getPermanentAddress()!=null) count++;
-    if(!CollectionUtils.isEmpty(personalProfileRequest.getInterests())) count++;
+      if (personalProfileRequest.getBloodDonateWillingness() != null) count++;
+      if (personalProfileRequest.getPresentAddress() != null) count++;
+      if (personalProfileRequest.getPermanentAddress() != null) count++;
+      if (!CollectionUtils.isEmpty(personalProfileRequest.getInterests())) count++;
+    }
     //double temp = (count/totalCount)*100;
     return (int) ((count/totalCount)*100);
   }
@@ -239,15 +260,17 @@ public class ProfileService {
     if(!StringUtils.isBlank(request.getEmailId())) count++;
     if(!StringUtils.isBlank(request.getMobileNumber())) count++;
     if(!StringUtils.isBlank(request.getAadhar())) count++;
-    if(!StringUtils.isBlank(request.getIsAadharVerified())) count++;
+    if(request.getIsAadharVerified()!=null) count++;
     if(!StringUtils.isBlank(request.getFileId())) count++;
 
     var firmProfileRequest = request.getFirmProfile();
 
-    if(!StringUtils.isBlank(firmProfileRequest.getFirmAddress())) count++;
-    if(!StringUtils.isBlank(firmProfileRequest.getFieldOfBusiness())) count++;
-    if(!StringUtils.isBlank(firmProfileRequest.getProductOrService())) count++;
-    if(firmProfileRequest.getAddress()!=null) count++;
+    if(firmProfileRequest!=null) {
+      if (!StringUtils.isBlank(firmProfileRequest.getFirmAddress())) count++;
+      if (!StringUtils.isBlank(firmProfileRequest.getFieldOfBusiness())) count++;
+      if (!StringUtils.isBlank(firmProfileRequest.getProductOrService())) count++;
+      if (firmProfileRequest.getAddress() != null) count++;
+    }
 
     return (count/totalCount)*100;
   }

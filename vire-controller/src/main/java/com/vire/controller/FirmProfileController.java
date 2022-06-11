@@ -52,6 +52,7 @@ public class FirmProfileController {
     @PostMapping(value = "/create")
     public ResponseEntity<FirmResponse> createFirmProfile(@Valid @RequestBody FirmRequest request) {
         log.info("*********createFirmProfile***************: "+request);
+        request.validate();
         FirmResponse firmResponse = profileService.createFirmProfile(request);
         setProfileCounts(Long.valueOf(firmResponse.getProfileId()),firmResponse);
         return new ResponseEntity<>(firmResponse, HttpStatus.CREATED);

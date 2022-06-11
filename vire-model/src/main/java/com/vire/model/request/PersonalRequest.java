@@ -1,8 +1,10 @@
 package com.vire.model.request;
 
+import com.vire.dto.PersonalProfileDto;
 import com.vire.dto.ProfileDto;
 import com.vire.dto.ProfileSettingDto;
 import com.vire.enumeration.Gender;
+import com.vire.utils.Utility;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,19 +29,24 @@ public class PersonalRequest {
     private String emailId;
     @Pattern(regexp="(^$|[0-9]{10})", message = "Mobile number must be numeric and 10 digits")
     private String mobileNumber;
-    @Pattern(regexp="(^$|[0-9]{12})", message = "Aadhar must be numeric and 12 digits")
-    private String aadhar;
-    private String isAadharVerified;
 
-    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
+    //@Pattern(regexp="(^$|[0-9]{12})", message = "Aadhar must be numeric and 12 digits")
+    private String aadhar;
+    private Boolean isAadharVerified;
+
+    //@Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
     private String fileId;
 
     @NotBlank(message = "Date of birth required dd-MM-YYYY format")
     // date range years from 1800 to 2999
     @Pattern(regexp="^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-((18|19|2[0-9])[0-9]{2})$", message = "Invalid date of birth format")
     private String dateOfBirth;
+
     private Gender gender;
     private List<ProfileSettingRequest> profileSettingTypes;
+
+
+
     @Valid
     private PersonalProfileRequest personalProfile;
 
@@ -56,7 +63,7 @@ public class PersonalRequest {
         profileDto.setDateOfBirth(this.dateOfBirth);
         profileDto.setGender(this.gender);
         profileDto.setFileId(this.getFileId() == null || !StringUtils.isNumeric(this.getFileId())? null : Long.valueOf(this.getFileId()));
-        profileDto.setPersonalProfile(this.personalProfile.toDto());
+        profileDto.setPersonalProfile(this.personalProfile == null ? null : this.personalProfile.toDto());
         if(this.getProfileSettingTypes()!=null && !this.getProfileSettingTypes().isEmpty()){
             var profileSettingsDtos = new ArrayList<ProfileSettingDto>();
             for(var profileSetting : this.getProfileSettingTypes()){
@@ -71,5 +78,25 @@ public class PersonalRequest {
         return profileDto;
 
         //return  new ModelMapper().map(this,ProfileDto.class);
+    }
+
+    public boolean validate(){
+
+        boolean isValid = true;
+        StringBuffer exceptionMessage = new StringBuffer();
+        if(!StringUtils.isBlank(this.getAadhar()) && !Utility.isValidAadhar(this.getAadhar())){
+            exceptionMessage.append(" Aadhar must be numeric and 12 digits,");
+            isValid = false;
+        }
+
+        if(!StringUtils.isBlank(this.getFileId()) && !Utility.isValidFileID(this.getFileId())){
+            exceptionMessage.append(" File id must be numeric,");
+            isValid = false;
+        }
+
+        if(!isValid) throw  new RuntimeException(exceptionMessage.toString());
+
+        return true;
+
     }
 }

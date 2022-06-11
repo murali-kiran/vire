@@ -1,5 +1,6 @@
 package com.vire.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vire.dto.PersonalProfileDto;
 import com.vire.enumeration.BloodDonateWillingness;
 import com.vire.enumeration.Gender;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PersonalProfileResponse {
 
     private String personalProfileId;
@@ -52,8 +54,13 @@ public class PersonalProfileResponse {
         personalProfileResponse.setOrganizationLocation(dto.getOrganizationLocation());
         personalProfileResponse.setBloodGroup(dto.getBloodGroup());
         personalProfileResponse.setBloodDonateWillingness(dto.getBloodDonateWillingness());
+
+        if(dto.getPresentAddress()!=null)
         personalProfileResponse.setPresentAddress(AddressResponse.fromDto(dto.getPresentAddress()));
+
+        if(dto.getPermanentAddress()!=null)
         personalProfileResponse.setPermanentAddress(AddressResponse.fromDto(dto.getPermanentAddress()));
+
         personalProfileResponse.setProductOrService(dto.getProductOrService());
 
         if(dto.getInterests()!=null) {
