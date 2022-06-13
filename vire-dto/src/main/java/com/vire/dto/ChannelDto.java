@@ -12,6 +12,7 @@ public class ChannelDto {
     private String name;
     private String description;
     private Long creatorProfileId;
+    private String loginProfileId;
     private Long fileId;
     private Long coverFileId;
     private String rules;

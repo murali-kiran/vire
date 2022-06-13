@@ -2,6 +2,7 @@ package com.vire.repository;
 
 import com.vire.dao.ChannelDao;
 import com.vire.dto.ChannelDto;
+import com.vire.dto.CommunityDto;
 import com.vire.repository.ChannelRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,12 @@ public class ChannelRepository {
     return channelRepositoryJpa.findAll(spec).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
+  }
+  public List<ChannelDto> retrieveByIds(List<Long> channelIDs) {
+    var channelDaos= channelRepositoryJpa.findByChannelIdIn(channelIDs);
+    var channelDtos= channelDaos.stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+    return channelDtos;
   }
 }

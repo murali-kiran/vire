@@ -36,8 +36,8 @@ public class ChannelDao {
     @Column(name = "rules", nullable = false)
     private String rules;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChannelProfileDao> profiles;
+   /* @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChannelProfileDao> profiles;*/
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -69,12 +69,12 @@ public class ChannelDao {
         dto.setCoverFileId(this.getCoverFileId());
         dto.setRules(this.getRules());
 
-        if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
+        /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()
                     .map(child -> child.toDto())
                     .collect(Collectors.toList()));
-        }
+        }*/
 
 
         dto.setCreatedTime(this.getCreatedTime());
@@ -97,12 +97,12 @@ public class ChannelDao {
         );
         channel.setRules(dto.getRules());
 
-        if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
+        /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             channel.setProfiles(dto.getProfiles()
                     .stream()
                     .map(child -> ChannelProfileDao.fromDto(child))
                     .collect(Collectors.toList()));
-        }
+        }*/
 
 
         return channel;

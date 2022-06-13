@@ -23,7 +23,7 @@ public class ChannelProfileRequest {
         }
         dto.setStatus(this.getStatus());
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
-
+        dto.setChannelId(this.getChannelId() == null ? null : Long.valueOf(this.getChannelId()));
         return dto;
     }
 

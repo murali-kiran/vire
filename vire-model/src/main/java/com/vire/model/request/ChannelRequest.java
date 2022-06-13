@@ -17,8 +17,8 @@ public class ChannelRequest {
     private String creatorProfileId;
     private String fileId;
     private String coverFileId;
-    private String rules;
-    private List<ChannelProfileRequest> profiles;
+    //private String rules;
+    //private List<ChannelProfileRequest> profiles;
 
     public ChannelDto toDto(Snowflake snowflake) {
 
@@ -35,14 +35,14 @@ public class ChannelRequest {
         dto.setCreatorProfileId(this.getCreatorProfileId() == null ? null : Long.valueOf(this.getCreatorProfileId()));
         dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setCoverFileId(this.getCoverFileId() == null ? null : Long.valueOf(this.getCoverFileId()));
-        dto.setRules(this.getRules());
+        //dto.setRules(this.getRules());
 
-        if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
+        /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()
                     .map(child -> child.toDto(snowflake))
                     .collect(Collectors.toList()));
-        }
+        }*/
 
 
         return dto;

@@ -6,3 +6,4 @@ ALTER TABLE personal_profile CHANGE COLUMN blood_donate_willingness blood_donate
 ALTER TABLE firm_profile CHANGE COLUMN field_of_business field_of_business VARCHAR(255) NULL;
 ALTER TABLE firm_profile CHANGE COLUMN product_or_service product_or_service VARCHAR(255) NULL;
 ALTER TABLE firm_profile CHANGE COLUMN firm_address_id firm_address_id BIGINT NULL;
+ALTER TABLE channel CHANGE COLUMN description description VARCHAR(191) NOT NULL ;

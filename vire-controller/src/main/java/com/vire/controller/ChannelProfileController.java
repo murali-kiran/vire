@@ -2,13 +2,21 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.request.ChannelProfileRequest;
+import com.vire.model.request.ChannelProfileRequest;
+import com.vire.model.response.ChannelProfileResponse;
 import com.vire.model.response.ChannelProfileResponse;
 import com.vire.service.ChannelProfileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,7 +35,17 @@ public class ChannelProfileController {
   public ResponseEntity<ChannelProfileResponse> update(@RequestBody ChannelProfileRequest request) {
     return new ResponseEntity<>(channelProfileService.update(request), HttpStatus.CREATED);
   }
-
+  @Operation(summary = "Update channel profile status")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "201", description = "updated channel profile status successfully",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ChannelProfileResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "channel profile status updating failed",
+                  content = @Content) })
+  @PutMapping("channelProfileStatus/update")
+  public ResponseEntity<ChannelProfileResponse> updateStatus(@Valid @RequestBody ChannelProfileRequest request) {
+    return new ResponseEntity<>(channelProfileService.updateChannelProfileStatus(request), HttpStatus.CREATED);
+  }
   @DeleteMapping("/{channelProfileId}")
   public ResponseEntity<ChannelProfileResponse> delete(
           @PathVariable(value = "channelProfileId") Long channelProfileId) {

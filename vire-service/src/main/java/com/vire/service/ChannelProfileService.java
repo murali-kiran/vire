@@ -7,6 +7,7 @@ import com.vire.repository.ChannelProfileRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +23,10 @@ public class ChannelProfileService {
   @Autowired
   ProfileService profileService;
 
+
+  @Transactional
   public ChannelProfileResponse create(final ChannelProfileRequest request) {
-
     var dto = request.toDto(snowflake);
-
     return ChannelProfileResponse.fromDto(channelProfileRepository.create(dto));
   }
 
@@ -34,6 +35,15 @@ public class ChannelProfileService {
     var dto = request.toDto();
 
     return ChannelProfileResponse.fromDto(channelProfileRepository.update(dto));
+  }
+  public ChannelProfileResponse updateChannelProfileStatus(final ChannelProfileRequest request) {
+    var channelProfile = channelProfileRepository.retrieveByChannelIdAndProfileId(Long.valueOf(request.getChannelId()), Long.valueOf(request.getProfileId()));
+    if(channelProfile != null) {
+      channelProfile.get().setStatus(request.getStatus());
+      return ChannelProfileResponse.fromDto(channelProfileRepository.update(channelProfile.get()));
+    }else{
+      throw new RuntimeException("No record found with given profile and channel Ids.");
+    }
   }
 
   public ChannelProfileResponse delete(final Long channelProfileId) {
@@ -74,5 +84,12 @@ public class ChannelProfileService {
               return channelProfileResponse;
             })
             .collect(Collectors.toList());
+  }
+
+  public List<ChannelProfileResponse> retrieveByChannelId(String channelId) {
+    return this.search("channelId:"+channelId);
+  }
+  public List<ChannelProfileResponse> retrieveByProfileId(String profileId) {
+    return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
   }
 }

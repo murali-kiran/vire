@@ -1,15 +1,14 @@
 package com.vire.service;
 
-import com.vire.dto.CommunityProfileDto;
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.request.CommunityRequest;
 import com.vire.model.response.CommunityResponse;
 import com.vire.model.response.MinimalProfileResponse;
+import com.vire.repository.CommunityProfileRepository;
 import com.vire.repository.CommunityRepository;
 import com.vire.utils.Snowflake;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,8 @@ public class CommunityService {
 
     @Autowired
     CommunityRepository communityRepository;
-
+    @Autowired
+    CommunityProfileRepository communityProfileRepository;
     @Autowired
     ProfileService profileService;
 
@@ -34,18 +34,18 @@ public class CommunityService {
     @Transactional
     public CommunityResponse create(final CommunityRequest request) {
         try{
-        var communityDto = request.toDto(snowflake);
-        communityDto =  communityRepository.create(communityDto);
+            var communityDto = request.toDto(snowflake);
+            communityDto =  communityRepository.create(communityDto);
 
-        var communityProfileRequest = new CommunityProfileRequest();
+            var communityProfileRequest = new CommunityProfileRequest();
 
-        communityProfileRequest.setCommunityId(communityDto.getCommunityId().toString());
-        communityProfileRequest.setProfileId(communityDto.getCreatorProfileId().toString());
-        communityProfileRequest.setIsAdmin(true);
-        communityProfileRequest.setStatus("Admin");
-        communityProfileService.create(communityProfileRequest);
+            communityProfileRequest.setCommunityId(communityDto.getCommunityId().toString());
+            communityProfileRequest.setProfileId(communityDto.getCreatorProfileId().toString());
+            communityProfileRequest.setIsAdmin(true);
+            communityProfileRequest.setStatus("Admin");
+            communityProfileService.create(communityProfileRequest);
 
-        return CommunityResponse.fromDto(communityDto);}
+            return CommunityResponse.fromDto(communityDto);}
         catch(ConstraintViolationException e){
             throw new RuntimeException("Record already exists. Please update instead of create.");
         }
@@ -124,8 +124,12 @@ public class CommunityService {
         String loginProfileId = response.getLoginProfileId();
         if(loginProfileId != null) {
             status = "Join Community";
+            var communityProfileById = communityProfileRepository.retrieveByCommunityIdAndProfileId(Long.valueOf(response.getCommunityId()), Long.valueOf(loginProfileId));
+            if(!communityProfileById.isEmpty()){
+                status = communityProfileById.get().getStatus();
+                //response.setCommunityProfileIdOfLoginUser(communityProfileById.get().getCommunityProfileId()+"");
+            }
         }
-        //var communityProfile = communityProfileService.search("( profileId:"+loginProfileId+" ) AND ( communityId:"+)
         var communityProfileList = communityProfileService.retrieveByCommunityId(response.getCommunityId());
         if (communityProfileList != null) {
             int i = 1;
@@ -134,10 +138,6 @@ public class CommunityService {
                     communityProfile.getProfile().cloneProperties(
                             profileService.retrieveProfileDtoById(
                                     Long.valueOf(communityProfile.getProfile().getProfileId())));
-                    if(loginProfileId != null && loginProfileId.equals(communityProfile.getProfile().getProfileId())) {
-                        status = communityProfile.getStatus();
-                        response.setCommunityProfileIdOfLoginUser(communityProfile.getCommunityProfileId());
-                    }
                     if("Accepted".equals(communityProfile.getStatus())){
                         i++;
                     }

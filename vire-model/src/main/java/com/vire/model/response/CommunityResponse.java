@@ -22,7 +22,7 @@ public class CommunityResponse {
     private List<CommunityProfileResponse> communityProfiles;
     private String profileCommunityStatus;
     private String loginProfileId;
-    private String communityProfileIdOfLoginUser;
+    //private String communityProfileIdOfLoginUser;
     private int acceptedUserCount;
     private Long createdTime;
     private Long updatedTime;

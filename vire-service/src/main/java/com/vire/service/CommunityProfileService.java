@@ -22,10 +22,14 @@ public class CommunityProfileService {
   ProfileService profileService;
 
   public CommunityProfileResponse create(final CommunityProfileRequest request) {
-
-    var dto = request.toDto(snowflake);
-
-    return CommunityProfileResponse.fromDto(communityProfileRepository.create(dto));
+    var existingCommunityProfile = communityProfileRepository.retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
+    if(existingCommunityProfile == null) {
+      var dto = request.toDto(snowflake);
+      return CommunityProfileResponse.fromDto(communityProfileRepository.create(dto));
+    }else{
+      existingCommunityProfile.get().setStatus(request.getStatus());
+      return CommunityProfileResponse.fromDto(communityProfileRepository.update(existingCommunityProfile.get()));
+    }
   }
 
   public CommunityProfileResponse update(final CommunityProfileRequest request) {
