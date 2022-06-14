@@ -4,12 +4,13 @@ import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.response.CommunityProfileResponse;
 import com.vire.repository.CommunityProfileRepository;
 import com.vire.utils.Snowflake;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class CommunityProfileService {
 
@@ -22,26 +23,29 @@ public class CommunityProfileService {
   ProfileService profileService;
 
   public CommunityProfileResponse create(final CommunityProfileRequest request) {
+    log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
+    checkAdminStatusCount(request);
     var existingCommunityProfile = communityProfileRepository.retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
-    if(existingCommunityProfile == null) {
+    if(existingCommunityProfile.isEmpty()) {
       var dto = request.toDto(snowflake);
       return CommunityProfileResponse.fromDto(communityProfileRepository.create(dto));
     }else{
-      existingCommunityProfile.get().setStatus(request.getStatus());
-      return CommunityProfileResponse.fromDto(communityProfileRepository.update(existingCommunityProfile.get()));
+      throw new RuntimeException("Record already exists please update");
     }
   }
 
   public CommunityProfileResponse update(final CommunityProfileRequest request) {
-
+    log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
+    checkAdminStatusCount(request);
     var dto = request.toDto();
-
     return CommunityProfileResponse.fromDto(communityProfileRepository.update(dto));
   }
   public CommunityProfileResponse updateCommunityProfileStatus(final CommunityProfileRequest request) {
+    log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
+    checkAdminStatusCount(request);
     var communityProfile = communityProfileRepository
             .retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
-    if(communityProfile != null) {
+    if(communityProfile != null && !communityProfile.isEmpty()) {
       communityProfile.get().setStatus(request.getStatus());
       return CommunityProfileResponse.fromDto(communityProfileRepository.update(communityProfile.get()));
     }else{
@@ -99,5 +103,23 @@ public class CommunityProfileService {
 
     public List<CommunityProfileResponse> retrieveByProfileId(String profileId) {
       return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
+    }
+
+    private String checkAdminStatusCount(CommunityProfileRequest request){
+      var communityProfiles = communityProfileRepository.search("( communityId:"+request.getCommunityId()+" ) AND ( status:Admin )");
+      if(communityProfiles.size() == 3) {
+        if(request.getStatus().equals("Admin")){
+          throw new RuntimeException("max allowed admins reached");
+        }
+        return "max_admin_count";
+      }
+      else if(communityProfiles.size() == 1) {
+        if(request.getStatus().equals("Exit")){
+          throw new RuntimeException("Please make another person admin before exit");
+        }
+        return "one_admin";
+      }
+      else
+        return "add_admin";
     }
 }

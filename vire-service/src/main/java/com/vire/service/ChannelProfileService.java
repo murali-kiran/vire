@@ -2,9 +2,9 @@ package com.vire.service;
 
 import com.vire.model.request.ChannelProfileRequest;
 import com.vire.model.response.ChannelProfileResponse;
-import com.vire.model.response.CommunityProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.utils.Snowflake;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ChannelProfileService {
 
@@ -26,17 +27,19 @@ public class ChannelProfileService {
 
   @Transactional
   public ChannelProfileResponse create(final ChannelProfileRequest request) {
+    log.info("Community id###############:"+request.getChannelId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
     var dto = request.toDto(snowflake);
     return ChannelProfileResponse.fromDto(channelProfileRepository.create(dto));
   }
 
   public ChannelProfileResponse update(final ChannelProfileRequest request) {
-
+    log.info("Community id###############:"+request.getChannelId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
     var dto = request.toDto();
 
     return ChannelProfileResponse.fromDto(channelProfileRepository.update(dto));
   }
   public ChannelProfileResponse updateChannelProfileStatus(final ChannelProfileRequest request) {
+    log.info("Community id###############:"+request.getChannelId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
     var channelProfile = channelProfileRepository.retrieveByChannelIdAndProfileId(Long.valueOf(request.getChannelId()), Long.valueOf(request.getProfileId()));
     if(channelProfile != null) {
       channelProfile.get().setStatus(request.getStatus());
