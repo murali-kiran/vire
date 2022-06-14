@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.model.request.ChannelProfileRequest;
+import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.response.ChannelProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.utils.Snowflake;
@@ -28,18 +29,20 @@ public class ChannelProfileService {
   @Transactional
   public ChannelProfileResponse create(final ChannelProfileRequest request) {
     log.info("Community id###############:"+request.getChannelId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
+    checkAdminStatusCount(request);
     var dto = request.toDto(snowflake);
     return ChannelProfileResponse.fromDto(channelProfileRepository.create(dto));
   }
 
   public ChannelProfileResponse update(final ChannelProfileRequest request) {
     log.info("Community id###############:"+request.getChannelId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
+    checkAdminStatusCount(request);
     var dto = request.toDto();
-
     return ChannelProfileResponse.fromDto(channelProfileRepository.update(dto));
   }
   public ChannelProfileResponse updateChannelProfileStatus(final ChannelProfileRequest request) {
     log.info("Community id###############:"+request.getChannelId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
+    checkAdminStatusCount(request);
     var channelProfile = channelProfileRepository.retrieveByChannelIdAndProfileId(Long.valueOf(request.getChannelId()), Long.valueOf(request.getProfileId()));
     if(channelProfile != null) {
       channelProfile.get().setStatus(request.getStatus());
@@ -94,5 +97,14 @@ public class ChannelProfileService {
   }
   public List<ChannelProfileResponse> retrieveByProfileId(String profileId) {
     return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
+  }
+  private void checkAdminStatusCount(ChannelProfileRequest request){
+    var channelProfiles = channelProfileRepository
+            .search("( channelId:"+request.getChannelId()+" ) AND ( status:Admin )");
+    if(channelProfiles.size() == 3 && request.getStatus().equals("Admin"))
+       throw new RuntimeException("max allowed admins reached");
+    else if(channelProfiles.size() == 1 && request.getStatus().equals("Exit") &&
+            channelProfiles.get(0).getProfileId().toString().equals(request.getProfileId()))
+      throw new RuntimeException("Make someone as channel admin before you leave current channel");
   }
 }

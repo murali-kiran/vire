@@ -123,13 +123,13 @@ public class ChannelService {
     }
     var channelProfileList = channelProfileService.retrieveByChannelId(response.getChannelId());
     if (channelProfileList != null) {
-      int i = 1;
+      int i = 0;
       for (var channelProfile : channelProfileList) {
         if (channelProfile.getProfile() != null) {
           channelProfile.getProfile().cloneProperties(
                   profileService.retrieveProfileDtoById(
                           Long.valueOf(channelProfile.getProfile().getProfileId())));
-          if("Accepted".equals(channelProfile.getStatus())){
+          if(channelProfile.getStatus().matches("(?i)Accepted|Admin")){
             i++;
           }
         }

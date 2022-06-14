@@ -105,21 +105,13 @@ public class CommunityProfileService {
       return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
     }
 
-    private String checkAdminStatusCount(CommunityProfileRequest request){
-      var communityProfiles = communityProfileRepository.search("( communityId:"+request.getCommunityId()+" ) AND ( status:Admin )");
-      if(communityProfiles.size() == 3) {
-        if(request.getStatus().equals("Admin")){
-          throw new RuntimeException("max allowed admins reached");
-        }
-        return "max_admin_count";
-      }
-      else if(communityProfiles.size() == 1) {
-        if(request.getStatus().equals("Exit")){
-          throw new RuntimeException("Please make another person admin before exit");
-        }
-        return "one_admin";
-      }
-      else
-        return "add_admin";
-    }
+  private void checkAdminStatusCount(CommunityProfileRequest request){
+    var communityProfiles = communityProfileRepository
+            .search("( communityId:"+request.getCommunityId()+" ) AND ( status:Admin )");
+    if(communityProfiles.size() == 3 && request.getStatus().equals("Admin"))
+      throw new RuntimeException("max allowed admins reached");
+    else if(communityProfiles.size() == 1 && request.getStatus().equals("Exit") &&
+            communityProfiles.get(0).getProfileId().toString().equals(request.getProfileId()))
+      throw new RuntimeException("Make someone as community admin before you leave current community");
+  }
 }

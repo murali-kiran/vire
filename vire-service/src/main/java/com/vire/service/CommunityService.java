@@ -132,13 +132,13 @@ public class CommunityService {
         }
         var communityProfileList = communityProfileService.retrieveByCommunityId(response.getCommunityId());
         if (communityProfileList != null) {
-            int i = 1;
+            int i = 0;
             for (var communityProfile : communityProfileList) {
                 if (communityProfile.getProfile() != null) {
                     communityProfile.getProfile().cloneProperties(
                             profileService.retrieveProfileDtoById(
                                     Long.valueOf(communityProfile.getProfile().getProfileId())));
-                    if("Accepted".equals(communityProfile.getStatus())){
+                    if(communityProfile.getStatus().matches("(?i)Accepted|Admin")){
                         i++;
                     }
                 }
