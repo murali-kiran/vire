@@ -38,9 +38,11 @@ public class FeedsService {
     ProfileService profileService;
     @Autowired
     FeedsSendToService feedsSendToService;
+
+
     public FeedsResponse createFeeds(final FeedsRequest request) {
 
-        var dto = request.toDto();
+        var dto = request.toDto(snowflake);
         dto.setFeedId(snowflake.nextId());
 
         if (!CollectionUtils.isEmpty(dto.getFeedsSendTo())) {
@@ -54,7 +56,7 @@ public class FeedsService {
 
     public FeedsResponse updateFeeds(final FeedsRequest request) {
 
-        var dto = request.toDto();
+        var dto = request.toDto(snowflake);
 
         return FeedsResponse.fromDto(feedsRepo.updateFeeds(dto));
     }

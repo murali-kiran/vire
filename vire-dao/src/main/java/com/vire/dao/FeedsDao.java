@@ -28,7 +28,8 @@ public class FeedsDao {
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<FeedsSendToDao> feedsSendTo;
-
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedFileDao> feedFileList;
     @Column(name = "created_time", nullable = false)
     private Long createdTime;
 
@@ -74,6 +75,12 @@ public class FeedsDao {
                     .collect(Collectors.toList())
             );
         }
+        if (this.getFeedFileList() != null && !this.getFeedFileList().isEmpty()) {
+            dto.setFeedFileList(this.getFeedFileList()
+                    .stream()
+                    .map(child -> child.toDto())
+                    .collect(Collectors.toList()));
+        }
         return dto;
     }
 
@@ -93,6 +100,15 @@ public class FeedsDao {
                     .map(sendTo -> FeedsSendToDao.fromDto(sendTo))
                     .collect(Collectors.toList())
             );
+        }
+        if (dto.getFeedFileList() != null && !dto.getFeedFileList().isEmpty()) {
+            dao.setFeedFileList(dto.getFeedFileList()
+                    .stream()
+                    .map(child -> {
+                        var childDao = FeedFileDao.fromDto(child);
+                        childDao.setFeed(dao);
+                        return childDao;
+                    })                    .collect(Collectors.toList()));
         }
         return dao;
     }

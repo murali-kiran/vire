@@ -15,6 +15,7 @@ public class ExperienceDto {
     private String title;
     private String description;
     private String location;
+    private List<ExperienceFileDto> experienceFileList;
     public Long createdTime;
     public Long updatedTime;
 }

@@ -21,14 +21,15 @@ public class ExperienceRequest {
     @Pattern(regexp="(^[0-9]*$)", message = "Profile id must be numeric")
     private String profileId;
     @NotBlank(message = "File id required")
-    @Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
-    private String fileId;
+    /*@Pattern(regexp="(^[0-9]*$)", message = "File id must be numeric")
+    private String fileId;*/
     @NotBlank(message = "Title required")
     private String title;
     @NotBlank(message = "Description required")
     private String description;
     @NotBlank(message = "Location required")
     private String location;
+    private List<ExperienceFileRequest> experienceFileList;
 
     public ExperienceDto toDto(Snowflake snowflake) {
 
@@ -42,11 +43,16 @@ public class ExperienceRequest {
         
         dto.setCategoryId(this.getCategoryId() == null ? null : Long.valueOf(this.getCategoryId()));
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
-        dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        //dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setTitle(this.getTitle());
         dto.setDescription(this.getDescription());
         dto.setLocation(this.getLocation());
-
+        if (this.getExperienceFileList() != null && !this.getExperienceFileList().isEmpty()) {
+            dto.setExperienceFileList(this.getExperienceFileList()
+                    .stream()
+                    .map(child -> child.toDto(snowflake))
+                    .collect(Collectors.toList()));
+        }
         return dto;
     }
 

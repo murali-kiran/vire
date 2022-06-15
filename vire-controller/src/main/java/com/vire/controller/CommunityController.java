@@ -100,15 +100,15 @@ public class CommunityController {
     return new ResponseEntity<CommunityResponse>(communityService.retrieveById(communityId), HttpStatus.OK);
   }
 
-  @Operation(summary = "Retrieve participants of community by ID")
+  @Operation(summary = "Retrieve participants not of community by ID")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Retrieve participants of community by ID successfully",
+          @ApiResponse(responseCode = "200", description = "Retrieve participants not of community by ID, success",
                   content = { @Content(mediaType = "application/json",
                           schema = @Schema(implementation = MinimalProfileResponse.class)) }),
-          @ApiResponse(responseCode = "500", description = "Retrieve participants of community failed",
+          @ApiResponse(responseCode = "500", description = "Retrieve participants not of community, failed",
                   content = @Content) })
   @GetMapping("/newParticipants/{communityId}")
-  public ResponseEntity<List<MinimalProfileResponse>> RetrieveParticipantsOfCommunity(@PathVariable Long communityId) {
+  public ResponseEntity<List<MinimalProfileResponse>> retrieveParticipantsNotOfCommunity(@PathVariable Long communityId) {
     return new ResponseEntity<>(communityService.retrieveProfilesNotPartOfCommunity(communityId), HttpStatus.OK);
   }
 

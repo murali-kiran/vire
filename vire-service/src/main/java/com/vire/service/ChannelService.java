@@ -4,6 +4,7 @@ import com.vire.model.request.ChannelProfileRequest;
 import com.vire.model.request.ChannelRequest;
 import com.vire.model.response.ChannelResponse;
 import com.vire.model.response.ChannelResponse;
+import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.repository.ChannelRepository;
 import com.vire.utils.Snowflake;
@@ -87,7 +88,11 @@ public class ChannelService {
             .map(dto -> profileLoader(ChannelResponse.fromDto(dto)))
             .get();
   }
-
+  public List<MinimalProfileResponse> retrieveProfilesNotPartOfChannel(final Long channelId){
+    var channelProfiles = channelProfileService.retrieveByChannelId(channelId+"");
+    var profileIDs = channelProfiles.stream().map(channelProfile->Long.valueOf(channelProfile.getProfile().getProfileId())).collect(Collectors.toList());
+    return profileService.retrieveProfilesNotInGivenIds(profileIDs);
+  }
   public List<ChannelResponse> search(final String searchString) {
 
     return channelRepository
