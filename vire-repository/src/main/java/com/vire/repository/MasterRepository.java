@@ -2,11 +2,15 @@ package com.vire.repository;
 
 import com.vire.dao.MasterDao;
 import com.vire.dto.MasterDto;
+import com.vire.dto.PagedResponseDto;
 import com.vire.repository.MasterRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,6 +62,21 @@ public class MasterRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+  public PagedResponseDto<MasterDto> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+    PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+     var machedResult = masterRepositoryJpa.findAll(request);
+
+     var masterDtoList = new ArrayList<MasterDto>();
+     machedResult.forEach(dao -> masterDtoList.add(dao.toDto()));
+
+    var pagedDto = new PagedResponseDto<>(pageNumber, pageSize, masterDtoList,
+            machedResult.getTotalElements(), machedResult.getTotalPages());
+
+    return pagedDto;
+  }
+
   public Optional<MasterDto> retrieveById(Long masterId) {
 
     return masterRepositoryJpa.findById(masterId).map(dao -> dao.toDto());

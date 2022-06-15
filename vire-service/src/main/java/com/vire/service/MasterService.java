@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.MasterRequest;
 import com.vire.model.response.MasterResponse;
+import com.vire.model.response.PagedResponse;
 import com.vire.repository.MasterRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,17 @@ public class MasterService {
             .map(dto -> MasterResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+    public PagedResponse<MasterResponse> getAllPaged(Integer pageNumber, Integer pageSize) {
+        var pagedResponseDto = masterRepository.getAllPaged(pageNumber, pageSize);
+
+        return new PagedResponse<>(pagedResponseDto.getPageNumber(),
+                pagedResponseDto.getPageSize(),
+                pagedResponseDto.getPageItems().stream().map(dto -> MasterResponse.fromDto(dto))
+                        .collect(Collectors.toList()),
+                pagedResponseDto.getTotalItems(),
+                pagedResponseDto.getTotalPages());
+    }
 
   public MasterResponse retrieveById(Long masterId) {
 
