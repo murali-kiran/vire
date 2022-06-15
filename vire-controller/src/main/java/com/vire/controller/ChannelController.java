@@ -3,7 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.model.request.ChannelRequest;
 import com.vire.model.response.ChannelResponse;
-import com.vire.model.response.CommunityResponse;
+import com.vire.model.response.MinimalProfileResponse;
 import com.vire.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -84,6 +84,17 @@ public class ChannelController {
     return new ResponseEntity<>(channelService.getAll(profileId), HttpStatus.OK);
   }
 
+  @Operation(summary = "Retrieve participants not part of channel by channel ID")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieved participants not part of channel successfully",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MinimalProfileResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve participants not part of channel failed",
+                  content = @Content) })
+  @GetMapping("/newParticipants/{channelId}")
+  public ResponseEntity<List<MinimalProfileResponse>> retrieveParticipantsNotOfChannel(@PathVariable Long channelId) {
+    return new ResponseEntity<>(channelService.retrieveProfilesNotPartOfChannel(channelId), HttpStatus.OK);
+  }
   @Operation(summary = "Get all channels with logged in profile id status")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Successfully got all channels",
@@ -111,7 +122,7 @@ public class ChannelController {
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Retrieve  communities joined by profile ID successfully",
                   content = { @Content(mediaType = "application/json",
-                          schema = @Schema(implementation = CommunityResponse.class)) }),
+                          schema = @Schema(implementation = ChannelResponse.class)) }),
           @ApiResponse(responseCode = "500", description = "Retrieve  communities joined by profile ID failed",
                   content = @Content) })
   @GetMapping("/linkedProfiles/{profileId}")

@@ -35,7 +35,8 @@ public class ExperienceDao {
 
     @Column(name = "location", nullable = false)
     private String location;
-
+    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExperienceFileDao> experienceFileList;
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -65,7 +66,12 @@ public class ExperienceDao {
         dto.setTitle(this.getTitle());
         dto.setDescription(this.getDescription());
         dto.setLocation(this.getLocation());
-
+        if (this.getExperienceFileList() != null && !this.getExperienceFileList().isEmpty()) {
+            dto.setExperienceFileList(this.getExperienceFileList()
+                    .stream()
+                    .map(child -> child.toDto())
+                    .collect(Collectors.toList()));
+        }
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -84,7 +90,15 @@ public class ExperienceDao {
         experience.setTitle(dto.getTitle());
         experience.setDescription(dto.getDescription());
         experience.setLocation(dto.getLocation());
-
+        if (dto.getExperienceFileList() != null && !dto.getExperienceFileList().isEmpty()) {
+            experience.setExperienceFileList(dto.getExperienceFileList()
+                    .stream()
+                    .map(child -> {
+                        var childDao = ExperienceFileDao.fromDto(child);
+                        childDao.setExperience(experience);
+                        return childDao;
+                    })                    .collect(Collectors.toList()));
+        }
         return experience;
     }
 }
