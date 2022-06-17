@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Optional<ProfileDao> profileDao = Optional.empty();
         if(Utility.isEmailValid(username)){
-            profileDao =   profileRepository.findByEmailId(username);
+            //profileDao =   profileRepository.findByEmailId(username);
             profileDao =   profileRepository.findByEmailId(username);
         }else if(Utility.isPhoneNumberValid(username)){
             profileDao = profileRepository.findByMobileNumber(username);

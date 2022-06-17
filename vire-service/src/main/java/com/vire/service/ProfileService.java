@@ -1,17 +1,17 @@
 package com.vire.service;
 
 
+import com.vire.dao.ProfileDao;
 import com.vire.dto.*;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
-import com.vire.model.response.FirmResponse;
-import com.vire.model.response.MinimalProfileResponse;
-import com.vire.model.response.PersonalResponse;
-import com.vire.model.response.ProfileResponse;
+import com.vire.model.request.UpdatePasswordRequest;
+import com.vire.model.response.*;
 import com.vire.repository.MasterRepository;
 import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
+import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -274,4 +274,41 @@ public class ProfileService {
 
     return (count/totalCount)*100;
   }
+
+    public  Optional<UpdatePasswordResponse> updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+
+        Optional<ProfileDao> profileDao = null;
+        UpdatePasswordResponse updatePasswordResponse = null;
+        boolean isEmail = false;
+        String emailOrPassword = updatePasswordRequest.getEmailOrphonenumber();
+        if(Utility.isEmailValid(emailOrPassword)){
+            profileDao =   profileRepository.findByEmailId(emailOrPassword);
+            isEmail = true;
+        }else if(Utility.isPhoneNumberValid(emailOrPassword)){
+            profileDao = profileRepository.findByMobileNumber(emailOrPassword);
+            isEmail = false;
+        }else{
+            updatePasswordResponse = new UpdatePasswordResponse(false,"Invalid email or phone number");
+            return Optional.of(updatePasswordResponse);
+        }
+
+        if(profileDao.isPresent()){
+            if(profileDao.get().getPassword().equals(passwordEncoder.encode(updatePasswordRequest.getOldPassword()))){
+                if(isEmail)
+                    profileRepository.updatePasswordViaEmail(emailOrPassword,passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+                else
+                    profileRepository.updatePasswordViaMobileNumber(emailOrPassword,passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+
+                updatePasswordResponse = new UpdatePasswordResponse(true,"Password is updated");
+                return Optional.of(updatePasswordResponse);
+            }else{
+                updatePasswordResponse = new UpdatePasswordResponse(false,"Existing password does not match");
+                return Optional.of(updatePasswordResponse);
+            }
+        }
+
+        updatePasswordResponse = new UpdatePasswordResponse(false,"Password updation failed");
+        return Optional.of(updatePasswordResponse);
+
+    }
 }

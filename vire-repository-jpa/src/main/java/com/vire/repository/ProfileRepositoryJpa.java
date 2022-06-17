@@ -3,6 +3,9 @@ package com.vire.repository;
 import com.vire.dao.ProfileDao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,5 +28,13 @@ public interface ProfileRepositoryJpa
     List<ProfileDao> findByProfileIdNotIn(List<Long> profileIDs);
 
     List<ProfileDao> findByProfileIdIn(List<Long> profileIDs);
+
+    @Modifying
+    @Query("update ProfileDao p set p.password = :password where p.emailId = :email")
+    void updatePasswordViaEmail(@Param(value = "email") String email, @Param(value = "password") String password);
+
+    @Modifying
+    @Query("update ProfileDao p set p.password = :password where p.mobileNumber = :phonenumber")
+    void updatePasswordViaPhoneNumber(@Param(value = "phonenumber") String phonenumber, @Param(value = "password") String password);
 
 }
