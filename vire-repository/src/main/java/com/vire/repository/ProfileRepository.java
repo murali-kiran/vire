@@ -211,4 +211,12 @@ public class ProfileRepository {
 
 
     }
+
+    public void updatePasswordViaEmail(String emailOrPassword, String password) {
+        profileRepositoryJpa.updatePasswordViaEmail(emailOrPassword,password);
+    }
+
+    public void updatePasswordViaMobileNumber(String emailOrPassword, String password) {
+        profileRepositoryJpa.updatePasswordViaPhoneNumber(emailOrPassword,password);
+    }
 }

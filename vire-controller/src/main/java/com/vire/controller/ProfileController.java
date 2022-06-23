@@ -1,7 +1,9 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.UpdatePasswordRequest;
 import com.vire.model.response.ProfileResponse;
+import com.vire.model.response.UpdatePasswordResponse;
 import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Validated
 @RestController
@@ -97,4 +98,24 @@ public class ProfileController {
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(profileService.searchProfiles(searchString), HttpStatus.OK);
     }*/
+
+
+    @Operation(summary = "update password by phone number or email id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated password",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UpdatePasswordResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Failed update password",
+                    content = @Content) })
+    @PutMapping("/changePassword")
+    public ResponseEntity<UpdatePasswordResponse> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest){
+        var response = profileService.updatePassword(updatePasswordRequest);
+
+        return response
+                .stream()
+                .map(updatePasswordResponse -> new ResponseEntity<>(updatePasswordResponse, HttpStatus.OK))
+                .findFirst()
+                .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
+
+    }
 }

@@ -29,7 +29,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
      **/
     @Override
     public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) throws Exception {
-        log.info("[postHandle][" + request + "]");
+        //log.info("[postHandle][" + request + "]");
     }
 
     /**
@@ -39,7 +39,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
     public void afterCompletion(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final Exception ex) throws Exception {
         if (ex != null)
             ex.printStackTrace();
-        log.info("[afterCompletion][" + request + "][exception: " + ex + "]");
+        //log.info("[afterCompletion][" + request + "][exception: " + ex + "]");
     }
 
     private String getParameters(final HttpServletRequest request) {
