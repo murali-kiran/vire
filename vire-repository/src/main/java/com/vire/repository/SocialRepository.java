@@ -7,6 +7,7 @@ import com.vire.dto.SocialSendToDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
@@ -79,7 +80,7 @@ public class SocialRepository {
 
     public List<SocialDto> getAllSocials() {
 
-        return socialRepositoryJpa.findAll()
+        return socialRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime"))
                 .stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());

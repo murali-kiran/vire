@@ -101,7 +101,9 @@ public class SocialService {
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setCommentsReply(commentReplyList);
         socialPostResponse.setLikes(likesList);
-        DateFormat sdf2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        //DateFormat sdf2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
+
         socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
         if(categoryMasterResponse != null) {
             socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
@@ -127,15 +129,21 @@ public class SocialService {
 
     public List<SocialPostResponse> retrievePostsByProfileId(Long profileId) {
         long startTime = System.nanoTime();
-        Set<String> socialIds = getSocialListBySearch(profileId);
+
+        /*Set<String> socialIds = getSocialListBySearch(profileId);
         long endTime = System.nanoTime();
         double elapsedTimeInSecond = (double) (endTime - startTime) / 1_000_000_000;
-        log.info("****************duration:" + elapsedTimeInSecond);
+        log.info("****************duration:" + elapsedTimeInSecond);*/
+        List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
             var socialPostResponse = retrieveSocialDetailsById(Long.valueOf(socialId));
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
-            socialPostResponse.setLocation(LOCATION);
+            var sendToList = socialPostResponse.getSendTo();
+            for (SocialSendToResponse sendTo:sendToList) {
+                if(sendTo.getType() != null && sendTo.getType().equals("Location"))
+                    socialPostResponse.setLocation(sendTo.getValue());
+            }
             socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;

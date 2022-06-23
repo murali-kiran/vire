@@ -6,6 +6,7 @@ import com.vire.dto.CommunityDto;
 import com.vire.repository.ChannelRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class ChannelRepository {
   }
   public List<ChannelDto> getAll() {
 
-    return channelRepositoryJpa.findAll()
+    return channelRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime"))
             .stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());

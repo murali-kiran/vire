@@ -26,6 +26,7 @@ public class SocialPostResponse {
     private List<CommentResponse> comments;
     private List<CommentReplyResponse> commentsReply;
     private List<LikesResponse> likes;
+    private List<SocialFileResponse> fileResponses;
     private String categoryName;
     private String categoryColorCode;
     private String createdTimeStr;
@@ -49,6 +50,13 @@ public class SocialPostResponse {
             response.setSendTo(dto.getSendTo()
                     .stream()
                     .map(sendToDto -> SocialSendToResponse.fromDto(sendToDto))
+                    .collect(Collectors.toList())
+            );
+        }
+        if (dto.getSocialFileList() != null && !dto.getSocialFileList().isEmpty()) {
+            response.setFileResponses(dto.getSocialFileList()
+                    .stream()
+                    .map(fileDto -> SocialFileResponse.fromDto(fileDto))
                     .collect(Collectors.toList())
             );
         }

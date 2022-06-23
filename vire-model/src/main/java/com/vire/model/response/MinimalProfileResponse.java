@@ -12,6 +12,7 @@ public class MinimalProfileResponse {
     private String name;
     private String fileId;
     private String profileType;
+    private String location;
 
 
     public static MinimalProfileResponse fromDto(final ProfileDto dto) {
@@ -21,7 +22,7 @@ public class MinimalProfileResponse {
         profileResponse.setName(dto.getName());
         profileResponse.setProfileType(dto.getProfileType());
         profileResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
-
+        profileResponse.setLocation(dto.getPersonalProfile() != null ? dto.getPersonalProfile().getPresentAddress().getCityTownVillage():dto.getFirmProfile().getAddress().getCityTownVillage());
         return profileResponse;
     }
 
@@ -30,5 +31,6 @@ public class MinimalProfileResponse {
         this.setName(response.getName());
         this.setFileId(response.getFileId());
         this.setProfileType(response.getProfileType());
+        this.setLocation(response.getLocation());
     }
 }
