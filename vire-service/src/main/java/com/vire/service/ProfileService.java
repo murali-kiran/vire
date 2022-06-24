@@ -3,6 +3,7 @@ package com.vire.service;
 
 import com.vire.dao.ProfileDao;
 import com.vire.dto.*;
+import com.vire.exception.LoginException;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
@@ -13,8 +14,12 @@ import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +42,9 @@ public class ProfileService {
 
   @Autowired
   PasswordEncoder passwordEncoder;
+
+  @Autowired
+  AuthenticationManager authenticationManager;
 
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
@@ -275,6 +283,7 @@ public class ProfileService {
     return (count/totalCount)*100;
   }
 
+    @Transactional
     public  Optional<UpdatePasswordResponse> updatePassword(UpdatePasswordRequest updatePasswordRequest) {
 
         Optional<ProfileDao> profileDao = null;
@@ -293,7 +302,11 @@ public class ProfileService {
         }
 
         if(profileDao.isPresent()){
-            if(profileDao.get().getPassword().equals(passwordEncoder.encode(updatePasswordRequest.getOldPassword()))){
+
+            try {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(emailOrPassword, updatePasswordRequest.getOldPassword()));
+
                 if(isEmail)
                     profileRepository.updatePasswordViaEmail(emailOrPassword,passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
                 else
@@ -301,10 +314,13 @@ public class ProfileService {
 
                 updatePasswordResponse = new UpdatePasswordResponse(true,"Password is updated");
                 return Optional.of(updatePasswordResponse);
-            }else{
+
+            }catch (Exception e){
+                e.printStackTrace();
                 updatePasswordResponse = new UpdatePasswordResponse(false,"Existing password does not match");
                 return Optional.of(updatePasswordResponse);
             }
+
         }
 
         updatePasswordResponse = new UpdatePasswordResponse(false,"Password updation failed");
