@@ -3,6 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.model.request.CommunityRequest;
 import com.vire.model.response.CommunityResponse;
+import com.vire.model.response.KeyValueListResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.service.CommunityService;
 import com.vire.constant.VireConstants;
@@ -122,6 +123,18 @@ public class CommunityController {
   @GetMapping("/joinedProfiles/{profileId}")
   public ResponseEntity<List<CommunityResponse>> retrieveJoinedByProfileId(@PathVariable Long profileId) {
     return new ResponseEntity<>(communityService.retrieveCommunitiesJoined(profileId), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Retrieve  communities created and joined by profile ID statusList: comma separated statuses ex: Admin,Accepted,Blocked,Rejected,Requested")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve  communities created and joined by profile ID successfully" ,
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = KeyValueListResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve  communities created and joined by profile ID failed",
+                  content = @Content) })
+  @GetMapping("/getByProfileStatus/{profileId}/{statusList}")
+  public ResponseEntity<List<KeyValueListResponse>> retrieveCommunitiesByProfileStatus(@PathVariable Long profileId, @PathVariable String statusList) {
+    return new ResponseEntity<>(communityService.retrieveCommunitiesByProfileStatus(profileId, statusList), HttpStatus.OK);
   }
 
   @Operation(summary = "Searching of community")

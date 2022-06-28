@@ -105,6 +105,10 @@ public class CommunityProfileService {
       return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
     }
 
+  public List<CommunityProfileResponse> retrieveCommunitiesCreatedJoined(String profileId) {
+    return this.search("( profileId:"+profileId+ " ) AND ( ( status:Accepted ) OR ( status:Admin ) )");
+  }
+
   private void checkAdminStatusCount(CommunityProfileRequest request){
     var communityProfiles = communityProfileRepository
             .search("( communityId:"+request.getCommunityId()+" ) AND ( status:Admin )");

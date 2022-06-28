@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SocialReportRepositoryJpa
-    extends JpaRepository<SocialReportDao, Long>, JpaSpecificationExecutor<SocialReportDao> {}
+    extends JpaRepository<SocialReportDao, Long>, JpaSpecificationExecutor<SocialReportDao> {
+    void deleteBySocialId(Long socialId);
+}

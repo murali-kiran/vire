@@ -2,7 +2,9 @@ package com.vire.service;
 
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.request.CommunityRequest;
+import com.vire.model.response.CommunityProfileResponse;
 import com.vire.model.response.CommunityResponse;
+import com.vire.model.response.KeyValueListResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.CommunityProfileRepository;
 import com.vire.repository.CommunityRepository;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -158,6 +161,14 @@ public class CommunityService {
                 .retrieveByIds(communityIDs)
                 .stream()
                 .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+    }
+    public List<KeyValueListResponse> retrieveCommunitiesByProfileStatus(Long profileId, String statusList) {
+
+        return communityRepository
+                .retrieveByProfileIdStatus(profileId, Arrays.asList(statusList.split(",", -1)))
+                .stream()
+                .map(dto -> KeyValueListResponse.fromDto(dto.getCommunityId(), dto.getName()))
                 .collect(Collectors.toList());
     }
 }

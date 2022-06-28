@@ -25,7 +25,7 @@ public class SocialChatDao extends BaseDao{
     private String message;
 
     @Column(name = "social_id", nullable = false)
-    private Long socialPostId;
+    private Long socialId;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -48,7 +48,7 @@ public class SocialChatDao extends BaseDao{
         dto.setChatInitiatorProfileId(this.getChatInitiatorProfileId());
         dto.setSenderProfileId(this.getSenderProfileId());
         dto.setMessage(this.getMessage());
-        dto.setSocialPostId(this.getSocialPostId());
+        dto.setSocialPostId(this.getSocialId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
         return dto;
@@ -59,7 +59,7 @@ public class SocialChatDao extends BaseDao{
         dao.setChatInitiatorProfileId(dto.getChatInitiatorProfileId());
         dao.setSenderProfileId(dto.getSenderProfileId());
         dao.setMessage(dto.getMessage());
-        dao.setSocialPostId(dto.getSocialPostId());
+        dao.setSocialId(dto.getSocialPostId());
         return dao;
     }
 

@@ -68,12 +68,12 @@ public class ChannelRepository {
 
     var spec = new CustomSpecificationResolver<ChannelDao>(searchString).resolve();
 
-    return channelRepositoryJpa.findAll(spec).stream()
+    return channelRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
   public List<ChannelDto> retrieveByIds(List<Long> channelIDs) {
-    var channelDaos= channelRepositoryJpa.findByChannelIdIn(channelIDs);
+    var channelDaos= channelRepositoryJpa.findByChannelIdIn(channelIDs, Sort.by(Sort.Direction.DESC, "updatedTime"));
     var channelDtos= channelDaos.stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());

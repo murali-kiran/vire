@@ -12,8 +12,8 @@ public class SocialReportRequest {
 
     private String socialReportId;
     
-    private Long socialId;
-    private Long reporterId;
+    private String socialId;
+    private String reporterId;
     private String reportReason;
     private String reportDescription;
 
@@ -27,8 +27,8 @@ public class SocialReportRequest {
             dto.setSocialReportId(snowflake.nextId());
         }
         
-        dto.setSocialId(this.getSocialId());
-        dto.setReporterId(this.getReporterId());
+        dto.setSocialId(this.getSocialId() == null ? null : Long.valueOf(this.getSocialId()));
+        dto.setReporterId(this.getReporterId() == null ? null : Long.valueOf(this.getReporterId()));
         dto.setReportReason(this.getReportReason());
         dto.setReportDescription(this.getReportDescription());
 

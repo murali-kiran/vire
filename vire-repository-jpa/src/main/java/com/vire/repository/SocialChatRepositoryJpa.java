@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface SocialChatRepositoryJpa extends JpaRepository<SocialChatDao, Long> ,
         JpaSpecificationExecutor<SocialChatDao> {
 
+    void deleteBySocialId(Long socialId);
 }

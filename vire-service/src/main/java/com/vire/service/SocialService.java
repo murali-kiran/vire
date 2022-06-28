@@ -40,6 +40,8 @@ public class SocialService {
     SocialSendToService socialSendToService;
     @Autowired
     SocialCategoryMasterService socialCategoryMasterService;
+    @Autowired
+    SocialCallRequestService socialCallRequestService;
 
     private String LOCATION = null;
     public SocialResponse createSocial(final SocialRequest request) {
@@ -70,6 +72,7 @@ public class SocialService {
 
     public SocialResponse deleteSocialPost(final Long socialId) {
 
+
         return socialRepo.deleteSocialPost(socialId)
                 .map(dto -> SocialResponse.fromDto(dto))
                 .get();
@@ -90,7 +93,8 @@ public class SocialService {
                 .get();
     }
 
-    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
+    public SocialPostResponse retrieveSocialDetailsById(Long socialId, Long profileId) {
+        log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
         SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
                 .map(dto -> SocialPostResponse.fromDto(dto))
                 .get();
@@ -98,12 +102,17 @@ public class SocialService {
         List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
         List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:" + socialId);
         List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
+        if(profileId != null && socialPostResponse.getSocialCallRequestResponses() != null) {
+            SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId+"");
+            if(socialCallRequestResponse != null)
+                socialPostResponse.setCallRequestStatusOfLoginUser(socialCallRequestResponse.getStatus());
+        }
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setCommentsReply(commentReplyList);
         socialPostResponse.setLikes(likesList);
         //DateFormat sdf2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
-
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
         if(categoryMasterResponse != null) {
             socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
@@ -111,7 +120,10 @@ public class SocialService {
         }
         return socialPostResponse;
     }
-
+    private static SocialCallRequestResponse findCallRequestByProfileId(Collection<SocialCallRequestResponse> listCallRequest, String profileId) {
+        return listCallRequest.stream().filter(callRequestResponse-> profileId.equals(callRequestResponse.getRequesterProfileId()))
+                .findFirst().orElse(null);
+    }
     public List<SocialResponse> getPostsByCommunity(Long communityId) {
 
         return socialRepo.getPostsByCommunity(communityId).stream()
@@ -137,7 +149,7 @@ public class SocialService {
         List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
-            var socialPostResponse = retrieveSocialDetailsById(Long.valueOf(socialId));
+            var socialPostResponse = retrieveSocialDetailsById(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
             for (SocialSendToResponse sendTo:sendToList) {

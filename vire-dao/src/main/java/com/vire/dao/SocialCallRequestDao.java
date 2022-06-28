@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name="socail_call_request")
+@Table(name="social_call_request")
 @Data
 public class SocialCallRequestDao {
 
@@ -53,7 +53,7 @@ public class SocialCallRequestDao {
         var dto = new SocialCallRequestDto();
 
         dto.setSocialCallRequestId(this.getSocialCallRequestId());
-        
+        dto.setSocialId(this.getSocial().getSocialId());
         dto.setProfileId(this.getProfileId());
         dto.setRequesterProfileId(this.getRequesterProfileId());
         dto.setStatus(this.getStatus());

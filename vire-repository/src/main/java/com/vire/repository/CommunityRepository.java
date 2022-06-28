@@ -69,16 +69,21 @@ public class CommunityRepository {
 
     var spec = new CustomSpecificationResolver<CommunityDao>(searchString).resolve();
 
-    return communityRepositoryJpa.findAll(spec).stream()
+    return communityRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
 
     public List<CommunityDto> retrieveByIds(List<Long> communityIDs) {
-      var communityDaos= communityRepositoryJpa.findBycommunityIdIn(communityIDs);
+      var communityDaos= communityRepositoryJpa.findByCommunityIdIn(communityIDs, Sort.by(Sort.Direction.DESC, "updatedTime"));
       var communityDtos= communityDaos.stream()
               .map(dao -> dao.toDto())
               .collect(Collectors.toList());
       return communityDtos;
     }
+  public List<CommunityDto> retrieveByProfileIdStatus(Long profileId, List<String> statusList){
+    return communityRepositoryJpa.findCommunityByProfileIdStatus(profileId, statusList).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
 }

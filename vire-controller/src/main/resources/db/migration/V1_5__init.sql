@@ -22,3 +22,8 @@ ALTER TABLE feed_files ADD CONSTRAINT fk_feed_files_feed_id FOREIGN KEY (feed_id
 ALTER TABLE experience_files ADD CONSTRAINT fk_experience_files_experience_id FOREIGN KEY (experience_id) REFERENCES experience(experience_id);
 ALTER TABLE t_feeds CHANGE COLUMN file_id file_id BIGINT NULL ;
 ALTER TABLE experience CHANGE COLUMN file_id file_id BIGINT NULL ;
+
+ALTER TABLE socail_call_request RENAME TO  social_call_request;
+ALTER TABLE social_call_request ADD UNIQUE unique_index(social_id, requester_profile_id);
+
+ALTER TABLE social_report CHANGE COLUMN reportDescription report_description VARCHAR(191) NOT NULL ;

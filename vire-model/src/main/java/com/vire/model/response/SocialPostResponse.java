@@ -27,10 +27,12 @@ public class SocialPostResponse {
     private List<CommentReplyResponse> commentsReply;
     private List<LikesResponse> likes;
     private List<SocialFileResponse> fileResponses;
+    private List<SocialCallRequestResponse> socialCallRequestResponses;
     private String categoryName;
     private String categoryColorCode;
     private String createdTimeStr;
     private String location;
+    private String callRequestStatusOfLoginUser;
     //private List<SocialPostSentResponse> sendTo;
 
     public static SocialPostResponse fromDto(final SocialDto dto) {
@@ -60,7 +62,12 @@ public class SocialPostResponse {
                     .collect(Collectors.toList())
             );
         }
-
+        if (dto.getSocialCallRequestList() != null && !dto.getSocialCallRequestList().isEmpty()) {
+            response.setSocialCallRequestResponses(dto.getSocialCallRequestList()
+                    .stream()
+                    .map(socialCallDto -> SocialCallRequestResponse.fromDto(socialCallDto))
+                    .collect(Collectors.toList()));
+        }
         return response;
     }
 }

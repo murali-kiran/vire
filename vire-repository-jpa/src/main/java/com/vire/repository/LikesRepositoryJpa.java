@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface LikesRepositoryJpa extends JpaRepository<LikesDao, Long> ,
         JpaSpecificationExecutor<LikesDao> {
 
+    void deleteBySocialId(Long socialId);
 }

@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface ChannelRepositoryJpa
     extends JpaRepository<ChannelDao, Long>, JpaSpecificationExecutor<ChannelDao> {
-    List<ChannelDao> findByChannelIdIn(List<Long> channelIDs);
+    List<ChannelDao> findByChannelIdIn(List<Long> channelIDs, Sort sort);
     List<ChannelDao> findAll(Sort sort);
 }

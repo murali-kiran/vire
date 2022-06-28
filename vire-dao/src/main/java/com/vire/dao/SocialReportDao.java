@@ -27,7 +27,7 @@ public class SocialReportDao {
     @Column(name = "report_reason", nullable = false)
     private String reportReason;
 
-    @Column(name = "reportDescription", nullable = false)
+    @Column(name = "report_description", nullable = false)
     private String reportDescription;
 
     @Column(name = "created_time", nullable = false , updatable = false)

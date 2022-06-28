@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class SocialCallRequestResponse {
 
     private String socialCallRequestId;
-    
+    private String socialId;
     private String profileId;
     private String requesterProfileId;
     private String status;
@@ -22,6 +22,7 @@ public class SocialCallRequestResponse {
 
         socialCallRequest.setSocialCallRequestId(String.valueOf(dto.getSocialCallRequestId()));
         socialCallRequest.setProfileId(dto.getProfileId() == null ? null : String.valueOf(dto.getProfileId()));
+        socialCallRequest.setSocialId(dto.getSocialId() == null ? null : String.valueOf(dto.getSocialId()));
         socialCallRequest.setRequesterProfileId(dto.getRequesterProfileId() == null ? null : String.valueOf(dto.getRequesterProfileId()));
         socialCallRequest.setStatus(dto.getStatus());
         socialCallRequest.setCreatedTime(dto.getCreatedTime());

@@ -1,6 +1,7 @@
 package com.vire.repository;
 
 import com.vire.dao.SocialDao;
+import com.vire.dao.SocialReportDao;
 import com.vire.dao.SocialSendToDao;
 import com.vire.dto.SocialDto;
 import com.vire.dto.SocialSendToDto;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,7 +26,16 @@ public class SocialRepository {
     @Autowired
     SocialRepositoryJpa socialRepositoryJpa;
     @Autowired
-    SocialSendToRepositoryJpa socialSendToRepositoryJpa;
+    SocialReportRepositoryJpa socialReportRepositoryJpa;
+    @Autowired
+    LikesRepositoryJpa likesRepositoryJpa;
+    @Autowired
+    CommentRepositoryJpa commentRepositoryJpa;
+    @Autowired
+    CommentReplyReposJpa commentReplyReposJpa;
+    @Autowired
+    SocialChatRepositoryJpa socialChatRepositoryJpa;
+
     @PersistenceContext
     private EntityManager entityManager;
     public SocialDto createSocial(final SocialDto socialDto) {
@@ -64,12 +75,17 @@ public class SocialRepository {
         }
         return socialRepositoryJpa.save(socialDao).toDto();
     }
-
+    @Transactional
     public Optional<SocialDto> deleteSocialPost(final Long socialId) {
 
         var optionalSocial = retrieveById(socialId);
-
+        log.info("Delete Social ID#########:"+socialId);
         if (optionalSocial.isPresent()) {
+            likesRepositoryJpa.deleteBySocialId(socialId);
+            commentReplyReposJpa.deleteBySocialId(socialId);
+            commentRepositoryJpa.deleteBySocialId(socialId);
+            socialChatRepositoryJpa.deleteBySocialId(socialId);
+            socialReportRepositoryJpa.deleteBySocialId(socialId);
             socialRepositoryJpa.deleteById(socialId);
         } else {
             throw new RuntimeException("Social Post Object not exists in DB");

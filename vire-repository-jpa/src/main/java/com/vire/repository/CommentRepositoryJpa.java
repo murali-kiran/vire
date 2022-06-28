@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepositoryJpa extends JpaRepository<CommentDao, Long> ,
         JpaSpecificationExecutor<CommentDao> {
 
+    void deleteBySocialId(Long socialId);
 }

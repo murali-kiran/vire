@@ -121,7 +121,7 @@ public class SocialController {
                     content = @Content)})
     @GetMapping("socialdetails/{socialid}")
     public ResponseEntity<SocialPostResponse> findById(@PathVariable(name = "socialid") Long socialPostId) {
-        return new ResponseEntity<SocialPostResponse>(socialService.retrieveSocialDetailsById(socialPostId), HttpStatus.OK);
+        return new ResponseEntity<SocialPostResponse>(socialService.retrieveSocialDetailsById(socialPostId, null), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Social by profile by ID")
