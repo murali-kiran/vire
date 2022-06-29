@@ -14,10 +14,13 @@ public class CommentReplyRepository {
 
     @Autowired
     CommentReplyReposJpa commentReplyReposJpa;
+    @Autowired
+    CommentRepositoryJpa commentRepositoryJpa;
 
     public CommentReplyDto createReply(final CommentReplyDto commentReplyDto) {
         var commentReplyDao = CommentReplyDao.fromDto(commentReplyDto);
         commentReplyDao.onPrePersist();
+        commentReplyDao.setSocialPostComment(commentRepositoryJpa.getById(commentReplyDto.getCommentId()));
         return commentReplyReposJpa.save(CommentReplyDao.fromDto(commentReplyDto)).toDto();
     }
 

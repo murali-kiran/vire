@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.CommentReplyRequest;
 import com.vire.model.response.CommentReplyResponse;
+import com.vire.model.response.CommentResponse;
 import com.vire.repository.CommentReplyRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class CommentReplyService {
     @Autowired
     CommentReplyRepository commentReplyRepository;
 
+    @Autowired
+    ProfileService profileService;
     public CommentReplyResponse createReply(final CommentReplyRequest request) {
 
         var dto = request.toDto();
@@ -43,14 +46,24 @@ public class CommentReplyService {
     public CommentReplyResponse retrieveById(Long replyId) {
 
         return commentReplyRepository.retrieveById(replyId)
-                .map(dto -> CommentReplyResponse.fromDto(dto))
+                .map(dto -> profileLoader(CommentReplyResponse.fromDto(dto)))
                 .get();
     }
 
     public List<CommentReplyResponse> searchReplies(final String searchString) {
 
         return commentReplyRepository.searchReplies(searchString).stream()
-                .map(dto -> CommentReplyResponse.fromDto(dto))
+                .map(dto -> profileLoader(CommentReplyResponse.fromDto(dto)))
                 .collect(Collectors.toList());
+    }
+
+    private CommentReplyResponse profileLoader(CommentReplyResponse response){
+        if (response.getReplierProfile() != null
+                && response.getReplierProfile().getProfileId() != null) {
+            response.getReplierProfile().cloneProperties(
+                    profileService.retrieveProfileDtoById(
+                            Long.valueOf(response.getReplierProfile().getProfileId())));
+        }
+        return response;
     }
 }

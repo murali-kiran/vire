@@ -24,7 +24,7 @@ public class SocialPostResponse {
     private Long updatedTime;
     private List<SocialSendToResponse> sendTo;
     private List<CommentResponse> comments;
-    private List<CommentReplyResponse> commentsReply;
+    //private List<CommentReplyResponse> commentsReply;
     private List<LikesResponse> likes;
     private List<SocialFileResponse> fileResponses;
     private List<SocialCallRequestResponse> socialCallRequestResponses;

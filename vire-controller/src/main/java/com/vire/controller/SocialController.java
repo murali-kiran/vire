@@ -116,12 +116,12 @@ public class SocialController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Social by ID Successful",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialResponse.class))}),
+                            schema = @Schema(implementation = SocialPostResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Find Social by ID Failed",
                     content = @Content)})
     @GetMapping("socialdetails/{socialid}")
     public ResponseEntity<SocialPostResponse> findById(@PathVariable(name = "socialid") Long socialPostId) {
-        return new ResponseEntity<SocialPostResponse>(socialService.retrieveSocialDetailsById(socialPostId, null), HttpStatus.OK);
+        return new ResponseEntity<SocialPostResponse>(socialService.retrieveSocialDetailsById(socialPostId), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Social by profile by ID")

@@ -2,6 +2,7 @@ package com.vire.dao;
 
 import com.vire.dto.CommentReplyDto;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -20,8 +21,13 @@ public class CommentReplyDao extends BaseDao{
     @Column(name = "reply", length = 191)
     private String reply;
 
-    @Column(name = "comment_id", nullable = false)
-    private Long commentId;
+    /*@Column(name = "comment_id", nullable = false)
+    private Long commentId;*/
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_id")
+    @ToString.Exclude
+    private CommentDao socialPostComment;
 
     @Column(name = "social_id", nullable = false)
     private Long socialId;
@@ -43,7 +49,7 @@ public class CommentReplyDao extends BaseDao{
         dto.setSocialPostCommentReplyId(this.getSocialPostCommentReplyId());
         dto.setCommentReplierProfileId(this.getCommentReplierProfileId());
         dto.setReply(this.getReply());
-        dto.setCommentId(this.getCommentId());
+        dto.setCommentId(this.getSocialPostComment().getSocialPostCommentId());
         dto.setSocialId(this.getSocialId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
@@ -55,7 +61,7 @@ public class CommentReplyDao extends BaseDao{
         dao.setSocialPostCommentReplyId(dto.getSocialPostCommentReplyId());
         dao.setCommentReplierProfileId(dto.getCommentReplierProfileId());
         dao.setReply(dto.getReply());
-        dao.setCommentId(dto.getCommentId());
+        //dao.setCommentId(dto.getCommentId());
         dao.setSocialId(dto.getSocialId());
         return dao;
     }

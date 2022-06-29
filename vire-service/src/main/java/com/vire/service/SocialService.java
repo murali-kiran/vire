@@ -100,7 +100,7 @@ public class SocialService {
                 .get();
         SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
         List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
-        List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:" + socialId);
+        //List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:" + socialId);
         List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
         if(profileId != null && socialPostResponse.getSocialCallRequestResponses() != null) {
             SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId+"");
@@ -108,7 +108,28 @@ public class SocialService {
                 socialPostResponse.setCallRequestStatusOfLoginUser(socialCallRequestResponse.getStatus());
         }
         socialPostResponse.setComments(commentsList);
-        socialPostResponse.setCommentsReply(commentReplyList);
+       // socialPostResponse.setCommentsReply(commentReplyList);
+        socialPostResponse.setLikes(likesList);
+        //DateFormat sdf2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
+        if(categoryMasterResponse != null) {
+            socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
+            socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
+        }
+        return socialPostResponse;
+    }
+    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
+        SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .get();
+        SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
+        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
+        //List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("socialId:" + socialId);
+        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
+        socialPostResponse.setComments(commentsList);
+        // socialPostResponse.setCommentsReply(commentReplyList);
         socialPostResponse.setLikes(likesList);
         //DateFormat sdf2 = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
