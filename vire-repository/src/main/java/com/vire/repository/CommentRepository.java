@@ -4,6 +4,7 @@ import com.vire.dao.CommentDao;
 import com.vire.dto.CommentDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class CommentRepository {
 
         var spec = new CustomSpecificationResolver<CommentDao>(searchString).resolve();
 
-        return commentRepositoryJpa.findAll(spec).stream()
+        return commentRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
     }

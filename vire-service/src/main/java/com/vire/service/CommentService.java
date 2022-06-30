@@ -66,7 +66,7 @@ public class CommentService {
                             Long.valueOf(response.getCommenterProfile().getProfileId())));
         }
         var replyList = response.getCommentReplyResponseList();
-        if(!replyList.isEmpty()){
+        if(replyList != null && !replyList.isEmpty()){
             replyList.forEach(replyResponse -> replyResponse.getReplierProfile().cloneProperties(
                     profileService.retrieveProfileDtoById(
                             Long.valueOf(replyResponse.getReplierProfile().getProfileId()))));

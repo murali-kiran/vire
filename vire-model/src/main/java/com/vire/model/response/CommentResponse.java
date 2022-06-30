@@ -4,6 +4,8 @@ import com.vire.dto.CommentDto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ public class CommentResponse implements Serializable {
                     .stream()
                     .map(child -> CommentReplyResponse.fromDto(child))
                     .collect(Collectors.toList()));
+            Collections.sort(response.getCommentReplyResponseList(), Comparator.comparing(CommentReplyResponse::getUpdatedTime).reversed());
         }
         if (dto.getCommenterProfileId() != null) {
             var minProfileRes = new MinimalProfileResponse();
@@ -56,7 +59,7 @@ public class CommentResponse implements Serializable {
         long diffYears = timeDifferenceMilliseconds / ((long) 60 * 60 * 1000 * 24 * 365);
 
         if (diffSeconds < 1) {
-            return "few seconds ego";
+            return "few seconds ago";
         } else if (diffMinutes < 1) {
             return diffSeconds + " s ";
         } else if (diffHours < 1) {

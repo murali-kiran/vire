@@ -21,7 +21,7 @@ public class CommentReplyRepository {
         var commentReplyDao = CommentReplyDao.fromDto(commentReplyDto);
         commentReplyDao.onPrePersist();
         commentReplyDao.setSocialPostComment(commentRepositoryJpa.getById(commentReplyDto.getCommentId()));
-        return commentReplyReposJpa.save(CommentReplyDao.fromDto(commentReplyDto)).toDto();
+        return commentReplyReposJpa.save(commentReplyDao).toDto();
     }
 
     public Optional<CommentReplyDto> retrieveById(Long replyId) {

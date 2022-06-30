@@ -46,7 +46,7 @@ public class CommentReplyResponse implements Serializable {
         long diffYears = timeDifferenceMilliseconds / ((long) 60 * 60 * 1000 * 24 * 365);
 
         if (diffSeconds < 1) {
-            return "few seconds ego";
+            return "few seconds ago";
         } else if (diffMinutes < 1) {
             return diffSeconds + " s ";
         } else if (diffHours < 1) {
