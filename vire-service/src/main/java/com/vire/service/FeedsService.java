@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,11 +30,13 @@ public class FeedsService {
     FileRepository feedsImageRepo;
 
     @Autowired
-    CommentService commentService;
+    FeedCommentService commentService;
+
     @Autowired
-    CommentReplyService commentReplyService;
+    FeedCommentReplyService commentReplyService;
+
     @Autowired
-    LikesService likesService;
+    FeedLikesService likesService;
     @Autowired
     ProfileService profileService;
     @Autowired
@@ -82,18 +85,35 @@ public class FeedsService {
                 .map(dto -> FeedsResponse.fromDto(dto))
                 .get();
     }
-    public FeedsResponse retrieveFeedsDetailsById(Long feedsId) {
+    public FeedsFullResponse retrieveFeedsDetailsById(Long feedsId) {
         FeedsResponse feedsResponse =  feedsRepo.retrieveById(feedsId)
                 .map(dto -> FeedsResponse.fromDto(dto))
                 .get();
-       /* List<CommentResponse> commentsList = commentService.searchComments("feedsId:"+feedsId);
-        List<CommentReplyResponse> commentReplyList = commentReplyService.searchReplies("feedsId:"+feedsId);
-        List<LikesResponse> likesList = likesService.searchLikes("feedsId:"+feedsId);
-        feedsPostResponse.setComments(commentsList);
-        feedsPostResponse.setCommentsReply(commentReplyList);
-        feedsPostResponse.setLikes(likesList);*/
 
-        return feedsResponse;
+        FeedsFullResponse feedsFullResponse = FeedsFullResponse.fromFeedResponse(feedsResponse);
+
+        List<FeedCommentResponse> commentsList = commentService.search("feedId:" + feedsId);
+        List<FeedLikesResponse> likesList = likesService.search("feedId:" + feedsId);
+        feedsFullResponse.setComments(commentsList);
+        feedsFullResponse.setLikes(likesList);
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        feedsFullResponse.setCreatedTimeStr(sdf2.format(new Date(feedsResponse.getCreatedTime())));
+
+        Optional<FeedsSendToResponse> feedsSendToResponse = feedsResponse.getFeedsSendTo().stream().
+                filter(p -> p.getType().equals("Location")).
+                findFirst();
+        if(feedsSendToResponse != null && feedsSendToResponse.get() != null)
+            feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
+
+        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
+        minimalProfileResponse.setProfileId(feedsResponse.getProfileId());
+        feedsFullResponse.setMinimalProfileResponse(minimalProfileResponse);
+        feedsFullResponse.getMinimalProfileResponse().cloneProperties(
+                profileService.retrieveProfileDtoById(
+                        Long.valueOf(feedsResponse.getProfileId())));
+
+        return feedsFullResponse;
     }
 
     public List<FeedsResponse> search(final String searchString) {
@@ -103,7 +123,7 @@ public class FeedsService {
                 .collect(Collectors.toList());
     }
 
-    public List<FeedsResponse> retrievePostsByProfileId(Long profileId) {
+    public List<FeedsFullResponse> retrievePostsByProfileId(Long profileId) {
 
         PersonalResponse personalResponse = profileService.retrievePersonalProfileById(profileId).get();
         StringBuilder searchString = new StringBuilder();
@@ -135,7 +155,7 @@ public class FeedsService {
                 .map(FeedsSendToResponse::getFeedId)
                 .distinct()
                 .collect(Collectors.toList());
-        List<FeedsResponse> feedsResponses = new ArrayList<>();
+        List<FeedsFullResponse> feedsResponses = new ArrayList<>();
         for (String feedsId : uniqueFeeds) {
             feedsResponses.add(retrieveFeedsDetailsById(Long.valueOf(feedsId)));
         }

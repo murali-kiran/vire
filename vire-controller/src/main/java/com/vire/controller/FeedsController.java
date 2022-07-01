@@ -2,6 +2,7 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.request.FeedsRequest;
+import com.vire.model.response.FeedsFullResponse;
 import com.vire.model.response.FeedsResponse;
 import com.vire.service.FeedsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -103,23 +104,23 @@ public class FeedsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Feeds by ID Successful",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FeedsResponse.class)) }),
+                            schema = @Schema(implementation = FeedsFullResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Find Feeds by ID Failed",
                     content = @Content) })
     @GetMapping("feedsdetails/{feedid}")
-    public ResponseEntity<FeedsResponse> findById(@PathVariable(name = "feedsid") Long feedsPostId) {
-        return new ResponseEntity<FeedsResponse>(feedsService.retrieveFeedsDetailsById(feedsPostId), HttpStatus.OK);
+    public ResponseEntity<FeedsFullResponse> findById(@PathVariable(name = "feedsid") Long feedsPostId) {
+        return new ResponseEntity<FeedsFullResponse>(feedsService.retrieveFeedsDetailsById(feedsPostId), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Feeds By ProfileId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Feeds By ProfileId Successful",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FeedsResponse.class)) }),
+                            schema = @Schema(implementation = FeedsFullResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Find Feeds By ProfileId Failed",
                     content = @Content) })
     @GetMapping("feedsposts/{profileid}")
-    public ResponseEntity<List<FeedsResponse>> findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
-        return new ResponseEntity<List<FeedsResponse>>(feedsService.retrievePostsByProfileId(profileId), HttpStatus.OK);
+    public ResponseEntity<List<FeedsFullResponse>> findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
+        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrievePostsByProfileId(profileId), HttpStatus.OK);
     }
 }
