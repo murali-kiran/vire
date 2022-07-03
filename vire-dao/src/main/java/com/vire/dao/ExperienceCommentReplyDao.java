@@ -2,6 +2,7 @@ package com.vire.dao;
 
 import com.vire.dto.ExperienceCommentReplyDto;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -16,7 +17,6 @@ public class ExperienceCommentReplyDao {
     @Id
     @Column(name = "experience_comment_reply_id")
     private Long experienceCommentReplyId;
-    
 
     @Column(name = "replier_profile_id", nullable = false)
     private Long replierProfileId;
@@ -24,8 +24,12 @@ public class ExperienceCommentReplyDao {
     @Column(name = "experience_id", nullable = false)
     private Long experienceId;
 
-    @Column(name = "comment_id", nullable = false)
-    private Long commentId;
+   /* @Column(name = "comment_id", nullable = false)
+    private Long commentId;*/
+   @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+   @JoinColumn(name = "comment_id")
+   @ToString.Exclude
+   private ExperienceCommentDao experienceComment;
 
     @Column(name = "reply", nullable = false)
     private String reply;
@@ -55,7 +59,7 @@ public class ExperienceCommentReplyDao {
         
         dto.setReplierProfileId(this.getReplierProfileId());
         dto.setExperienceId(this.getExperienceId());
-        dto.setCommentId(this.getCommentId());
+        dto.setCommentId(this.getExperienceComment().getExperienceCommentId());
         dto.setReply(this.getReply());
 
         dto.setCreatedTime(this.getCreatedTime());
@@ -72,7 +76,7 @@ public class ExperienceCommentReplyDao {
         
         experienceCommentReply.setReplierProfileId(dto.getReplierProfileId());
         experienceCommentReply.setExperienceId(dto.getExperienceId());
-        experienceCommentReply.setCommentId(dto.getCommentId());
+        //experienceCommentReply.setCommentId(dto.getCommentId());
         experienceCommentReply.setReply(dto.getReply());
 
         return experienceCommentReply;

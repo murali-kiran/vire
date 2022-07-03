@@ -33,6 +33,8 @@ public class SocialPostResponse {
     private String createdTimeStr;
     private String location;
     private String callRequestStatusOfLoginUser;
+    private Integer commentsCount;
+    private Integer starsCount;
     //private List<SocialPostSentResponse> sendTo;
 
     public static SocialPostResponse fromDto(final SocialDto dto) {

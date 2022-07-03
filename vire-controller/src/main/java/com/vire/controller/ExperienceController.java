@@ -2,6 +2,7 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.request.ExperienceRequest;
+import com.vire.model.response.ExperienceDetailResponse;
 import com.vire.model.response.ExperienceResponse;
 import com.vire.service.ExperienceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,7 +75,17 @@ public class ExperienceController {
   public ResponseEntity<List<ExperienceResponse>> retrieveAll() {
     return new ResponseEntity<>(experienceService.getAll(), HttpStatus.OK);
   }
-
+  @Operation(summary = "Retrieve All Experience by Profile")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve All Experience by Profile Successful",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ExperienceDetailResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve All Experience by Profile Failed",
+                  content = @Content) })
+  @GetMapping("byprofile/{profileid}")
+  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@PathVariable(name = "profileid") Long profileId) {
+    return new ResponseEntity<>(experienceService.retrieveAllByProfile(profileId), HttpStatus.OK);
+  }
   @Operation(summary = "Retrieve Experience by ID")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Retrieve Experience by ID Successful",
@@ -87,6 +98,17 @@ public class ExperienceController {
     return new ResponseEntity<ExperienceResponse>(experienceService.retrieveById(experienceId), HttpStatus.OK);
   }
 
+  @Operation(summary = "Retrieve Detailed Experience by ID")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve Detailed Experience by ID Successful",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ExperienceDetailResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve Detailed Experience by ID Experience Failed",
+                  content = @Content) })
+  @GetMapping("details/{experienceId}")
+  public ResponseEntity<ExperienceDetailResponse> retrieveDetailsById(@PathVariable Long experienceId) {
+    return new ResponseEntity<ExperienceDetailResponse>(experienceService.retrieveExperienceDetailsById(experienceId), HttpStatus.OK);
+  }
   @Operation(summary = "Search Experience")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Search Experience Successful",

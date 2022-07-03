@@ -16,7 +16,6 @@ public class ExperienceCommentDao {
     @Id
     @Column(name = "experience_comment_id")
     private Long experienceCommentId;
-    
 
     @Column(name = "commentor_profile_id", nullable = false)
     private Long commentorProfileId;
@@ -26,6 +25,9 @@ public class ExperienceCommentDao {
 
     @Column(name = "comment", nullable = false)
     private String comment;
+
+    @OneToMany(mappedBy = "experienceComment", cascade = CascadeType.ALL)
+    private List<ExperienceCommentReplyDao> expCommentReplyDaoList;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -53,7 +55,13 @@ public class ExperienceCommentDao {
         dto.setCommentorProfileId(this.getCommentorProfileId());
         dto.setExperienceId(this.getExperienceId());
         dto.setComment(this.getComment());
-
+        if (this.getExpCommentReplyDaoList() != null && !this.getExpCommentReplyDaoList().isEmpty()) {
+            dto.setExperienceCommentReplyDtoList(this.getExpCommentReplyDaoList()
+                    .stream()
+                    .map(expCommentReply -> expCommentReply.toDto())
+                    .collect(Collectors.toList())
+            );
+        }
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 

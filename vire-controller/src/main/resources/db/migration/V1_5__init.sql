@@ -27,3 +27,8 @@ ALTER TABLE socail_call_request RENAME TO  social_call_request;
 ALTER TABLE social_call_request ADD UNIQUE unique_index(social_id, requester_profile_id);
 
 ALTER TABLE social_report CHANGE COLUMN reportDescription report_description VARCHAR(191) NOT NULL ;
+
+
+ALTER TABLE experience_likes ADD UNIQUE unique_index(experience_id, liker_profile_id);
+ALTER TABLE feed_likes ADD UNIQUE unique_index(feed_id, liker_profile_id);
+ALTER TABLE t_social_post_like ADD UNIQUE unique_index(social_id, liker_profile_id);

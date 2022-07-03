@@ -11,6 +11,7 @@ public class ExperienceCommentDto {
     private Long experienceCommentId;
     private Long commentorProfileId;
     private Long experienceId;
+    private List<ExperienceCommentReplyDto> experienceCommentReplyDtoList;
     private String comment;
     public Long createdTime;
     public Long updatedTime;

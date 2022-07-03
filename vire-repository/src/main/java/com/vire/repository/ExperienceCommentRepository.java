@@ -5,6 +5,7 @@ import com.vire.dto.ExperienceCommentDto;
 import com.vire.repository.ExperienceCommentRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,10 @@ public class ExperienceCommentRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+  public Optional<ExperienceCommentDto> retrieveByProfileId(Long profileId) {
+
+    return experienceCommentRepositoryJpa.findById(profileId).map(dao -> dao.toDto());
+  }
   public Optional<ExperienceCommentDto> retrieveById(Long experienceCommentId) {
 
     return experienceCommentRepositoryJpa.findById(experienceCommentId).map(dao -> dao.toDto());
@@ -66,7 +71,7 @@ public class ExperienceCommentRepository {
 
     var spec = new CustomSpecificationResolver<ExperienceCommentDao>(searchString).resolve();
 
-    return experienceCommentRepositoryJpa.findAll(spec).stream()
+    return experienceCommentRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

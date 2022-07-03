@@ -100,6 +100,7 @@ public class SocialService {
                 .get();
         SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
         List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
+        List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialId);
         List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
         if(profileId != null && socialPostResponse.getSocialCallRequestResponses() != null) {
             SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId+"");
@@ -108,13 +109,14 @@ public class SocialService {
         }
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setLikes(likesList);
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
         if(categoryMasterResponse != null) {
             socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
             socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
         }
+        socialPostResponse.setCommentsCount(( commentsList != null ? commentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
         return socialPostResponse;
     }
     public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
@@ -127,7 +129,7 @@ public class SocialService {
         List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
         socialPostResponse.setComments(commentsList);
         socialPostResponse.setLikes(likesList);
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
         if(categoryMasterResponse != null) {

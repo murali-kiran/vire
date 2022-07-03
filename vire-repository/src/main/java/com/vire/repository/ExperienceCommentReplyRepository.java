@@ -15,12 +15,13 @@ public class ExperienceCommentReplyRepository {
 
   @Autowired
   ExperienceCommentReplyRepositoryJpa experienceCommentReplyRepositoryJpa;
-
+  @Autowired
+  ExperienceCommentRepositoryJpa experienceCommentRepositoryJpa;
   public ExperienceCommentReplyDto create(final ExperienceCommentReplyDto experienceCommentReplyDto) {
 
     var experienceCommentReplyDao = ExperienceCommentReplyDao.fromDto(experienceCommentReplyDto);
     experienceCommentReplyDao.onPrePersist();
-
+    experienceCommentReplyDao.setExperienceComment(experienceCommentRepositoryJpa.getById(experienceCommentReplyDto.getCommentId()));
     return experienceCommentReplyRepositoryJpa.save(experienceCommentReplyDao).toDto();
   }
 

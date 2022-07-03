@@ -49,7 +49,7 @@ public class CommentDao extends BaseDao{
         if (this.getCommentReplyDaoList() != null && !this.getCommentReplyDaoList().isEmpty()) {
             dto.setCommentReplyDtoList(this.getCommentReplyDaoList()
                     .stream()
-                    .map(socialFile -> socialFile.toDto())
+                    .map(commentReply -> commentReply.toDto())
                     .collect(Collectors.toList())
             );
         }
