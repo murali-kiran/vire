@@ -5,6 +5,7 @@ import com.vire.dto.FeedCommentReplyDto;
 import com.vire.repository.FeedCommentReplyRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -15,12 +16,13 @@ public class FeedCommentReplyRepository {
 
   @Autowired
   FeedCommentReplyRepositoryJpa feedCommentReplyRepositoryJpa;
-
+  @Autowired
+  FeedCommentRepositoryJpa feedCommentRepositoryJpa;
   public FeedCommentReplyDto create(final FeedCommentReplyDto feedCommentReplyDto) {
 
     var feedCommentReplyDao = FeedCommentReplyDao.fromDto(feedCommentReplyDto);
     feedCommentReplyDao.onPrePersist();
-
+    feedCommentReplyDao.setFeedComment(feedCommentRepositoryJpa.getById(feedCommentReplyDto.getCommentId()));
     return feedCommentReplyRepositoryJpa.save(feedCommentReplyDao).toDto();
   }
 
@@ -66,7 +68,7 @@ public class FeedCommentReplyRepository {
 
     var spec = new CustomSpecificationResolver<FeedCommentReplyDao>(searchString).resolve();
 
-    return feedCommentReplyRepositoryJpa.findAll(spec).stream()
+    return feedCommentReplyRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

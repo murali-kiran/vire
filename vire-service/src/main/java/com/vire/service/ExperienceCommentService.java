@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.model.request.ExperienceCommentRequest;
+import com.vire.model.response.CommentResponse;
 import com.vire.model.response.ExperienceCommentResponse;
 import com.vire.repository.ExperienceCommentRepository;
 import com.vire.utils.Snowflake;
@@ -18,7 +19,8 @@ public class ExperienceCommentService {
 
   @Autowired
   ExperienceCommentRepository experienceCommentRepository;
-
+  @Autowired
+  ProfileService profileService;
   public ExperienceCommentResponse create(final ExperienceCommentRequest request) {
 
     var dto = request.toDto(snowflake);
@@ -62,7 +64,24 @@ public class ExperienceCommentService {
     return experienceCommentRepository
             .search(searchString)
             .stream()
-            .map(dto -> ExperienceCommentResponse.fromDto(dto))
+            .map(dto -> profileLoader(ExperienceCommentResponse.fromDto(dto)))
             .collect(Collectors.toList());
+  }
+  private ExperienceCommentResponse profileLoader(ExperienceCommentResponse response){
+    if (response.getCommentorProfile() != null
+            && response.getCommentorProfile().getProfileId() != null) {
+      response.getCommentorProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getCommentorProfile().getProfileId())));
+    }
+    var replyList = response.getExperienceCommentReplyResponseList();
+    if(replyList != null && !replyList.isEmpty()){
+      replyList.forEach(replyResponse -> replyResponse.getReplierProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(replyResponse.getReplierProfile().getProfileId()))));
+
+    }
+
+    return response;
   }
 }

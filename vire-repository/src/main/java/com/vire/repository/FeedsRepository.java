@@ -4,6 +4,7 @@ import com.vire.dao.FeedsDao;
 import com.vire.dto.FeedsDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -72,7 +73,7 @@ public class FeedsRepository {
 
     public List<FeedsDto> getAllFeeds() {
 
-        return feedsRepositoryJpa.findAll()
+        return feedsRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime"))
                 .stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
@@ -88,7 +89,7 @@ public class FeedsRepository {
 
         var spec = new CustomSpecificationResolver<FeedsDao>(searchString).resolve();
 
-        return feedsRepositoryJpa.findAll(spec).stream()
+        return feedsRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
     }

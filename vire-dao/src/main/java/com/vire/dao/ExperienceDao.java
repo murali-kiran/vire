@@ -35,8 +35,10 @@ public class ExperienceDao {
 
     @Column(name = "location", nullable = false)
     private String location;
-    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL)
     private List<ExperienceFileDao> experienceFileList;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 

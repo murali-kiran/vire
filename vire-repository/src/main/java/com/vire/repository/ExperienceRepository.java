@@ -1,11 +1,18 @@
 package com.vire.repository;
 
 import com.vire.dao.ExperienceDao;
+import com.vire.dao.ExperienceViewsCountDao;
 import com.vire.dto.ExperienceDto;
+import com.vire.dto.ExperienceViewsCountDto;
 import com.vire.repository.ExperienceRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,12 +22,20 @@ public class ExperienceRepository {
 
   @Autowired
   ExperienceRepositoryJpa experienceRepositoryJpa;
+  @Autowired
+  SessionFactory sessionFactory;
+  @Autowired
+  ExperienceViewsCountRepositoryJpa experienceViewsCountRepositoryJpa;
 
+  @Transactional
   public ExperienceDto create(final ExperienceDto experienceDto) {
 
     var experienceDao = ExperienceDao.fromDto(experienceDto);
     experienceDao.onPrePersist();
-
+    ExperienceViewsCountDao experienceViewsCountDao = new ExperienceViewsCountDao();
+    experienceViewsCountDao.setExperienceId(experienceDao.getExperienceId());
+    experienceViewsCountDao.setViewsCount(0);
+    experienceViewsCountRepositoryJpa.save(experienceViewsCountDao);
     return experienceRepositoryJpa.save(experienceDao).toDto();
   }
 
@@ -52,7 +67,7 @@ public class ExperienceRepository {
   }
   public List<ExperienceDto> getAll() {
 
-    return experienceRepositoryJpa.findAll()
+    return experienceRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime"))
             .stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
@@ -66,8 +81,9 @@ public class ExperienceRepository {
 
     var spec = new CustomSpecificationResolver<ExperienceDao>(searchString).resolve();
 
-    return experienceRepositoryJpa.findAll(spec).stream()
+    return experienceRepositoryJpa.findAll(spec,Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
 }

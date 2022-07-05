@@ -107,7 +107,7 @@ public class FeedsController {
                             schema = @Schema(implementation = FeedsFullResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Find Feeds by ID Failed",
                     content = @Content) })
-    @GetMapping("feedsdetails/{feedid}")
+    @GetMapping("feedsdetails/{feedsid}")
     public ResponseEntity<FeedsFullResponse> findById(@PathVariable(name = "feedsid") Long feedsPostId) {
         return new ResponseEntity<FeedsFullResponse>(feedsService.retrieveFeedsDetailsById(feedsPostId), HttpStatus.OK);
     }
@@ -120,7 +120,8 @@ public class FeedsController {
             @ApiResponse(responseCode = "500", description = "Find Feeds By ProfileId Failed",
                     content = @Content) })
     @GetMapping("feedsposts/{profileid}")
-    public ResponseEntity<List<FeedsFullResponse>> findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
-        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrievePostsByProfileId(profileId), HttpStatus.OK);
+    public ResponseEntity<List<FeedsFullResponse>>
+    findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
+        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByProfileId(profileId), HttpStatus.OK);
     }
 }

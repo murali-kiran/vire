@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.FeedCommentRequest;
 import com.vire.model.response.FeedCommentResponse;
+import com.vire.model.response.FeedCommentResponse;
 import com.vire.repository.FeedCommentRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,10 @@ public class FeedCommentService {
 
   @Autowired
   Snowflake snowflake;
-
   @Autowired
   FeedCommentRepository feedCommentRepository;
+  @Autowired
+  ProfileService profileService;
 
   public FeedCommentResponse create(final FeedCommentRequest request) {
 
@@ -62,7 +64,24 @@ public class FeedCommentService {
     return feedCommentRepository
             .search(searchString)
             .stream()
-            .map(dto -> FeedCommentResponse.fromDto(dto))
+            .map(dto -> profileLoader(FeedCommentResponse.fromDto(dto)))
             .collect(Collectors.toList());
+  }
+  private FeedCommentResponse profileLoader(FeedCommentResponse response){
+    if (response.getCommenterProfile() != null
+            && response.getCommenterProfile().getProfileId() != null) {
+      response.getCommenterProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getCommenterProfile().getProfileId())));
+    }
+    var replyList = response.getFeedCommentReplyResponseList();
+    if(replyList != null && !replyList.isEmpty()){
+      replyList.forEach(replyResponse -> replyResponse.getReplierProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(replyResponse.getReplierProfile().getProfileId()))));
+
+    }
+
+    return response;
   }
 }

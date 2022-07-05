@@ -2,6 +2,7 @@ package com.vire.dao;
 
 import com.vire.dto.FeedCommentReplyDto;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -24,8 +25,12 @@ public class FeedCommentReplyDao {
     @Column(name = "feed_id", nullable = false)
     private Long feedId;
 
-    @Column(name = "comment_id", nullable = false)
-    private Long commentId;
+    /*@Column(name = "comment_id", nullable = false)
+    private Long commentId;*/
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_id")
+    @ToString.Exclude
+    private FeedCommentDao feedComment;
 
     @Column(name = "reply", nullable = false)
     private String reply;
@@ -55,7 +60,7 @@ public class FeedCommentReplyDao {
         
         dto.setReplierProfileId(this.getReplierProfileId());
         dto.setFeedId(this.getFeedId());
-        dto.setCommentId(this.getCommentId());
+        dto.setCommentId(this.getFeedComment().getFeedCommentId());
         dto.setReply(this.getReply());
 
         dto.setCreatedTime(this.getCreatedTime());
@@ -72,7 +77,7 @@ public class FeedCommentReplyDao {
         
         feedCommentReply.setReplierProfileId(dto.getReplierProfileId());
         feedCommentReply.setFeedId(dto.getFeedId());
-        feedCommentReply.setCommentId(dto.getCommentId());
+        //feedCommentReply.setCommentId(dto.getCommentId());
         feedCommentReply.setReply(dto.getReply());
 
         return feedCommentReply;

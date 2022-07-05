@@ -24,16 +24,28 @@ public class FeedsFullResponse {
     private  Long createdTime;
     private  Long updatedTime;
 
-    public static FeedsFullResponse fromFeedResponse(FeedsResponse feedResponse){
+    public static FeedsFullResponse fromDto(FeedsDto dto){
         var response = new FeedsFullResponse();
-        response.setFeedId(feedResponse.getFeedId().toString());
-        response.setProfileId(feedResponse.getProfileId().toString());
-        response.setDescription(feedResponse.getDescription());
+        response.setFeedId(dto.getFeedId().toString());
+        response.setProfileId(dto.getProfileId().toString());
+        response.setDescription(dto.getDescription());
         //response.setFileId(dto.getFileId().toString());
-        response.setCreatedTime(feedResponse.getCreatedTime());
-        response.setUpdatedTime(feedResponse.getUpdatedTime());
-        response.setFeedsSendTo(feedResponse.getFeedsSendTo());
-        response.setFeedFileList(feedResponse.getFeedFileList());
+        if (dto.getFeedsSendTo() != null && !dto.getFeedsSendTo().isEmpty()) {
+            response.setFeedsSendTo(dto.getFeedsSendTo()
+                    .stream()
+                    .map(sendToDto -> FeedsSendToResponse.fromDto(sendToDto))
+                    .collect(Collectors.toList())
+            );
+        }
+        if (dto.getFeedFileList() != null && !dto.getFeedFileList().isEmpty()) {
+            response.setFeedFileList(dto.getFeedFileList()
+                    .stream()
+                    .map(fileDto -> FeedFileResponse.fromDto(fileDto))
+                    .collect(Collectors.toList())
+            );
+        }
+        response.setCreatedTime(dto.getCreatedTime());
+        response.setUpdatedTime(dto.getUpdatedTime());
 
         return response;
     }

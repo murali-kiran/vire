@@ -27,6 +27,9 @@ public class FeedCommentDao {
     @Column(name = "comment", nullable = false)
     private String comment;
 
+    @OneToMany(mappedBy = "feedComment", cascade = CascadeType.ALL)
+    private List<FeedCommentReplyDao> feedCommentReplyDaoList;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -53,7 +56,13 @@ public class FeedCommentDao {
         dto.setCommentorProfileId(this.getCommentorProfileId());
         dto.setFeedId(this.getFeedId());
         dto.setComment(this.getComment());
-
+        if (this.getFeedCommentReplyDaoList() != null && !this.getFeedCommentReplyDaoList().isEmpty()) {
+            dto.setFeedCommentReplyDtoList(this.getFeedCommentReplyDaoList()
+                    .stream()
+                    .map(expCommentReply -> expCommentReply.toDto())
+                    .collect(Collectors.toList())
+            );
+        }
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 

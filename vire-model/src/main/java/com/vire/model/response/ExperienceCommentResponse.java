@@ -1,6 +1,7 @@
 package com.vire.model.response;
 
 import com.vire.dto.ExperienceCommentDto;
+import com.vire.utils.Utility;
 import lombok.Data;
 
 import java.util.Collections;
@@ -12,11 +13,12 @@ import java.util.stream.Collectors;
 public class ExperienceCommentResponse {
 
     private String experienceCommentId;
-    
+    private MinimalProfileResponse commentorProfile;
     private String commentorProfileId;
     private String experienceId;
     private String comment;
     private List<ExperienceCommentReplyResponse> experienceCommentReplyResponseList;
+    private String commentedTime;
     private Long createdTime;
     private Long updatedTime;
 
@@ -35,6 +37,12 @@ public class ExperienceCommentResponse {
                     .collect(Collectors.toList()));
             Collections.sort(experienceComment.getExperienceCommentReplyResponseList(), Comparator.comparing(ExperienceCommentReplyResponse::getUpdatedTime).reversed());
         }
+        if (dto.getCommentorProfileId() != null) {
+            var minProfileRes = new MinimalProfileResponse();
+            minProfileRes.setProfileId(String.valueOf(dto.getCommentorProfileId()));
+            experienceComment.setCommentorProfile(minProfileRes);
+        }
+        experienceComment.setCommentedTime(Utility.calculateTimeDiff(dto.getUpdatedTime()));
         experienceComment.setCreatedTime(dto.getCreatedTime());
         experienceComment.setUpdatedTime(dto.getUpdatedTime());
 

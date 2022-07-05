@@ -1,10 +1,9 @@
 package com.vire.service;
 
-import com.vire.model.request.PersonalProfileInterestRequest;
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.*;
-import com.vire.repository.FileRepository;
 import com.vire.repository.FeedsRepository;
+import com.vire.repository.FileRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,36 +85,35 @@ public class FeedsService {
                 .get();
     }
     public FeedsFullResponse retrieveFeedsDetailsById(Long feedsId) {
-        FeedsResponse feedsResponse =  feedsRepo.retrieveById(feedsId)
-                .map(dto -> FeedsResponse.fromDto(dto))
+        FeedsFullResponse feedsFullResponse =  feedsRepo.retrieveById(feedsId)
+                .map(dto -> FeedsFullResponse.fromDto(dto))
                 .get();
-
-        FeedsFullResponse feedsFullResponse = FeedsFullResponse.fromFeedResponse(feedsResponse);
-
-        List<FeedCommentResponse> commentsList = commentService.search("feedId:" + feedsId);
-        List<FeedLikesResponse> likesList = likesService.search("feedId:" + feedsId);
-        feedsFullResponse.setComments(commentsList);
-        feedsFullResponse.setLikes(likesList);
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' hh:mm");
-        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        feedsFullResponse.setCreatedTimeStr(sdf2.format(new Date(feedsResponse.getCreatedTime())));
-
-        Optional<FeedsSendToResponse> feedsSendToResponse = feedsResponse.getFeedsSendTo().stream().
-                filter(p -> p.getType().equals("Location")).
-                findFirst();
-        if(feedsSendToResponse != null && feedsSendToResponse.get() != null)
-            feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
-
-        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
-        minimalProfileResponse.setProfileId(feedsResponse.getProfileId());
-        feedsFullResponse.setMinimalProfileResponse(minimalProfileResponse);
-        feedsFullResponse.getMinimalProfileResponse().cloneProperties(
-                profileService.retrieveProfileDtoById(
-                        Long.valueOf(feedsResponse.getProfileId())));
-
-        return feedsFullResponse;
+        if(feedsFullResponse != null){
+            return setFeedsDetailResponse(feedsFullResponse);
+        }
+        else{
+            throw new RuntimeException("Record not found for id:"+feedsId);
+        }
     }
+    public List<FeedsFullResponse> retrieveFeedPostsByProfileId(Long profileId) {
+        List<String> feedsIdList = getAll().stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
+        List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
+        for (String feedId : feedsIdList) {
+            FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(Long.valueOf(feedId))
+                    .map(dto -> FeedsFullResponse.fromDto(dto))
+                    .get();
+            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse));
+        }
+        return feedsFullResponseList;
+    }
+    public List<FeedsResponse> getAll() {
 
+        return feedsRepo
+                .getAllFeeds()
+                .stream()
+                .map(dto -> FeedsResponse.fromDto(dto))
+                .collect(Collectors.toList());
+    }
     public List<FeedsResponse> search(final String searchString) {
 
         return feedsRepo.search(searchString).stream()
@@ -123,13 +121,11 @@ public class FeedsService {
                 .collect(Collectors.toList());
     }
 
-    public List<FeedsFullResponse> retrievePostsByProfileId(Long profileId) {
-
+    private List<FeedsFullResponse> retrievePostsByProfileId(Long profileId) {
         PersonalResponse personalResponse = profileService.retrievePersonalProfileById(profileId).get();
         StringBuilder searchString = new StringBuilder();
         if(personalResponse != null){
            List<PersonalProfileInterestResponse> personalProfileInterestResponses = personalResponse.getPersonalProfile().getInterests();
-
             for (PersonalProfileInterestResponse personalProfileInterestResponse : personalProfileInterestResponses) {
                 if(searchString.length() != 0) {
                     searchString.append(" OR ");
@@ -139,11 +135,9 @@ public class FeedsService {
                             .append(" AND ( ");
                 }
                 searchString.append("( value:"+ personalProfileInterestResponse.getInterest()+" )");
-
             }
             searchString.append(" )");
         }
-
         String designation = personalResponse.getPersonalProfile().getDesignation();
         String fieldProfessionBusiness = personalResponse.getPersonalProfile().getFieldProfessionBusiness();
         String location = personalResponse.getPersonalProfile().getPresentAddress().getCityTownVillage();
@@ -160,5 +154,26 @@ public class FeedsService {
             feedsResponses.add(retrieveFeedsDetailsById(Long.valueOf(feedsId)));
         }
         return feedsResponses;
+    }
+    private FeedsFullResponse setFeedsDetailResponse(FeedsFullResponse feedsFullResponse){
+        List<FeedCommentResponse> commentsList = commentService.search("feedId:" + feedsFullResponse.getFeedId());
+        List<FeedLikesResponse> likesList = likesService.search("feedId:" + feedsFullResponse.getFeedId());
+        feedsFullResponse.setComments(commentsList);
+        feedsFullResponse.setLikes(likesList);
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        feedsFullResponse.setCreatedTimeStr(sdf2.format(new Date(feedsFullResponse.getCreatedTime())));
+        Optional<FeedsSendToResponse> feedsSendToResponse = feedsFullResponse.getFeedsSendTo().stream().
+                filter(p -> p.getType().equals("Location")).
+                findFirst();
+        if(feedsSendToResponse != null && feedsSendToResponse.get() != null)
+            feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
+        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
+        minimalProfileResponse.setProfileId(feedsFullResponse.getProfileId());
+        feedsFullResponse.setMinimalProfileResponse(minimalProfileResponse);
+        feedsFullResponse.getMinimalProfileResponse().cloneProperties(
+                profileService.retrieveProfileDtoById(
+                        Long.valueOf(feedsFullResponse.getProfileId())));
+        return feedsFullResponse;
     }
 }

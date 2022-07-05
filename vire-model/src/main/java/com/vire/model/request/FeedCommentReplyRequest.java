@@ -16,13 +16,13 @@ public class FeedCommentReplyRequest {
     private String feedCommentReplyId;
     @NotBlank(message = "Replier Profile id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Replier Profile id must be numeric")
-    private Long replierProfileId;
+    private String replierProfileId;
     @NotBlank(message = "Feed id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Feed id must be numeric")
-    private Long feedId;
+    private String feedId;
     @NotBlank(message = "Comment id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Comment id must be numeric")
-    private Long commentId;
+    private String commentId;
     @NotBlank(message = "Reply required")
     private String reply;
 
@@ -36,9 +36,9 @@ public class FeedCommentReplyRequest {
             dto.setFeedCommentReplyId(snowflake.nextId());
         }
         
-        dto.setReplierProfileId(this.getReplierProfileId());
-        dto.setFeedId(this.getFeedId());
-        dto.setCommentId(this.getCommentId());
+        dto.setReplierProfileId(this.getReplierProfileId() == null ? null : Long.valueOf(this.getReplierProfileId()));
+        dto.setFeedId(this.getFeedId() == null ? null : Long.valueOf(this.getFeedId()));
+        dto.setCommentId(this.getCommentId() == null ? null : Long.valueOf(this.getCommentId()));
         dto.setReply(this.getReply());
 
         return dto;

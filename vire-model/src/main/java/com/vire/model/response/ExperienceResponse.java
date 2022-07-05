@@ -16,6 +16,7 @@ public class ExperienceResponse {
     private String title;
     private String description;
     private String location;
+    private Integer viewCount;
     private List<ExperienceFileResponse> experienceFileList;
     private Long createdTime;
     private Long updatedTime;
@@ -30,6 +31,7 @@ public class ExperienceResponse {
         //experience.setFileId(String.valueOf(dto.getFileId()));
         experience.setTitle(dto.getTitle());
         experience.setDescription(dto.getDescription());
+        experience.setViewCount(dto.getViewCount());
         experience.setLocation(dto.getLocation());
         if (dto.getExperienceFileList() != null && !dto.getExperienceFileList().isEmpty()) {
             experience.setExperienceFileList(dto.getExperienceFileList()

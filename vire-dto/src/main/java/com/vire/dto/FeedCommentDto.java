@@ -12,6 +12,7 @@ public class FeedCommentDto {
     private Long commentorProfileId;
     private Long feedId;
     private String comment;
+    private List<FeedCommentReplyDto> feedCommentReplyDtoList;
     public Long createdTime;
     public Long updatedTime;
 }

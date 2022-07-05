@@ -83,7 +83,7 @@ public class ExperienceController {
           @ApiResponse(responseCode = "500", description = "Retrieve All Experience by Profile Failed",
                   content = @Content) })
   @GetMapping("byprofile/{profileid}")
-  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@PathVariable(name = "profileid") Long profileId) {
+  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@PathVariable(name = "profileid") String profileId) {
     return new ResponseEntity<>(experienceService.retrieveAllByProfile(profileId), HttpStatus.OK);
   }
   @Operation(summary = "Retrieve Experience by ID")

@@ -23,6 +23,8 @@ public class ExperienceDetailResponse {
     private String createdTimeStr;
     private MasterResponse categoryResponse;
     private Integer commentsCount;
+    private Boolean loginUserLiked;
+    private Integer viewsCount;
     private Long createdTime;
     private Long updatedTime;
 
@@ -43,6 +45,7 @@ public class ExperienceDetailResponse {
                     .map(child -> ExperienceFileResponse.fromDto(child))
                     .collect(Collectors.toList()));
         }
+        experience.setViewsCount(dto.getViewCount());
         experience.setCreatedTime(dto.getCreatedTime());
         experience.setUpdatedTime(dto.getUpdatedTime());
 

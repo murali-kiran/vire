@@ -32,3 +32,14 @@ ALTER TABLE social_report CHANGE COLUMN reportDescription report_description VAR
 ALTER TABLE experience_likes ADD UNIQUE unique_index(experience_id, liker_profile_id);
 ALTER TABLE feed_likes ADD UNIQUE unique_index(feed_id, liker_profile_id);
 ALTER TABLE t_social_post_like ADD UNIQUE unique_index(social_id, liker_profile_id);
+
+CREATE TABLE experience_views_count (
+  views_count_id bigint NOT NULL,
+  views_count int DEFAULT '0',
+  PRIMARY KEY (views_count_id)
+) COMMENT='primary key experience_id';
+
+ALTER TABLE t_feeds CHANGE COLUMN description description VARCHAR(1000) NULL DEFAULT NULL ;
+ALTER TABLE t_social CHANGE COLUMN description description VARCHAR(1000) NULL DEFAULT NULL ;
+ALTER TABLE experience CHANGE COLUMN description description TEXT NOT NULL ;
+

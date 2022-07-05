@@ -101,5 +101,33 @@ public class Utility {
     }
     //
 
+    public static String calculateTimeDiff(Long updatedTime) {
+        Long currentTime = System.currentTimeMillis();
+        Long timeDifferenceMilliseconds = currentTime - updatedTime;
+        long diffSeconds = timeDifferenceMilliseconds / 1000;
+        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
+        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
+        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
+        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
+        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
+        long diffYears = timeDifferenceMilliseconds / ((long) 60 * 60 * 1000 * 24 * 365);
 
+        if (diffSeconds < 1) {
+            return "few seconds ago";
+        } else if (diffMinutes < 1) {
+            return diffSeconds + " s ";
+        } else if (diffHours < 1) {
+            return diffMinutes + " m ";
+        } else if (diffDays < 1) {
+            return diffHours + " h ";
+        } else if (diffWeeks < 1) {
+            return diffDays + " d ";
+        } else if (diffMonths < 1) {
+            return diffWeeks + " weeks";
+        } else if (diffYears < 1) {
+            return diffMonths + " months";
+        } else {
+            return diffYears + " years";
+        }
+    }
 }

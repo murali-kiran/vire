@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.model.request.ExperienceLikesRequest;
+import com.vire.model.response.ExperienceCommentResponse;
 import com.vire.model.response.ExperienceLikesResponse;
 import com.vire.repository.ExperienceLikesRepository;
 import com.vire.utils.Snowflake;
@@ -18,6 +19,9 @@ public class ExperienceLikesService {
 
   @Autowired
   ExperienceLikesRepository experienceLikesRepository;
+
+  @Autowired
+  ProfileService profileService;
 
   public ExperienceLikesResponse create(final ExperienceLikesRequest request) {
 
@@ -53,7 +57,7 @@ public class ExperienceLikesService {
 
     return experienceLikesRepository
             .retrieveById(experienceLikesId)
-            .map(dto -> ExperienceLikesResponse.fromDto(dto))
+            .map(dto -> profileLoader(ExperienceLikesResponse.fromDto(dto)))
             .get();
   }
 
@@ -62,11 +66,20 @@ public class ExperienceLikesService {
     return experienceLikesRepository
             .search(searchString)
             .stream()
-            .map(dto -> ExperienceLikesResponse.fromDto(dto))
+            .map(dto -> profileLoader(ExperienceLikesResponse.fromDto(dto)))
             .collect(Collectors.toList());
   }
 
     public long getLikesCountOfProfile(Long profileId) {
       return experienceLikesRepository.getLikesCountOfProfile(profileId);
     }
+  private ExperienceLikesResponse profileLoader(ExperienceLikesResponse response) {
+    if (response.getLikerProfile() != null
+            && response.getLikerProfile().getProfileId() != null) {
+      response.getLikerProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getLikerProfile().getProfileId())));
+    }
+    return response;
+  }
 }
