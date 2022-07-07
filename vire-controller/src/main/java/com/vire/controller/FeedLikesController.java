@@ -3,6 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.model.request.FeedLikesRequest;
 import com.vire.model.response.FeedLikesResponse;
+import com.vire.model.response.FeedLikesResponse;
 import com.vire.service.FeedLikesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -63,6 +64,19 @@ public class FeedLikesController {
     return new ResponseEntity<>(feedLikesService.delete(feedLikesId), HttpStatus.OK);
   }
 
+  @Operation(summary = "Delete Feed Likes by feedId, profileId")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Delete Feed Likes Successful by feedId, profileId",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = FeedLikesResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Delete Feed Likes by feedId, profileId Failed ",
+                  content = @Content) })
+  @DeleteMapping("/{feedId}/{profileId}")
+  public ResponseEntity<FeedLikesResponse> delete(
+          @PathVariable(value = "feedId") Long feedId, @PathVariable(value = "profileId") Long profileId) {
+    return new ResponseEntity<>(feedLikesService.deleteByProfileAndFeed(feedId, profileId), HttpStatus.OK);
+  }
+  
   @Operation(summary = "Retrieve All Feed Likes")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Retrieve All Feed Likes Successful",

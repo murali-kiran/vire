@@ -2,12 +2,14 @@ package com.vire.repository;
 
 import com.vire.dao.ChannelDao;
 import com.vire.dto.ChannelDto;
-import com.vire.dto.CommunityDto;
+import com.vire.dto.ChannelDto;
 import com.vire.repository.ChannelRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +19,8 @@ public class ChannelRepository {
 
   @Autowired
   ChannelRepositoryJpa channelRepositoryJpa;
+  @Autowired
+  ChannelProfileRepositoryJpa channelProfileRepositoryJpa;
 
   public ChannelDto create(final ChannelDto channelDto) {
 
@@ -40,11 +44,13 @@ public class ChannelRepository {
     return channelRepositoryJpa.save(channelDao).toDto();
   }
 
+  @Transactional
   public Optional<ChannelDto> delete(final Long channelId) {
 
     var optionalSocial = retrieveById(channelId);
 
     if (optionalSocial.isPresent()) {
+      channelProfileRepositoryJpa.deleteByChannelId(channelId);
       channelRepositoryJpa.deleteById(channelId);
     } else {
       throw new RuntimeException("Object not exists in DB to delete");
@@ -78,5 +84,10 @@ public class ChannelRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
     return channelDtos;
+  }
+  public List<ChannelDto> retrieveByProfileIdStatus(Long profileId, List<String> statusList){
+    return channelRepositoryJpa.findChannelByProfileIdStatus(profileId, statusList).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
   }
 }

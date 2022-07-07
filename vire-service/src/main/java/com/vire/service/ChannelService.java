@@ -4,6 +4,7 @@ import com.vire.model.request.ChannelProfileRequest;
 import com.vire.model.request.ChannelRequest;
 import com.vire.model.response.ChannelResponse;
 import com.vire.model.response.ChannelResponse;
+import com.vire.model.response.KeyValueListResponse;
 import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.repository.ChannelRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -145,5 +147,12 @@ public class ChannelService {
     response.setLoginProfileChannelStatus(status);
     return response;
   }
+  public List<KeyValueListResponse> retrieveChannelsByProfileStatus(Long profileId, String statusList) {
 
+    return channelRepository
+            .retrieveByProfileIdStatus(profileId, Arrays.asList(statusList.split(",", -1)))
+            .stream()
+            .map(dto -> KeyValueListResponse.fromDto(dto.getChannelId(), dto.getName(), "channel"))
+            .collect(Collectors.toList());
+  }
 }

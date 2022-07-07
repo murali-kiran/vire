@@ -63,6 +63,18 @@ public class ExperienceLikesController {
     return new ResponseEntity<>(experienceLikesService.delete(experienceLikesId), HttpStatus.OK);
   }
 
+  @Operation(summary = "Delete Experience Likes by Experienceid, profileid")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Delete Experience Likes Successful by Experienceid, profileid",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ExperienceLikesResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Delete Experience Likes by Experienceid, profileid Failed ",
+                  content = @Content) })
+  @DeleteMapping("/deletebyexp/{experienceId}/{profileId}")
+  public ResponseEntity<ExperienceLikesResponse> delete(
+          @PathVariable(value = "experienceId") Long experienceId, @PathVariable(value = "profileId") Long profileId) {
+    return new ResponseEntity<>(experienceLikesService.deleteByProfileAndExperience(experienceId, profileId), HttpStatus.OK);
+  }
   @Operation(summary = "Retrieve All Experience Likes")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Retrieve All Experience Likes Successful",

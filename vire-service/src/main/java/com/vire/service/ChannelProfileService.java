@@ -3,6 +3,7 @@ package com.vire.service;
 import com.vire.model.request.ChannelProfileRequest;
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.response.ChannelProfileResponse;
+import com.vire.model.response.CommunityProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
@@ -97,6 +98,10 @@ public class ChannelProfileService {
   }
   public List<ChannelProfileResponse> retrieveByProfileId(String profileId) {
     return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
+  }
+
+  public List<ChannelProfileResponse> retrieveChannelsCreatedJoined(String profileId) {
+    return this.search("( profileId:"+profileId+ " ) AND ( ( status:Accepted ) OR ( status:Admin ) )");
   }
   private void checkAdminStatusCount(ChannelProfileRequest request){
     var channelProfiles = channelProfileRepository

@@ -3,10 +3,15 @@ package com.vire.service;
 import com.vire.model.request.ExperienceLikesRequest;
 import com.vire.model.response.ExperienceCommentResponse;
 import com.vire.model.response.ExperienceLikesResponse;
+import com.vire.model.response.ExperienceResponse;
 import com.vire.repository.ExperienceLikesRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +48,16 @@ public class ExperienceLikesService {
             .map(dto -> ExperienceLikesResponse.fromDto(dto))
             .get();
   }
+  public ExperienceLikesResponse deleteByProfileAndExperience(final Long experienceId, final Long profileId) {
 
+    List<ExperienceLikesResponse> experienceLikesResponses = search("experienceId:" + experienceId + " AND likerProfileId:"+profileId);
+    if(experienceLikesResponses != null && !experienceLikesResponses.isEmpty())
+    return experienceLikesRepository.delete(Long.valueOf(experienceLikesResponses.get(0).getExperienceLikesId()))
+            .map(dto -> ExperienceLikesResponse.fromDto(dto))
+            .get();
+    else
+      throw new RuntimeException("No record found with given experienceId:"+experienceId+" profileId:"+profileId);
+  }
   public List<ExperienceLikesResponse> getAll() {
 
     return experienceLikesRepository

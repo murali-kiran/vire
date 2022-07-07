@@ -4,6 +4,7 @@ import com.vire.constant.VireConstants;
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.FeedsFullResponse;
 import com.vire.model.response.FeedsResponse;
+import com.vire.model.response.KeyValueListResponse;
 import com.vire.service.FeedsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -75,6 +76,17 @@ public class FeedsController {
         return new ResponseEntity<>(feedsService.getFeeds(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Retrieve All Community, Channel created or joined by profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieve All Community, Channel created or joined by profile Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FeedsResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Retrieve All Community, Channel created or joined by profile Feeds Failed",
+                    content = @Content) })
+    @GetMapping("/communitychannels/{profileid}")
+    public ResponseEntity<List<KeyValueListResponse>> retrieveCommunityAndChannelByProfile(@PathVariable(name = "profileid") Long profileId) {
+        return new ResponseEntity<>(feedsService.getCommunityAndChannelByProfile(profileId), HttpStatus.OK);
+    }
     @Operation(summary = "Retrieve Feeds by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieve Feeds by ID Successful",

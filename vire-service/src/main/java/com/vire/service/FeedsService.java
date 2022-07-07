@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -41,6 +42,10 @@ public class FeedsService {
     @Autowired
     FeedsSendToService feedsSendToService;
 
+    @Autowired
+    ChannelService channelService;
+    @Autowired
+    CommunityService communityService;
 
     public FeedsResponse createFeeds(final FeedsRequest request) {
 
@@ -175,5 +180,12 @@ public class FeedsService {
                 profileService.retrieveProfileDtoById(
                         Long.valueOf(feedsFullResponse.getProfileId())));
         return feedsFullResponse;
+    }
+
+    public List<KeyValueListResponse> getCommunityAndChannelByProfile(Long profileId) {
+        List<KeyValueListResponse> keyValueChannelList = channelService.retrieveChannelsByProfileStatus(profileId, "Admin");
+        List<KeyValueListResponse> keyValueCommunityList = communityService.retrieveCommunitiesByProfileStatus(profileId, "Admin,Accepted");
+        return Stream.of(keyValueChannelList,keyValueCommunityList).flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 }

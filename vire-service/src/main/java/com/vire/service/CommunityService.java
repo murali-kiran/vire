@@ -168,7 +168,7 @@ public class CommunityService {
         return communityRepository
                 .retrieveByProfileIdStatus(profileId, Arrays.asList(statusList.split(",", -1)))
                 .stream()
-                .map(dto -> KeyValueListResponse.fromDto(dto.getCommunityId(), dto.getName()))
+                .map(dto -> KeyValueListResponse.fromDto(dto.getCommunityId(), dto.getName(), "community"))
                 .collect(Collectors.toList());
     }
 }

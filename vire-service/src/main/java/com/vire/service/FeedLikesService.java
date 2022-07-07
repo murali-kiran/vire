@@ -39,7 +39,16 @@ public class FeedLikesService {
             .map(dto -> FeedLikesResponse.fromDto(dto))
             .get();
   }
+  public FeedLikesResponse deleteByProfileAndFeed(final Long feedId, final Long profileId) {
 
+    List<FeedLikesResponse> feedLikesResponses = search("feedId:" + feedId + " AND likerProfileId:"+profileId);
+    if(feedLikesResponses != null && !feedLikesResponses.isEmpty())
+      return feedLikesRepository.delete(Long.valueOf(feedLikesResponses.get(0).getFeedLikesId()))
+              .map(dto -> FeedLikesResponse.fromDto(dto))
+              .get();
+    else
+      throw new RuntimeException("No record found with given feedId:"+feedId+" profileId:"+profileId);
+  }
   public List<FeedLikesResponse> getAll() {
 
     return feedLikesRepository

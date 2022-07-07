@@ -93,6 +93,37 @@ public class SocialService {
                 .get();
     }
 
+
+    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
+        log.info("Social ID###:"+socialId);
+        /*SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .get();
+        SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
+        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
+        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
+        socialPostResponse.setComments(commentsList);
+        socialPostResponse.setLikes(likesList);
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
+        if(categoryMasterResponse != null) {
+            socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
+            socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
+        }
+        Optional<SocialSendToResponse> socialSendToResponse = socialPostResponse.getSendTo().stream().
+                filter(p -> p.getType().equals("Location")).
+                findFirst();
+        if(socialSendToResponse != null && socialSendToResponse.get() != null)
+            socialPostResponse.setLocation(socialSendToResponse.get().getValue());
+        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
+        minimalProfileResponse.setProfileId(socialPostResponse.getProfileId());
+        socialPostResponse.setMinimalProfileResponse(minimalProfileResponse);
+        socialPostResponse.getMinimalProfileResponse().cloneProperties(
+                profileService.retrieveProfileDtoById(
+                        Long.valueOf(socialPostResponse.getProfileId())));*/
+        return retrieveSocialDetailsById(socialId, null);
+    }
     private static SocialCallRequestResponse findCallRequestByProfileId(Collection<SocialCallRequestResponse> listCallRequest, String profileId) {
         return listCallRequest.stream().filter(callRequestResponse-> profileId.equals(callRequestResponse.getRequesterProfileId()))
                 .findFirst().orElse(null);
@@ -133,7 +164,46 @@ public class SocialService {
         }
         return socialPostResponses;
     }
-
+    private SocialPostResponse retrieveSocialDetailsById(Long socialId, Long profileId) {
+        log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
+        SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .get();
+        SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
+        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
+        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
+        if(profileId != null ) {
+            List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialId);
+            if (socialPostResponse.getSocialCallRequestResponses() != null) {
+                SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId + "");
+                if (socialCallRequestResponse != null)
+                    socialPostResponse.setCallRequestStatusOfLoginUser(socialCallRequestResponse.getStatus());
+            }
+            socialPostResponse.setCommentsCount(( commentsList != null ? commentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
+        } else{
+            Optional<SocialSendToResponse> socialSendToResponse = socialPostResponse.getSendTo().stream().
+                    filter(p -> p.getType().equals("Location")).
+                    findFirst();
+            if(socialSendToResponse != null && socialSendToResponse.get() != null)
+                socialPostResponse.setLocation(socialSendToResponse.get().getValue());
+            MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
+            minimalProfileResponse.setProfileId(socialPostResponse.getProfileId());
+            socialPostResponse.setMinimalProfileResponse(minimalProfileResponse);
+            socialPostResponse.getMinimalProfileResponse().cloneProperties(
+                    profileService.retrieveProfileDtoById(
+                            Long.valueOf(socialPostResponse.getProfileId())));
+        }
+        socialPostResponse.setComments(commentsList);
+        socialPostResponse.setLikes(likesList);
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
+        if(categoryMasterResponse != null) {
+            socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
+            socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
+        }
+        return socialPostResponse;
+    }
     //TODO:fine tune performance
     private Set<String> getSocialListBySearch(Long profileId) {
         Optional<PersonalResponse> personalResponse = profileService.retrievePersonalProfileById(profileId);
@@ -180,40 +250,5 @@ public class SocialService {
             }
         }
         return uniqueSocialSet;
-    }
-
-    public SocialPostResponse retrieveSocialDetailsById(Long socialId, Long profileId) {
-        log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
-        return setSocialPostResponseDetails(socialId, profileId);
-    }
-    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
-        log.info("Social ID###:"+socialId);
-        return setSocialPostResponseDetails(socialId, null);
-    }
-    private SocialPostResponse setSocialPostResponseDetails(Long socialId, Long profileId){
-
-        SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
-                .map(dto -> SocialPostResponse.fromDto(dto))
-                .get();
-        SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
-        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
-        List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialId);
-        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
-        if(profileId != null && socialPostResponse.getSocialCallRequestResponses() != null) {
-            SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId+"");
-            if(socialCallRequestResponse != null)
-                socialPostResponse.setCallRequestStatusOfLoginUser(socialCallRequestResponse.getStatus());
-        }
-        socialPostResponse.setComments(commentsList);
-        socialPostResponse.setLikes(likesList);
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
-        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
-        if(categoryMasterResponse != null) {
-            socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
-            socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
-        }
-        socialPostResponse.setCommentsCount(( commentsList != null ? commentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
-        return socialPostResponse;
     }
 }
