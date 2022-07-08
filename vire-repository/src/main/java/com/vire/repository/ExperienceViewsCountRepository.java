@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class ExperienceViewsCountRepository {
 
     @Autowired
-    ExperienceViewsCountRepositoryJpa experienceRepositoryJpa;
+    ExperienceViewsCountRepositoryJpa experienceViewsCountRepositoryJpa;
     @Autowired
     SessionFactory sessionFactory;
 
@@ -24,12 +24,12 @@ public class ExperienceViewsCountRepository {
         var experienceDao = ExperienceViewsCountDao.fromDto(experienceDto);
         //experienceDao.onPrePersist();
 
-        return experienceRepositoryJpa.save(experienceDao).toDto();
+        return experienceViewsCountRepositoryJpa.save(experienceDao).toDto();
     }
 
     public ExperienceViewsCountDto update(final ExperienceViewsCountDto experienceDto) {
 
-        var existingObject = experienceRepositoryJpa.findById(experienceDto.getExperienceId());
+        var existingObject = experienceViewsCountRepositoryJpa.findById(experienceDto.getExperienceId());
 
         if (existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
@@ -38,13 +38,13 @@ public class ExperienceViewsCountRepository {
         var experienceDao = ExperienceViewsCountDao.fromDto(experienceDto);
         // experienceDao.onPreUpdate();
 
-        return experienceRepositoryJpa.save(experienceDao).toDto();
+        return experienceViewsCountRepositoryJpa.save(experienceDao).toDto();
     }
 
     public Optional<ExperienceViewsCountDto> delete(final Long experienceId) {
         var optionalSocial = retrieveById(experienceId);
         if (optionalSocial.isPresent()) {
-            experienceRepositoryJpa.deleteById(experienceId);
+            experienceViewsCountRepositoryJpa.deleteById(experienceId);
         } else {
             throw new RuntimeException("Object not exists in DB to delete");
         }
@@ -53,19 +53,26 @@ public class ExperienceViewsCountRepository {
 
     public List<ExperienceViewsCountDto> getAll() {
 
-        return experienceRepositoryJpa.findAll().stream().map(dao -> dao.toDto()).collect(Collectors.toList());
+        return experienceViewsCountRepositoryJpa.findAll().stream().map(dao -> dao.toDto()).collect(Collectors.toList());
     }
 
     public Optional<ExperienceViewsCountDto> retrieveById(Long experienceId) {
 
-        return experienceRepositoryJpa.findById(experienceId).map(dao -> dao.toDto());
+        return experienceViewsCountRepositoryJpa.findById(experienceId).map(dao -> dao.toDto());
     }
 
     public List<ExperienceViewsCountDto> search(final String searchString) {
 
         var spec = new CustomSpecificationResolver<ExperienceViewsCountDao>(searchString).resolve();
 
-        return experienceRepositoryJpa.findAll(spec).stream().map(dao -> dao.toDto()).collect(Collectors.toList());
+        return experienceViewsCountRepositoryJpa.findAll(spec).stream().map(dao -> dao.toDto()).collect(Collectors.toList());
     }
 
+    public Optional<ExperienceViewsCountDto> retrieveByProfileIdExperienceId(Long experienceId, Long profileId) {
+        return experienceViewsCountRepositoryJpa.findByExperienceIdAndProfileId(experienceId, profileId).map(dao -> dao.toDto());
+    }
+
+    public Long countByExperienceId(Long experienceId) {
+        return experienceViewsCountRepositoryJpa.countByExperienceId(experienceId);
+    }
 }

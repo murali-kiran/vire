@@ -17,6 +17,7 @@ public class ChannelDto {
     private Long coverFileId;
     private String rules;
     private List<ChannelProfileDto> profiles;
+    private Boolean isPrivate;
     public Long createdTime;
     public Long updatedTime;
 }

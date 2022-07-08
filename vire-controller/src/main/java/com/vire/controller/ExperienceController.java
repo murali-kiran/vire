@@ -60,7 +60,7 @@ public class ExperienceController {
                   content = @Content) })
   @DeleteMapping("/{experienceId}")
   public ResponseEntity<ExperienceResponse> delete(
-          @PathVariable(value = "id") Long experienceId) {
+          @PathVariable(value = "experienceId") Long experienceId) {
     return new ResponseEntity<>(experienceService.delete(experienceId), HttpStatus.OK);
   }
 
@@ -83,7 +83,7 @@ public class ExperienceController {
           @ApiResponse(responseCode = "500", description = "Retrieve All Experience by Profile Failed",
                   content = @Content) })
   @GetMapping("byprofile/{profileid}")
-  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@PathVariable(name = "profileid") String profileId) {
+  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@PathVariable(name = "profileid") Long profileId) {
     return new ResponseEntity<>(experienceService.retrieveAllByProfile(profileId), HttpStatus.OK);
   }
   @Operation(summary = "Retrieve Experience by ID")
@@ -98,16 +98,16 @@ public class ExperienceController {
     return new ResponseEntity<ExperienceResponse>(experienceService.retrieveById(experienceId), HttpStatus.OK);
   }
 
-  @Operation(summary = "Retrieve Detailed Experience by ID")
+  @Operation(summary = "Retrieve Detailed Experience by experience ID, profile Id")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Retrieve Detailed Experience by ID Successful",
+          @ApiResponse(responseCode = "200", description = "Retrieve Detailed Experience by experience ID, profile Id Successful",
                   content = { @Content(mediaType = "application/json",
                           schema = @Schema(implementation = ExperienceDetailResponse.class)) }),
-          @ApiResponse(responseCode = "500", description = "Retrieve Detailed Experience by ID Experience Failed",
+          @ApiResponse(responseCode = "500", description = "Retrieve Detailed Experience by experience ID, profile Id Experience Failed",
                   content = @Content) })
-  @GetMapping("details/{experienceId}")
-  public ResponseEntity<ExperienceDetailResponse> retrieveDetailsById(@PathVariable Long experienceId) {
-    return new ResponseEntity<ExperienceDetailResponse>(experienceService.retrieveExperienceDetailsById(experienceId), HttpStatus.OK);
+  @GetMapping("details/{experienceId}/{profileId}")
+  public ResponseEntity<ExperienceDetailResponse> retrieveDetailsById(@PathVariable Long experienceId, @PathVariable Long profileId) {
+    return new ResponseEntity<ExperienceDetailResponse>(experienceService.retrieveExperienceDetailsById(experienceId, profileId), HttpStatus.OK);
   }
   @Operation(summary = "Search Experience")
   @ApiResponses(value = {

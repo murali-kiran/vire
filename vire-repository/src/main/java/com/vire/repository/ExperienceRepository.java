@@ -32,10 +32,6 @@ public class ExperienceRepository {
 
     var experienceDao = ExperienceDao.fromDto(experienceDto);
     experienceDao.onPrePersist();
-    ExperienceViewsCountDao experienceViewsCountDao = new ExperienceViewsCountDao();
-    experienceViewsCountDao.setExperienceId(experienceDao.getExperienceId());
-    experienceViewsCountDao.setViewsCount(0);
-    experienceViewsCountRepositoryJpa.save(experienceViewsCountDao);
     return experienceRepositoryJpa.save(experienceDao).toDto();
   }
 

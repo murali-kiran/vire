@@ -27,7 +27,7 @@ public class PersonalResponse {
     private Long thumbsUpCount = 0l;
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
-    private Long starsCount = 0l;
+    private Integer starsCount = 0;
     private List<ProfileSettingResponse> profileSettingTypes;
     private PersonalProfileResponse personalProfile;
     //private FirmProfileResponse firmProfile;

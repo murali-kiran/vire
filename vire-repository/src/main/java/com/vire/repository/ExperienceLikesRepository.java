@@ -71,7 +71,11 @@ public class ExperienceLikesRepository {
             .collect(Collectors.toList());
   }
 
-    public long getLikesCountOfProfile(Long profileId) {
+    public long getLikesByProfile(Long profileId) {
         return experienceLikesRepositoryJpa.countByLikerProfileId(profileId);
     }
+    public Integer getLikesCountOfProfile(Long profileId) {
+      return experienceLikesRepositoryJpa.countByExperienceProfile(profileId);
+    }
+
 }

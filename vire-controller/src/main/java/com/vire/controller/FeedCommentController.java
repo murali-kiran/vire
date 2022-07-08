@@ -58,7 +58,7 @@ public class FeedCommentController {
                   content = @Content) })
   @DeleteMapping("/{feedCommentId}")
   public ResponseEntity<FeedCommentResponse> delete(
-          @PathVariable(value = "id") Long feedCommentId) {
+          @PathVariable(value = "feedCommentId") Long feedCommentId) {
     return new ResponseEntity<>(feedCommentService.delete(feedCommentId), HttpStatus.OK);
   }
 

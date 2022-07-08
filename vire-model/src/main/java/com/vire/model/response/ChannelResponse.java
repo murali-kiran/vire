@@ -20,6 +20,7 @@ public class ChannelResponse {
     private List<ChannelProfileResponse> channelProfiles;
     private int acceptedUserCount;
     private String loginProfileChannelStatus;
+    private Boolean isPrivate;
     private Long createdTime;
     private Long updatedTime;
 
@@ -40,6 +41,7 @@ public class ChannelResponse {
         channel.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         channel.setCoverFileId(dto.getCoverFileId() == null ? null : String.valueOf(dto.getCoverFileId()));
         channel.setRules(dto.getRules());
+        channel.setIsPrivate(dto.getIsPrivate());
 
         if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             channel.setChannelProfiles(dto.getProfiles()

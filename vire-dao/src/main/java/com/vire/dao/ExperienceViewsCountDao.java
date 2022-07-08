@@ -14,22 +14,28 @@ import javax.persistence.Table;
 public class ExperienceViewsCountDao {
     @Id
     @Column(name = "views_count_id", nullable = false)
+    private Long viewsCountId;
+
+    @Column(name = "profile_id", nullable = false)
+    private Long profileId;
+
+    @Column(name = "experience_id", nullable = false)
     private Long experienceId;
 
-    @Column(name = "views_count")
-    private Integer viewsCount;
     public ExperienceViewsCountDto toDto() {
 
         var dto = new ExperienceViewsCountDto();
+        dto.setViewsCountId(this.getViewsCountId());
         dto.setExperienceId(this.getExperienceId());
-        dto.setViewsCount(this.getViewsCount());
+        dto.setProfileId(this.getProfileId());
         return dto;
     }
     public static ExperienceViewsCountDao fromDto(final ExperienceViewsCountDto dto) {
 
         var experience = new ExperienceViewsCountDao();
         experience.setExperienceId(dto.getExperienceId());
-        experience.setViewsCount(dto.getViewsCount());
+        experience.setViewsCountId(dto.getViewsCountId());
+        experience.setProfileId(dto.getProfileId());
         return experience;
     }
 }

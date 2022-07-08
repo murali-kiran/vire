@@ -16,10 +16,10 @@ public class FeedLikesRequest {
     private String feedLikesId;
     @NotBlank(message = "Liker Profile id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Liker Profile id must be numeric")
-    private Long likerProfileId;
+    private String likerProfileId;
     @NotBlank(message = "Feed id required")
     @Pattern(regexp="(^[0-9]*$)", message = "Feed id must be numeric")
-    private Long feedId;
+    private String feedId;
 
     public FeedLikesDto toDto(Snowflake snowflake) {
 
@@ -31,8 +31,8 @@ public class FeedLikesRequest {
             dto.setFeedLikesId(snowflake.nextId());
         }
         
-        dto.setLikerProfileId(this.getLikerProfileId());
-        dto.setFeedId(this.getFeedId());
+        dto.setLikerProfileId(this.getLikerProfileId() == null ? null : Long.valueOf(this.getLikerProfileId()));
+        dto.setFeedId(this.getFeedId() == null ? null : Long.valueOf(this.getFeedId()));
 
         return dto;
     }

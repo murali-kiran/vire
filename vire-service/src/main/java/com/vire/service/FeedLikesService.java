@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.model.request.FeedLikesRequest;
+import com.vire.model.response.ExperienceLikesResponse;
 import com.vire.model.response.FeedLikesResponse;
 import com.vire.repository.FeedLikesRepository;
 import com.vire.utils.Snowflake;
@@ -18,6 +19,9 @@ public class FeedLikesService {
 
   @Autowired
   FeedLikesRepository feedLikesRepository;
+
+  @Autowired
+  ProfileService profileService;
 
   public FeedLikesResponse create(final FeedLikesRequest request) {
 
@@ -71,7 +75,16 @@ public class FeedLikesService {
     return feedLikesRepository
             .search(searchString)
             .stream()
-            .map(dto -> FeedLikesResponse.fromDto(dto))
+            .map(dto -> profileLoader(FeedLikesResponse.fromDto(dto)))
             .collect(Collectors.toList());
+  }
+  private FeedLikesResponse profileLoader(FeedLikesResponse response) {
+    if (response.getLikerProfile() != null
+            && response.getLikerProfile().getProfileId() != null) {
+      response.getLikerProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getLikerProfile().getProfileId())));
+    }
+    return response;
   }
 }

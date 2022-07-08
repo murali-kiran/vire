@@ -65,4 +65,8 @@ public class FeedCommentReplyService {
             .map(dto -> FeedCommentReplyResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+
+  public Integer countByFeedId(Long feedId){
+    return feedCommentReplyRepository.countByFeedId(feedId);
+  }
 }

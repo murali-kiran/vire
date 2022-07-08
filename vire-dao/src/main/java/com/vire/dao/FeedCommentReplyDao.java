@@ -27,7 +27,7 @@ public class FeedCommentReplyDao {
 
     /*@Column(name = "comment_id", nullable = false)
     private Long commentId;*/
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     @ToString.Exclude
     private FeedCommentDao feedComment;

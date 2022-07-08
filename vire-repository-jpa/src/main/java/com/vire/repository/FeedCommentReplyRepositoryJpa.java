@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FeedCommentReplyRepositoryJpa
-    extends JpaRepository<FeedCommentReplyDao, Long>, JpaSpecificationExecutor<FeedCommentReplyDao> {}
+    extends JpaRepository<FeedCommentReplyDao, Long>, JpaSpecificationExecutor<FeedCommentReplyDao> {
+    Integer countByFeedId(Long feedId);
+}

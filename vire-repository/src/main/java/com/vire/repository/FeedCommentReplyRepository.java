@@ -72,4 +72,8 @@ public class FeedCommentReplyRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+    public Integer countByFeedId(Long feedId) {
+      return feedCommentReplyRepositoryJpa.countByFeedId(feedId);
+    }
 }

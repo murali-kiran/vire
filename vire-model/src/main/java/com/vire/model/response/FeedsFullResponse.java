@@ -21,6 +21,8 @@ public class FeedsFullResponse {
     private List<FeedLikesResponse> likes;
     private String createdTimeStr;
     private String location;
+    private Integer commentsCount;
+    private Boolean loginUserLiked;
     private  Long createdTime;
     private  Long updatedTime;
 

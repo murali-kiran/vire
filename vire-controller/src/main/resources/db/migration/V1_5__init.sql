@@ -33,13 +33,18 @@ ALTER TABLE experience_likes ADD UNIQUE unique_index(experience_id, liker_profil
 ALTER TABLE feed_likes ADD UNIQUE unique_index(feed_id, liker_profile_id);
 ALTER TABLE t_social_post_like ADD UNIQUE unique_index(social_id, liker_profile_id);
 
-CREATE TABLE experience_views_count (
+  CREATE TABLE experience_views_count (
   views_count_id bigint NOT NULL,
-  views_count int DEFAULT '0',
-  PRIMARY KEY (views_count_id)
-) COMMENT='primary key experience_id';
+  profile_id bigint NOT NULL,
+  experience_id bigint NOT NULL,
+  PRIMARY KEY (views_count_id),
+  KEY Unique_Index (profile_id,experience_id)
+) 
 
 ALTER TABLE t_feeds CHANGE COLUMN description description VARCHAR(1000) NULL DEFAULT NULL ;
 ALTER TABLE t_social CHANGE COLUMN description description VARCHAR(1000) NULL DEFAULT NULL ;
 ALTER TABLE experience CHANGE COLUMN description description TEXT NOT NULL ;
 
+ALTER TABLE community CHANGE COLUMN description description VARCHAR(500) NOT NULL, CHANGE COLUMN rules rules VARCHAR(1000) NULL DEFAULT NULL ;
+ALTER TABLE channel CHANGE COLUMN description description VARCHAR(500) NOT NULL, CHANGE COLUMN rules rules VARCHAR(1000) NULL DEFAULT NULL ;
+ALTER TABLE channel ADD COLUMN is_private TINYINT(1) NULL DEFAULT 0 AFTER rules;

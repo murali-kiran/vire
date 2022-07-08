@@ -84,7 +84,7 @@ public class ExperienceLikesService {
             .collect(Collectors.toList());
   }
 
-    public long getLikesCountOfProfile(Long profileId) {
+    public Integer getLikesCountOfProfile(Long profileId) {
       return experienceLikesRepository.getLikesCountOfProfile(profileId);
     }
   private ExperienceLikesResponse profileLoader(ExperienceLikesResponse response) {

@@ -36,6 +36,8 @@ public class ChannelDao {
     @Column(name = "rules", nullable = false)
     private String rules;
 
+    @Column(name = "is_private", nullable = false)
+    private Boolean isPrivate;
    /* @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChannelProfileDao> profiles;*/
 
@@ -68,7 +70,7 @@ public class ChannelDao {
         dto.setFileId(this.getFileId());
         dto.setCoverFileId(this.getCoverFileId());
         dto.setRules(this.getRules());
-
+        dto.setIsPrivate(this.getIsPrivate());
         /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()
@@ -96,7 +98,7 @@ public class ChannelDao {
         channel.setCoverFileId(dto.getCoverFileId()
         );
         channel.setRules(dto.getRules());
-
+        channel.setIsPrivate(dto.getIsPrivate());
         /*if (dto.getProfiles() != null && !dto.getProfiles().isEmpty()) {
             channel.setProfiles(dto.getProfiles()
                     .stream()

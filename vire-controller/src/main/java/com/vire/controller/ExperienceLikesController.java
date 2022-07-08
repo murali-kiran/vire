@@ -59,7 +59,7 @@ public class ExperienceLikesController {
                   content = @Content) })
   @DeleteMapping("/{experienceLikesId}")
   public ResponseEntity<ExperienceLikesResponse> delete(
-          @PathVariable(value = "id") Long experienceLikesId) {
+          @PathVariable(value = "experienceLikesId") Long experienceLikesId) {
     return new ResponseEntity<>(experienceLikesService.delete(experienceLikesId), HttpStatus.OK);
   }
 

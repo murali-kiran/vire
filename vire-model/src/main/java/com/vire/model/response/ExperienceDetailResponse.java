@@ -24,7 +24,7 @@ public class ExperienceDetailResponse {
     private MasterResponse categoryResponse;
     private Integer commentsCount;
     private Boolean loginUserLiked;
-    private Integer viewsCount;
+    private Long viewsCount;
     private Long createdTime;
     private Long updatedTime;
 

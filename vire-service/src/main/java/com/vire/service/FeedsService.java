@@ -89,25 +89,26 @@ public class FeedsService {
                 .map(dto -> FeedsResponse.fromDto(dto))
                 .get();
     }
-    public FeedsFullResponse retrieveFeedsDetailsById(Long feedsId) {
+    public FeedsFullResponse retrieveFeedsDetailsById(Long feedsId, String profileId) {
         FeedsFullResponse feedsFullResponse =  feedsRepo.retrieveById(feedsId)
                 .map(dto -> FeedsFullResponse.fromDto(dto))
                 .get();
         if(feedsFullResponse != null){
-            return setFeedsDetailResponse(feedsFullResponse);
+
+            return setFeedsDetailResponse(feedsFullResponse, profileId);
         }
         else{
             throw new RuntimeException("Record not found for id:"+feedsId);
         }
     }
-    public List<FeedsFullResponse> retrieveFeedPostsByProfileId(Long profileId) {
+    public List<FeedsFullResponse> retrieveFeedPostsByProfileId(String profileId) {
         List<String> feedsIdList = getAll().stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
         List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
         for (String feedId : feedsIdList) {
             FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(Long.valueOf(feedId))
                     .map(dto -> FeedsFullResponse.fromDto(dto))
                     .get();
-            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse));
+            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId));
         }
         return feedsFullResponseList;
     }
@@ -126,8 +127,8 @@ public class FeedsService {
                 .collect(Collectors.toList());
     }
 
-    private List<FeedsFullResponse> retrievePostsByProfileId(Long profileId) {
-        PersonalResponse personalResponse = profileService.retrievePersonalProfileById(profileId).get();
+    private List<FeedsFullResponse> retrievePostsByProfileId(String profileId) {
+        PersonalResponse personalResponse = profileService.retrievePersonalProfileById(Long.valueOf(profileId)).get();
         StringBuilder searchString = new StringBuilder();
         if(personalResponse != null){
            List<PersonalProfileInterestResponse> personalProfileInterestResponses = personalResponse.getPersonalProfile().getInterests();
@@ -156,15 +157,19 @@ public class FeedsService {
                 .collect(Collectors.toList());
         List<FeedsFullResponse> feedsResponses = new ArrayList<>();
         for (String feedsId : uniqueFeeds) {
-            feedsResponses.add(retrieveFeedsDetailsById(Long.valueOf(feedsId)));
+            feedsResponses.add(retrieveFeedsDetailsById(Long.valueOf(feedsId), profileId));
         }
         return feedsResponses;
     }
-    private FeedsFullResponse setFeedsDetailResponse(FeedsFullResponse feedsFullResponse){
+    private FeedsFullResponse setFeedsDetailResponse(FeedsFullResponse feedsFullResponse, String profileId){
         List<FeedCommentResponse> commentsList = commentService.search("feedId:" + feedsFullResponse.getFeedId());
         List<FeedLikesResponse> likesList = likesService.search("feedId:" + feedsFullResponse.getFeedId());
         feedsFullResponse.setComments(commentsList);
+        Integer replyCount = commentReplyService.countByFeedId(Long.valueOf(feedsFullResponse.getFeedId()));
         feedsFullResponse.setLikes(likesList);
+        feedsFullResponse.setCommentsCount((commentsList != null ? commentsList.size() : 0) + (replyCount != null ? replyCount : 0));
+        List<String> profileIds = feedsFullResponse.getLikes().stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
+        feedsFullResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId)) ? true : false);
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         feedsFullResponse.setCreatedTimeStr(sdf2.format(new Date(feedsFullResponse.getCreatedTime())));

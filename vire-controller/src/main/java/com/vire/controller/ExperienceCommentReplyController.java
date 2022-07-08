@@ -59,7 +59,7 @@ public class ExperienceCommentReplyController {
                   content = @Content) })
   @DeleteMapping("/{experienceCommentReplyId}")
   public ResponseEntity<ExperienceCommentReplyResponse> delete(
-          @PathVariable(value = "id") Long experienceCommentReplyId) {
+          @PathVariable(value = "experienceCommentReplyId") Long experienceCommentReplyId) {
     return new ResponseEntity<>(experienceCommentReplyService.delete(experienceCommentReplyId), HttpStatus.OK);
   }
 

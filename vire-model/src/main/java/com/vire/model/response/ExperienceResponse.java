@@ -16,7 +16,7 @@ public class ExperienceResponse {
     private String title;
     private String description;
     private String location;
-    private Integer viewCount;
+    private Long viewCount;
     private List<ExperienceFileResponse> experienceFileList;
     private Long createdTime;
     private Long updatedTime;
