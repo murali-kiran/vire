@@ -23,6 +23,7 @@ public class ExperienceDetailResponse {
     private String createdTimeStr;
     private MasterResponse categoryResponse;
     private Integer commentsCount;
+    private Integer likesCount;
     private Boolean loginUserLiked;
     private Long viewsCount;
     private Long createdTime;

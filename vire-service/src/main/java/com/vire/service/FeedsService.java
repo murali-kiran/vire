@@ -95,7 +95,7 @@ public class FeedsService {
                 .get();
         if(feedsFullResponse != null){
 
-            return setFeedsDetailResponse(feedsFullResponse, profileId);
+            return setFeedsDetailResponse(feedsFullResponse, profileId, false);
         }
         else{
             throw new RuntimeException("Record not found for id:"+feedsId);
@@ -108,7 +108,7 @@ public class FeedsService {
             FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(Long.valueOf(feedId))
                     .map(dto -> FeedsFullResponse.fromDto(dto))
                     .get();
-            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId));
+            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId, true));
         }
         return feedsFullResponseList;
     }
@@ -161,23 +161,32 @@ public class FeedsService {
         }
         return feedsResponses;
     }
-    private FeedsFullResponse setFeedsDetailResponse(FeedsFullResponse feedsFullResponse, String profileId){
+    private FeedsFullResponse setFeedsDetailResponse(FeedsFullResponse feedsFullResponse, String profileId, boolean isList){
         List<FeedCommentResponse> commentsList = commentService.search("feedId:" + feedsFullResponse.getFeedId());
         List<FeedLikesResponse> likesList = likesService.search("feedId:" + feedsFullResponse.getFeedId());
-        feedsFullResponse.setComments(commentsList);
         Integer replyCount = commentReplyService.countByFeedId(Long.valueOf(feedsFullResponse.getFeedId()));
-        feedsFullResponse.setLikes(likesList);
+        if(!isList) {
+            feedsFullResponse.setComments(commentsList);
+            feedsFullResponse.setLikes(likesList);
+        }
+        feedsFullResponse.setLikesCount( likesList == null ? 0 : likesList.size() );
         feedsFullResponse.setCommentsCount((commentsList != null ? commentsList.size() : 0) + (replyCount != null ? replyCount : 0));
-        List<String> profileIds = feedsFullResponse.getLikes().stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
+        List<String> profileIds = feedsFullResponse.getLikes() == null ? null : feedsFullResponse.getLikes().stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
         feedsFullResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId)) ? true : false);
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         feedsFullResponse.setCreatedTimeStr(sdf2.format(new Date(feedsFullResponse.getCreatedTime())));
-        Optional<FeedsSendToResponse> feedsSendToResponse = feedsFullResponse.getFeedsSendTo().stream().
-                filter(p -> p.getType().equals("Location")).
-                findFirst();
-        if(feedsSendToResponse != null && feedsSendToResponse.get() != null)
-            feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
+        if(feedsFullResponse.getFeedsSendTo() != null) {
+            Optional<FeedsSendToResponse> feedsSendToResponse = feedsFullResponse.getFeedsSendTo().stream().
+                    filter(p -> p.getType().equals("Location")).
+                    findFirst();
+            if(feedsSendToResponse != null && !feedsSendToResponse.isEmpty()) {
+                feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
+            }
+            feedsFullResponse.getFeedsSendTo().stream()
+                    .map(feedsSendTo -> setChannelCommunityName(feedsSendTo))
+                    .collect(Collectors.toList());
+        }
         MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
         minimalProfileResponse.setProfileId(feedsFullResponse.getProfileId());
         feedsFullResponse.setMinimalProfileResponse(minimalProfileResponse);
@@ -187,6 +196,16 @@ public class FeedsService {
         return feedsFullResponse;
     }
 
+    private FeedsSendToResponse setChannelCommunityName(FeedsSendToResponse feedsSendToResponse){
+        if(feedsSendToResponse.getType().equalsIgnoreCase("channel")){
+            ChannelResponse response = channelService.retrieveById(Long.valueOf(feedsSendToResponse.getValue()));
+            feedsSendToResponse.setName(response == null ? null : response.getName());
+        } else if(feedsSendToResponse.getType().equalsIgnoreCase("community")){
+            CommunityResponse response = communityService.retrieveById(Long.valueOf(feedsSendToResponse.getValue()));
+            feedsSendToResponse.setName(response == null ? null : response.getName());
+        }
+        return feedsSendToResponse;
+    }
     public List<KeyValueListResponse> getCommunityAndChannelByProfile(Long profileId) {
         List<KeyValueListResponse> keyValueChannelList = channelService.retrieveChannelsByProfileStatus(profileId, "Admin");
         List<KeyValueListResponse> keyValueCommunityList = communityService.retrieveCommunitiesByProfileStatus(profileId, "Admin,Accepted");

@@ -23,6 +23,7 @@ public class FeedsFullResponse {
     private String location;
     private Integer commentsCount;
     private Boolean loginUserLiked;
+    private Integer likesCount;
     private  Long createdTime;
     private  Long updatedTime;
 

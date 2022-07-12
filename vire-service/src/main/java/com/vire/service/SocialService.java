@@ -94,36 +94,7 @@ public class SocialService {
     }
 
 
-    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
-        log.info("Social ID###:"+socialId);
-        /*SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
-                .map(dto -> SocialPostResponse.fromDto(dto))
-                .get();
-        SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
-        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
-        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
-        socialPostResponse.setComments(commentsList);
-        socialPostResponse.setLikes(likesList);
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
-        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
-        if(categoryMasterResponse != null) {
-            socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
-            socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
-        }
-        Optional<SocialSendToResponse> socialSendToResponse = socialPostResponse.getSendTo().stream().
-                filter(p -> p.getType().equals("Location")).
-                findFirst();
-        if(socialSendToResponse != null && socialSendToResponse.get() != null)
-            socialPostResponse.setLocation(socialSendToResponse.get().getValue());
-        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
-        minimalProfileResponse.setProfileId(socialPostResponse.getProfileId());
-        socialPostResponse.setMinimalProfileResponse(minimalProfileResponse);
-        socialPostResponse.getMinimalProfileResponse().cloneProperties(
-                profileService.retrieveProfileDtoById(
-                        Long.valueOf(socialPostResponse.getProfileId())));*/
-        return retrieveSocialDetailsById(socialId, null);
-    }
+
     private static SocialCallRequestResponse findCallRequestByProfileId(Collection<SocialCallRequestResponse> listCallRequest, String profileId) {
         return listCallRequest.stream().filter(callRequestResponse-> profileId.equals(callRequestResponse.getRequesterProfileId()))
                 .findFirst().orElse(null);
@@ -142,7 +113,11 @@ public class SocialService {
                 .map(dto -> SocialResponse.fromDto(dto))
                 .collect(Collectors.toList());
     }
+    public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
+        log.info("Social ID###:"+socialId);
 
+        return setSocialDetails(socialId, null);
+    }
     public List<SocialPostResponse> retrievePostsByProfileId(Long profileId) {
         long startTime = System.nanoTime();
 
@@ -153,7 +128,7 @@ public class SocialService {
         List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
-            var socialPostResponse = retrieveSocialDetailsById(Long.valueOf(socialId), profileId);
+            var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
             for (SocialSendToResponse sendTo:sendToList) {
@@ -164,7 +139,7 @@ public class SocialService {
         }
         return socialPostResponses;
     }
-    private SocialPostResponse retrieveSocialDetailsById(Long socialId, Long profileId) {
+    private SocialPostResponse setSocialDetails(Long socialId, Long profileId) {
         log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
         SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
                 .map(dto -> SocialPostResponse.fromDto(dto))
@@ -192,9 +167,10 @@ public class SocialService {
             socialPostResponse.getMinimalProfileResponse().cloneProperties(
                     profileService.retrieveProfileDtoById(
                             Long.valueOf(socialPostResponse.getProfileId())));
+            socialPostResponse.setComments(commentsList);
+            socialPostResponse.setLikes(likesList);
         }
-        socialPostResponse.setComments(commentsList);
-        socialPostResponse.setLikes(likesList);
+        socialPostResponse.setLikesCount( likesList == null ? 0 : likesList.size() );
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));

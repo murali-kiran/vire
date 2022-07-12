@@ -53,17 +53,14 @@ public class ProfileController {
         return response
                 .stream()
                 .map(profileResponse -> {
-
                     var thumbsDownCount = profileThumbsDownService.getThumbsDownCountOfProfile(profileId);
                     var thumbsUpCount = profileThumbsUpService.getThumbsUpCountOfProfile(profileId);
                     var friendsCount = profileFollowersService.getFriendCountOfProfile(profileId);
                     var starsCount = experienceLikesService.getLikesCountOfProfile(profileId);
-
                     profileResponse.setThumbsDownCount(thumbsDownCount);
                     profileResponse.setThumbsUpCount(thumbsUpCount);
                     profileResponse.setFriendsCount(friendsCount);
                     profileResponse.setStarsCount(starsCount);
-
                     return new ResponseEntity<>(profileResponse, HttpStatus.OK);
                 })
                 .findFirst()

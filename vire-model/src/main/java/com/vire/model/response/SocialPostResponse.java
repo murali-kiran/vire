@@ -33,6 +33,7 @@ public class SocialPostResponse {
     private String createdTimeStr;
     private String location;
     private String callRequestStatusOfLoginUser;
+    private Integer likesCount;
     private Integer commentsCount;
     private Integer starsCount;
     //private List<SocialPostSentResponse> sendTo;

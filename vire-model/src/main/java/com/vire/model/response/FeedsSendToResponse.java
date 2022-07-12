@@ -11,6 +11,7 @@ public class FeedsSendToResponse implements Serializable {
     private String feedsSendToId;
     private String type;
     private String value;
+    private String name;
     private String feedId;
     private Long createdTime;
     private Long updatedTime;
