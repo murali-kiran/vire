@@ -21,6 +21,7 @@ public class FeedsSendToResponse implements Serializable {
         response.setType(dto.getType());
         response.setValue(dto.getValue());
         response.setFeedId(dto.getFeedId().toString());
+        response.setName(dto.getName());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         return response;

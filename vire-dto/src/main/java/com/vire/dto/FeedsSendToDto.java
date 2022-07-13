@@ -10,6 +10,7 @@ public class FeedsSendToDto implements Serializable {
     private Long feedsSendToId;
     private String type;
     private String value;
+    private String name;
     private Long feedId;
     private  Long createdTime;
     private  Long updatedTime;

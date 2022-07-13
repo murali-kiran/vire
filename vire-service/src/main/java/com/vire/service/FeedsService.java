@@ -171,7 +171,7 @@ public class FeedsService {
         }
         feedsFullResponse.setLikesCount( likesList == null ? 0 : likesList.size() );
         feedsFullResponse.setCommentsCount((commentsList != null ? commentsList.size() : 0) + (replyCount != null ? replyCount : 0));
-        List<String> profileIds = feedsFullResponse.getLikes() == null ? null : feedsFullResponse.getLikes().stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
+        List<String> profileIds = likesList == null ? null : likesList.stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
         feedsFullResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId)) ? true : false);
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
@@ -183,9 +183,6 @@ public class FeedsService {
             if(feedsSendToResponse != null && !feedsSendToResponse.isEmpty()) {
                 feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
             }
-            feedsFullResponse.getFeedsSendTo().stream()
-                    .map(feedsSendTo -> setChannelCommunityName(feedsSendTo))
-                    .collect(Collectors.toList());
         }
         MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
         minimalProfileResponse.setProfileId(feedsFullResponse.getProfileId());
@@ -196,7 +193,7 @@ public class FeedsService {
         return feedsFullResponse;
     }
 
-    private FeedsSendToResponse setChannelCommunityName(FeedsSendToResponse feedsSendToResponse){
+    /*private FeedsSendToResponse setChannelCommunityName(FeedsSendToResponse feedsSendToResponse){
         if(feedsSendToResponse.getType().equalsIgnoreCase("channel")){
             ChannelResponse response = channelService.retrieveById(Long.valueOf(feedsSendToResponse.getValue()));
             feedsSendToResponse.setName(response == null ? null : response.getName());
@@ -205,7 +202,7 @@ public class FeedsService {
             feedsSendToResponse.setName(response == null ? null : response.getName());
         }
         return feedsSendToResponse;
-    }
+    }*/
     public List<KeyValueListResponse> getCommunityAndChannelByProfile(Long profileId) {
         List<KeyValueListResponse> keyValueChannelList = channelService.retrieveChannelsByProfileStatus(profileId, "Admin");
         List<KeyValueListResponse> keyValueCommunityList = communityService.retrieveCommunitiesByProfileStatus(profileId, "Admin,Accepted");

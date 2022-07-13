@@ -21,6 +21,9 @@ public class FeedsSendToDao {
     @Column(name = "value", length = 191)
     private String value;
 
+    @Column(name = "name", length = 191)
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "feed_id", nullable = false)
     private FeedsDao feed;
@@ -47,6 +50,7 @@ public class FeedsSendToDao {
                 "feedsSendToId=" + feedsSendToId +
                 ", type='" + type + '\'' +
                 ", value='" + value + '\'' +
+                ", name='" + name + '\'' +
                 ", feed=" + feed.getFeedId() +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
@@ -58,6 +62,7 @@ public class FeedsSendToDao {
         dto.setFeedsSendToId  (this.getFeedsSendToId());
         dto.setType(this.getType());
         dto.setValue(this.getValue());
+        dto.setName(this.getName());
         dto.setFeedId(this.getFeed().getFeedId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
@@ -69,6 +74,7 @@ public class FeedsSendToDao {
         dao.setFeedsSendToId(dto.getFeedsSendToId());
         dao.setType(dto.getType());
         dao.setValue(dto.getValue());
+        dao.setName(dto.getName());
         return dao;
     }
 }
