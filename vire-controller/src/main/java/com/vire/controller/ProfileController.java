@@ -1,8 +1,10 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.UpdateEmailRequest;
 import com.vire.model.request.UpdatePasswordRequest;
 import com.vire.model.response.ProfileResponse;
+import com.vire.model.response.UpdateEmailResponse;
 import com.vire.model.response.UpdatePasswordResponse;
 import com.vire.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -115,4 +117,26 @@ public class ProfileController {
                 .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
 
     }
+
+    @Operation(summary = "update to new email by phone number or email id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated email",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UpdateEmailResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Failed update email",
+                    content = @Content) })
+    @PutMapping("/updateEmail")
+    public ResponseEntity<UpdateEmailResponse> updateEmail(@Valid @RequestBody UpdateEmailRequest updateEmailRequest){
+        var response = profileService.updateEmail(updateEmailRequest);
+
+        return response
+                .stream()
+                .map(updateEmailResponse -> new ResponseEntity<>(updateEmailResponse, HttpStatus.OK))
+                .findFirst()
+                .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
+
+    }
+
+
+
 }

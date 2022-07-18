@@ -37,4 +37,12 @@ public interface ProfileRepositoryJpa
     @Query("update ProfileDao p set p.password = :password where p.mobileNumber = :phonenumber")
     void updatePasswordViaPhoneNumber(@Param(value = "phonenumber") String phonenumber, @Param(value = "password") String password);
 
+    @Modifying
+    @Query("update ProfileDao p set p.emailId = :newEmail where p.emailId = :oldEmail")
+    void updateEmailViaOldEmail(@Param(value = "oldEmail") String oldEmail, @Param(value = "newEmail") String newEmail);
+
+    @Modifying
+    @Query("update ProfileDao p set p.emailId = :newEmail where p.mobileNumber = :phonenumber")
+    void updateEmailViaMobileNumber(@Param(value = "phonenumber") String phonenumber, @Param(value = "newEmail") String newEmail);
+
 }

@@ -7,6 +7,7 @@ import com.vire.exception.LoginException;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
+import com.vire.model.request.UpdateEmailRequest;
 import com.vire.model.request.UpdatePasswordRequest;
 import com.vire.model.response.*;
 import com.vire.repository.MasterRepository;
@@ -325,6 +326,58 @@ public class ProfileService {
 
         updatePasswordResponse = new UpdatePasswordResponse(false,"Password updation failed");
         return Optional.of(updatePasswordResponse);
+
+    }
+
+    @Transactional
+    public Optional<UpdateEmailResponse> updateEmail(UpdateEmailRequest updateEmailRequest) {
+
+      Optional<ProfileDao> profileDao = null;
+      UpdateEmailResponse updateEmailResponse = null;
+      boolean isEmail = false;
+      String emailOrPassword = updateEmailRequest.getEmailOrphonenumber();
+      if(Utility.isEmailValid(emailOrPassword)){
+        profileDao =   profileRepository.findByEmailId(emailOrPassword);
+        isEmail = true;
+      }else if(Utility.isPhoneNumberValid(emailOrPassword)){
+        profileDao = profileRepository.findByMobileNumber(emailOrPassword);
+        isEmail = false;
+      }else{
+        updateEmailResponse = new UpdateEmailResponse(false,"Invalid email or phone number");
+        return Optional.of(updateEmailResponse);
+      }
+
+      if(profileDao.isPresent()){
+
+        Optional<ProfileDao> newProfile = profileRepository.findByEmailId(updateEmailRequest.getNewEmail());
+
+        if(newProfile.isPresent()){
+          updateEmailResponse = new UpdateEmailResponse(false,"Profile already exists with new  Email ");
+          return Optional.of(updateEmailResponse);
+        } else {
+
+          try {
+
+              if (isEmail)
+                profileRepository.updateEmailViaOldEmail(updateEmailRequest.getEmailOrphonenumber(), updateEmailRequest.getNewEmail());
+              else
+                profileRepository.updateEmailViaMobileNumber(updateEmailRequest.getEmailOrphonenumber(), updateEmailRequest.getNewEmail());
+
+              updateEmailResponse = new UpdateEmailResponse(true, "Email is updated");
+              return Optional.of(updateEmailResponse);
+
+            } catch (Exception e) {
+              e.printStackTrace();
+              updateEmailResponse = new UpdateEmailResponse(false, "Email updation failed :: "+e.getMessage());
+              return Optional.of(updateEmailResponse);
+            }
+
+        }
+
+      } else {
+        updateEmailResponse = new UpdateEmailResponse(false,"Profile with Phone number or Old Email does not exists");
+        return Optional.of(updateEmailResponse);
+      }
 
     }
 }
