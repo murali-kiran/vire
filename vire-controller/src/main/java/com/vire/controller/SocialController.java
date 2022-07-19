@@ -132,7 +132,30 @@ public class SocialController {
             @ApiResponse(responseCode = "500", description = "Find Social by profile by ID Failed",
                     content = @Content)})
     @GetMapping("socialposts/{profileid}")
-    public ResponseEntity<List<SocialPostResponse>> findByIdProfileId(@PathVariable(name = "profileid") Long profileId) {
+    public ResponseEntity<List<SocialPostResponse>> findByIdProfileId(@PathVariable(name = "profileid") String profileId) {
         return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsByProfileId(profileId), HttpStatus.OK);
+    }
+    @Operation(summary = "Find Social posts created by profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Find Social posts created by profile Successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialPostResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Find Social posts created by profile Failed",
+                    content = @Content)})
+    @GetMapping("createdsocials/{profileid}")
+    public ResponseEntity<List<SocialPostResponse>> retrievePostsCreatedBy(@PathVariable(name = "profileid") String profileId) {
+        return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsCreatedByProfile(profileId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Find Social posts by community")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Find Social posts by community Successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialPostResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Find Social posts by community Failed",
+                    content = @Content)})
+    @GetMapping("communitysocials/{communityid}/{profileid}")
+    public ResponseEntity<List<SocialPostResponse>> retrievePostsCreatedBy(@PathVariable(name = "communityid") Long communityId, @PathVariable(name = "profileid") String profileId) {
+        return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsByCommunity(communityId, profileId), HttpStatus.OK);
     }
 }

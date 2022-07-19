@@ -5,6 +5,7 @@ import com.vire.dto.SocialDto;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public interface SocialRepositoryJpa extends JpaRepository<SocialDao, Long> , JpaSpecificationExecutor<SocialDao> {
     List<SocialDao> findByCategoryId(Long categoryId);
     List<SocialDao> getBySendTo(final String searchString);
-
     List<SocialDao> findAll(Sort sort);
+    @Query(value="SELECT s.social_id FROM t_social s JOIN t_social_post_send_to st ON st.social_id = s.social_id WHERE st.type='Community' and st.value = :communityId ORDER BY s.updated_time DESC", nativeQuery = true)
+    List<Long> findByCommunity(Long communityId);
 }

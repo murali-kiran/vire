@@ -50,3 +50,6 @@ ALTER TABLE channel CHANGE COLUMN description description VARCHAR(500) NOT NULL,
 ALTER TABLE channel ADD COLUMN is_private TINYINT(1) NULL DEFAULT 0 AFTER rules;
 
 ALTER TABLE t_feeds_send_to ADD COLUMN name VARCHAR(191) NULL AFTER feed_id, CHANGE COLUMN type type VARCHAR(191) NOT NULL ;
+
+ALTER TABLE t_feeds ADD COLUMN parent_feed_id BIGINT NULL AFTER file_id;
+ALTER TABLE Feedback CHANGE COLUMN description description VARCHAR(500) NULL ;

@@ -46,18 +46,29 @@ public class FeedsService {
     ChannelService channelService;
     @Autowired
     CommunityService communityService;
+    @Autowired
+    FeedsRepository feedRepository;
 
     public FeedsResponse createFeeds(final FeedsRequest request) {
-
+        /*if(request.getParentFeedId() != null ){
+            FeedsResponse parentFeed = retrieveById(Long.valueOf(request.getParentFeedId()));
+            if(request.getFeedFileList() == null && parentFeed != null){
+                List<FeedFileRequest> feedFileRequests = new ArrayList<>();
+                for (var feedFile : parentFeed.getFeedFileList()) {
+                    FeedFileRequest feedFileRequest = new FeedFileRequest();
+                    feedFileRequest.setFileId(feedFile.getFileId());
+                    feedFileRequests.add(feedFileRequest);
+                }
+                request.setFeedFileList(feedFileRequests);
+            }
+        }*/
         var dto = request.toDto(snowflake);
         dto.setFeedId(snowflake.nextId());
-
         if (!CollectionUtils.isEmpty(dto.getFeedsSendTo())) {
             for (var sendToDto : dto.getFeedsSendTo()) {
                 sendToDto.setFeedsSendToId(snowflake.nextId());
             }
         }
-
         return FeedsResponse.fromDto(feedsRepo.createFeeds(dto));
     }
 
@@ -101,6 +112,17 @@ public class FeedsService {
             throw new RuntimeException("Record not found for id:"+feedsId);
         }
     }
+    public List<FeedsFullResponse> retrieveFeedsCreatedById(String profileId) {
+        List<String> feedsIdList = search("profileId:"+profileId).stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
+        List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
+        for (String feedId : feedsIdList) {
+            FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(Long.valueOf(feedId))
+                    .map(dto -> FeedsFullResponse.fromDto(dto))
+                    .get();
+            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId, true));
+        }
+        return feedsFullResponseList;
+    }
     public List<FeedsFullResponse> retrieveFeedPostsByProfileId(String profileId) {
         List<String> feedsIdList = getAll().stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
         List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
@@ -112,6 +134,31 @@ public class FeedsService {
         }
         return feedsFullResponseList;
     }
+
+    public List<FeedsFullResponse> retrieveFeedPostsByCommunityId(Long communityId, String profileId) {
+        List<Long> feedsIdList = feedsRepo.retrieveByCommunity(communityId);
+        List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
+        for (Long feedId : feedsIdList) {
+            FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(feedId)
+                    .map(dto -> FeedsFullResponse.fromDto(dto))
+                    .get();
+            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId, true));
+        }
+        return feedsFullResponseList;
+    }
+
+    public List<FeedsFullResponse> retrieveFeedPostsByChannelId(Long channelId, String profileId) {
+        List<Long> feedsIdList = feedsRepo.retrieveByChannel(channelId);
+        List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
+        for (Long feedId : feedsIdList) {
+            FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(feedId)
+                    .map(dto -> FeedsFullResponse.fromDto(dto))
+                    .get();
+            feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId, true));
+        }
+        return feedsFullResponseList;
+    }
+
     public List<FeedsResponse> getAll() {
 
         return feedsRepo
@@ -165,6 +212,7 @@ public class FeedsService {
         List<FeedCommentResponse> commentsList = commentService.search("feedId:" + feedsFullResponse.getFeedId());
         List<FeedLikesResponse> likesList = likesService.search("feedId:" + feedsFullResponse.getFeedId());
         Integer replyCount = commentReplyService.countByFeedId(Long.valueOf(feedsFullResponse.getFeedId()));
+        feedsFullResponse.setShareCount(feedsRepo.countByParentFeedId(Long.valueOf(feedsFullResponse.getFeedId())));
         if(!isList) {
             feedsFullResponse.setComments(commentsList);
             feedsFullResponse.setLikes(likesList);
@@ -173,26 +221,52 @@ public class FeedsService {
         feedsFullResponse.setCommentsCount((commentsList != null ? commentsList.size() : 0) + (replyCount != null ? replyCount : 0));
         List<String> profileIds = likesList == null ? null : likesList.stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
         feedsFullResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId)) ? true : false);
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
-        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        feedsFullResponse.setCreatedTimeStr(sdf2.format(new Date(feedsFullResponse.getCreatedTime())));
-        if(feedsFullResponse.getFeedsSendTo() != null) {
-            Optional<FeedsSendToResponse> feedsSendToResponse = feedsFullResponse.getFeedsSendTo().stream().
-                    filter(p -> p.getType().equals("Location")).
-                    findFirst();
-            if(feedsSendToResponse != null && !feedsSendToResponse.isEmpty()) {
-                feedsFullResponse.setLocation(feedsSendToResponse.get().getValue());
-            }
+        feedsFullResponse.setCreatedTimeStr(setDateFormat(feedsFullResponse.getCreatedTime()));
+        feedsFullResponse.setLocation(setLocation(feedsFullResponse.getFeedsSendTo()));
+        MinimalProfileResponse feedCreatorProfile = setMinimalProfile(feedsFullResponse.getProfileId());
+        feedsFullResponse.setMinimalProfileResponse(feedCreatorProfile);
+        if(feedsFullResponse.getParentFeedResponse() != null){
+            feedsFullResponse.setParentFeedResponse(setParentFeedResponse(feedsFullResponse.getParentFeedResponse()));
         }
-        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
-        minimalProfileResponse.setProfileId(feedsFullResponse.getProfileId());
-        feedsFullResponse.setMinimalProfileResponse(minimalProfileResponse);
-        feedsFullResponse.getMinimalProfileResponse().cloneProperties(
-                profileService.retrieveProfileDtoById(
-                        Long.valueOf(feedsFullResponse.getProfileId())));
         return feedsFullResponse;
     }
 
+    private String setLocation(List<FeedsSendToResponse> feedsSendToResponses){
+        if(feedsSendToResponses != null) {
+            Optional<FeedsSendToResponse> feedsSendToResponse = feedsSendToResponses.stream().
+                    filter(p -> p.getType().equals("Location")).
+                    findFirst();
+            if(feedsSendToResponse != null && !feedsSendToResponse.isEmpty()) {
+                return feedsSendToResponse.get().getValue();
+            }
+        }
+        return null;
+    }
+    private String setDateFormat(Long createdTime){
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        return sdf2.format(new Date(createdTime));
+    }
+    private ParentFeedResponse setParentFeedResponse(ParentFeedResponse parentFeedResponse){
+        FeedsResponse feedsResponse = retrieveById(Long.valueOf(parentFeedResponse.getFeedId()));
+        if(feedsResponse != null) {
+            MinimalProfileResponse parentFeedCreatorProfile = setMinimalProfile(feedsResponse.getProfileId());
+            parentFeedResponse.setMinimalProfileResponse(parentFeedCreatorProfile);
+            parentFeedResponse.setDescription(feedsResponse.getDescription());
+            parentFeedResponse.setLocation(setLocation(feedsResponse.getFeedsSendTo()));
+            parentFeedResponse.setFeedFileList(feedsResponse.getFeedFileList());
+            parentFeedResponse.setCreatedTimeStr(setDateFormat(feedsResponse.getCreatedTime()));
+            parentFeedResponse.setFeedsSendTo(feedsResponse.getFeedsSendTo());
+            return parentFeedResponse;
+        }
+        return null;
+    }
+    private MinimalProfileResponse setMinimalProfile(String profileId){
+        MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
+        minimalProfileResponse.setProfileId(profileId);
+        minimalProfileResponse.cloneProperties(profileService.retrieveProfileDtoById(Long.valueOf(profileId)));
+        return minimalProfileResponse;
+    }
     /*private FeedsSendToResponse setChannelCommunityName(FeedsSendToResponse feedsSendToResponse){
         if(feedsSendToResponse.getType().equalsIgnoreCase("channel")){
             ChannelResponse response = channelService.retrieveById(Long.valueOf(feedsSendToResponse.getValue()));

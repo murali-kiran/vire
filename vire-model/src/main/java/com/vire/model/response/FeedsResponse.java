@@ -2,8 +2,6 @@ package com.vire.model.response;
 
 
 import com.vire.dto.FeedsDto;
-import com.vire.dto.FeedsSendToDto;
-import com.vire.dto.SocialDto;
 import lombok.Data;
 
 import java.util.List;
@@ -18,15 +16,16 @@ public class FeedsResponse {
     //private String fileId;
     private List<FeedsSendToResponse> feedsSendTo;
     private List<FeedFileResponse> feedFileList;
+    private String parentFeedId;
     private  Long createdTime;
     private  Long updatedTime;
 
     public static FeedsResponse fromDto(FeedsDto dto){
         var response = new FeedsResponse();
-        response.setFeedId(dto.getFeedId().toString());
-        response.setProfileId(dto.getProfileId().toString());
+        response.setFeedId(dto.getFeedId() != null ? String.valueOf(dto.getFeedId()) : null);
+        response.setProfileId(dto.getProfileId() != null ? String.valueOf(dto.getProfileId()) : null);
         response.setDescription(dto.getDescription());
-        //response.setFileId(dto.getFileId().toString());
+        response.setParentFeedId(dto.getParentFeedId() != null ? String.valueOf(dto.getParentFeedId()) : null);
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getFeedsSendTo() != null && !dto.getFeedsSendTo().isEmpty()) {

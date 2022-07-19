@@ -28,13 +28,19 @@ public class FeedsDao {
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<FeedsSendToDao> feedsSendTo;
+
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FeedFileDao> feedFileList;
+
+    @Column(name = "parent_feed_id")
+    private Long parentFeedId;
+
     @Column(name = "created_time", nullable = false)
     private Long createdTime;
 
     @Column(name = "updated_time", nullable = false)
     private Long updatedTime;
+
     @PrePersist
     public void onPrePersist() {
         this.setCreatedTime(Instant.now().toEpochMilli());
@@ -54,6 +60,7 @@ public class FeedsDao {
                 ", description='" + description + '\'' +
                 ", fileId=" + fileId +
                 ", feedsSendTo=" + feedsSendTo +
+                ", parentFeedId=" + parentFeedId +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
                 '}';
@@ -65,6 +72,7 @@ public class FeedsDao {
         dto.setProfileId(this.getProfileId());
         dto.setDescription(this.getDescription());
         dto.setFileId(this.getFileId());
+        dto.setParentFeedId(this.getParentFeedId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -91,6 +99,7 @@ public class FeedsDao {
         dao.setProfileId(dto.getProfileId());
         dao.setDescription(dto.getDescription());
         dao.setFileId(dto.getFileId());
+        dao.setParentFeedId(dto.getParentFeedId());
         dao.setCreatedTime(dto.getCreatedTime());
         dao.setUpdatedTime(dto.getUpdatedTime());
 

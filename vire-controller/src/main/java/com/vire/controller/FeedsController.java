@@ -76,6 +76,18 @@ public class FeedsController {
         return new ResponseEntity<>(feedsService.getFeeds(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Retrieve All Feed details created by profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieve All Feed details Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FeedsFullResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Retrieve All Feed details Failed",
+                    content = @Content) })
+    @GetMapping("/createdfeeds/{profileid}")
+    public ResponseEntity<List<FeedsFullResponse>> retrieveFeedsCreatedById(@PathVariable(name = "profileid") String profileId) {
+        return new ResponseEntity<>(feedsService.retrieveFeedsCreatedById(profileId), HttpStatus.OK);
+    }
+
     @Operation(summary = "Retrieve All Community, Channel created or joined by profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieve All Community, Channel created or joined by profile Successful",
@@ -135,5 +147,31 @@ public class FeedsController {
     public ResponseEntity<List<FeedsFullResponse>>
     findByIdProfileId(@PathVariable(name = "profileid") String profileId) {
         return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByProfileId(profileId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Find Feeds By community Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Find Feeds By community Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FeedsFullResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Find Feeds By community Failed",
+                    content = @Content) })
+    @GetMapping("communityfeedsposts/{communityid}/{profileid}")
+    public ResponseEntity<List<FeedsFullResponse>>
+    findByIdCommunityId(@PathVariable(name = "communityid") Long communityId, @PathVariable(name = "profileid") String profileId) {
+        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByCommunityId(communityId, profileId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Find Feeds By channel Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Find Feeds By channel Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FeedsFullResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Find Feeds By channel Failed",
+                    content = @Content) })
+    @GetMapping("channelfeedsposts/{channelid}/{profileid}")
+    public ResponseEntity<List<FeedsFullResponse>>
+    findByIdChannelId(@PathVariable(name = "channelid") Long channelId, @PathVariable(name = "profileid") String profileId) {
+        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByChannelId(channelId, profileId), HttpStatus.OK);
     }
 }

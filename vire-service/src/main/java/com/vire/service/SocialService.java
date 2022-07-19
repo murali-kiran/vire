@@ -118,13 +118,9 @@ public class SocialService {
 
         return setSocialDetails(socialId, null);
     }
-    public List<SocialPostResponse> retrievePostsByProfileId(Long profileId) {
+    public List<SocialPostResponse> retrievePostsByProfileId(String profileId) {
         long startTime = System.nanoTime();
 
-        /*Set<String> socialIds = getSocialListBySearch(profileId);
-        long endTime = System.nanoTime();
-        double elapsedTimeInSecond = (double) (endTime - startTime) / 1_000_000_000;
-        log.info("****************duration:" + elapsedTimeInSecond);*/
         List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
@@ -139,7 +135,42 @@ public class SocialService {
         }
         return socialPostResponses;
     }
-    private SocialPostResponse setSocialDetails(Long socialId, Long profileId) {
+    public List<SocialPostResponse> retrievePostsCreatedByProfile(String profileId) {
+        long startTime = System.nanoTime();
+
+        List<String> socialIds = search("profileId:"+profileId).stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
+        List<SocialPostResponse> socialPostResponses = new ArrayList<>();
+        for (String socialId : socialIds) {
+            var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            var sendToList = socialPostResponse.getSendTo();
+            for (SocialSendToResponse sendTo:sendToList) {
+                if(sendTo.getType() != null && sendTo.getType().equals("Location"))
+                    socialPostResponse.setLocation(sendTo.getValue());
+            }
+            socialPostResponses.add(socialPostResponse);
+        }
+        return socialPostResponses;
+    }
+
+    public List<SocialPostResponse> retrievePostsByCommunity(Long communityId, String profileId) {
+        long startTime = System.nanoTime();
+
+        List<Long> socialIds = socialRepo.retrieveByCommunity(communityId);
+        List<SocialPostResponse> socialPostResponses = new ArrayList<>();
+        for (Long socialId : socialIds) {
+            var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            var sendToList = socialPostResponse.getSendTo();
+            for (SocialSendToResponse sendTo:sendToList) {
+                if(sendTo.getType() != null && sendTo.getType().equals("Location"))
+                    socialPostResponse.setLocation(sendTo.getValue());
+            }
+            socialPostResponses.add(socialPostResponse);
+        }
+        return socialPostResponses;
+    }
+    private SocialPostResponse setSocialDetails(Long socialId, String profileId) {
         log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
         SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
                 .map(dto -> SocialPostResponse.fromDto(dto))
@@ -150,7 +181,7 @@ public class SocialService {
         if(profileId != null ) {
             List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialId);
             if (socialPostResponse.getSocialCallRequestResponses() != null) {
-                SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId + "");
+                SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId);
                 if (socialCallRequestResponse != null)
                     socialPostResponse.setCallRequestStatusOfLoginUser(socialCallRequestResponse.getStatus());
             }
@@ -227,4 +258,5 @@ public class SocialService {
         }
         return uniqueSocialSet;
     }
+
 }

@@ -131,4 +131,7 @@ public class SocialRepository {
         List<SocialDto> resultList = query.getResultList();
         return resultList;
     }
+    public List<Long> retrieveByCommunity(Long communityId){
+        return socialRepositoryJpa.findByCommunity(communityId);
+    }
 }

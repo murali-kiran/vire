@@ -12,6 +12,7 @@ public class FeedsDto {
     private Long fileId;
     private List<FeedsSendToDto> feedsSendTo;
     private List<FeedFileDto> feedFileList;
+    private Long parentFeedId;
     private  Long createdTime;
     private  Long updatedTime;
 }

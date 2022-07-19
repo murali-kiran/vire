@@ -101,4 +101,14 @@ public class FeedsRepository {
         List<FeedsDto> resultList = query.getResultList();
         return resultList;
     }
+    public Integer countByParentFeedId(Long feedId) {
+        return feedsRepositoryJpa.countByParentFeedId(feedId);
+    }
+    public List<Long> retrieveByCommunity(Long communityId){
+        return feedsRepositoryJpa.findByCommunity(communityId);
+    }
+
+    public List<Long> retrieveByChannel(Long channelId){
+        return feedsRepositoryJpa.findByChannel(channelId);
+    }
 }

@@ -102,6 +102,17 @@ public class ExperienceService {
       return experienceDetailResponseList;
     }
 
+  public List<ExperienceDetailResponse> retrieveAllCreatedByProfile(String profileId) {
+    List<String> experienceIds = search("profileId:"+profileId).stream().map(ExperienceResponse::getExperienceId).collect(Collectors.toList());
+    List<ExperienceDetailResponse> experienceDetailResponseList = new ArrayList<>();
+    for (String experienceId : experienceIds) {
+      var experienceDetailResponse = setExperienceDetails(Long.valueOf(experienceId), false, Long.valueOf(profileId));
+      experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
+      experienceDetailResponseList.add(experienceDetailResponse);
+    }
+    return experienceDetailResponseList;
+  }
+
   public ExperienceDetailResponse retrieveExperienceDetailsById(Long experienceId, Long profileId) {
     log.info("Experience ID###:"+experienceId);
     ExperienceDetailResponse experienceDetailResponse = setExperienceDetails(experienceId, true, profileId);

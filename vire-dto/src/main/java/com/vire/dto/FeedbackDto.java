@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Data
 public class FeedbackDto {
     private Long feedbackId;
-    private Long feedback_provider_id;
+    private Long feedbackProviderId;
     private Short rating;
     private String description;
     public Long createdTime;

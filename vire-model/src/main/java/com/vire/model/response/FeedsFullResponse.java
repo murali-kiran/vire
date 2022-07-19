@@ -13,16 +13,18 @@ public class FeedsFullResponse {
     private String feedId;
     private String profileId;
     private String description;
-    private  MinimalProfileResponse minimalProfileResponse;
+    private MinimalProfileResponse minimalProfileResponse;
     //private String fileId;
     private List<FeedsSendToResponse> feedsSendTo;
     private List<FeedFileResponse> feedFileList;
     private List<FeedCommentResponse> comments;
     private List<FeedLikesResponse> likes;
+    private ParentFeedResponse parentFeedResponse;
     private String createdTimeStr;
     private String location;
     private Integer commentsCount;
     private Boolean loginUserLiked;
+    private Integer shareCount;
     private Integer likesCount;
     private  Long createdTime;
     private  Long updatedTime;
@@ -32,6 +34,12 @@ public class FeedsFullResponse {
         response.setFeedId(dto.getFeedId().toString());
         response.setProfileId(dto.getProfileId().toString());
         response.setDescription(dto.getDescription());
+
+        if(dto.getParentFeedId() != null) {
+            ParentFeedResponse parentFeedResponse = new ParentFeedResponse();
+            parentFeedResponse.setFeedId(String.valueOf(dto.getParentFeedId()));
+            response.setParentFeedResponse(parentFeedResponse);
+        }
         //response.setFileId(dto.getFileId().toString());
         if (dto.getFeedsSendTo() != null && !dto.getFeedsSendTo().isEmpty()) {
             response.setFeedsSendTo(dto.getFeedsSendTo()

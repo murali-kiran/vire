@@ -167,7 +167,12 @@ public class ProfileRepository {
     @Cacheable(value="profileDto", key="#profileId")
     public ProfileDto retrieveProfileDtoById(final Long profileId) {
         log.info("Sravan in cache");
-        return retrieveProfileById(profileId).get();
+        if(retrieveProfileById(profileId) !=  null) {
+            return retrieveProfileById(profileId).get();
+        }
+        else{
+            throw new RuntimeException("No profile present with id:"+profileId);
+        }
     }
 
     public Optional<ProfileDto> retrieveProfileById(final Long profileId) {

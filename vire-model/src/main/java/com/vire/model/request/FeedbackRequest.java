@@ -12,7 +12,7 @@ public class FeedbackRequest {
 
     private String feedbackId;
     
-    private Long feedback_provider_id;
+    private Long feedbackProviderId;
     private Short rating;
     private String description;
 
@@ -26,7 +26,7 @@ public class FeedbackRequest {
             dto.setFeedbackId(snowflake.nextId());
         }
         
-        dto.setFeedback_provider_id(this.getFeedback_provider_id());
+        dto.setFeedbackProviderId(this.getFeedbackProviderId());
         dto.setRating(this.getRating());
         dto.setDescription(this.getDescription());
 

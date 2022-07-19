@@ -121,4 +121,17 @@ public class ExperienceController {
           @RequestParam(value = "search") String searchString) {
     return new ResponseEntity<>(experienceService.search(searchString), HttpStatus.OK);
   }
+
+  @Operation(summary = "Retrieve Experiences created by Profile")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve Experiences created by Profile Successful",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ExperienceDetailResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve Experiences created by Profile Failed",
+                  content = @Content) })
+  @GetMapping("createdexperiences/{profileid}")
+  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllCreatedByProfile(@PathVariable(name = "profileid") String profileId) {
+    return new ResponseEntity<>(experienceService.retrieveAllCreatedByProfile(profileId), HttpStatus.OK);
+  }
+
 }

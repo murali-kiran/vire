@@ -19,7 +19,7 @@ public class FeedbackDao {
     
 
     @Column(name = "feedback_provider_id", nullable = false)
-    private Long feedback_provider_id;
+    private Long feedbackProviderId;
 
     @Column(name = "rating", nullable = false)
     private Short rating;
@@ -50,7 +50,7 @@ public class FeedbackDao {
 
         dto.setFeedbackId(this.getFeedbackId());
         
-        dto.setFeedback_provider_id(this.getFeedback_provider_id());
+        dto.setFeedbackProviderId(this.getFeedbackProviderId());
         dto.setRating(this.getRating());
         dto.setDescription(this.getDescription());
 
@@ -66,7 +66,7 @@ public class FeedbackDao {
 
         feedback.setFeedbackId(dto.getFeedbackId());
         
-        feedback.setFeedback_provider_id(dto.getFeedback_provider_id());
+        feedback.setFeedbackProviderId(dto.getFeedbackProviderId());
         feedback.setRating(dto.getRating());
         feedback.setDescription(dto.getDescription());
 
