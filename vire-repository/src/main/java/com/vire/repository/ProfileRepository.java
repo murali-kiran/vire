@@ -217,19 +217,19 @@ public class ProfileRepository {
 
     }
 
-    public void updatePasswordViaEmail(String emailOrPassword, String password) {
-        profileRepositoryJpa.updatePasswordViaEmail(emailOrPassword,password);
+    public void updatePasswordViaEmailAndProfileId(Long profileId,String emailOrPassword, String password) {
+        profileRepositoryJpa.updatePasswordViaEmailAndProfileId(profileId,emailOrPassword,password);
     }
 
-    public void updatePasswordViaMobileNumber(String emailOrPassword, String password) {
-        profileRepositoryJpa.updatePasswordViaPhoneNumber(emailOrPassword,password);
+    public void updatePasswordViaMobileNumberAndProfileId(Long profileId, String emailOrPassword, String password) {
+        profileRepositoryJpa.updatePasswordViaPhoneNumberAndProfileId(profileId,emailOrPassword,password);
     }
 
-    public void updateEmailViaOldEmail(String emailOrphonenumber, String newEmail) {
-        profileRepositoryJpa.updateEmailViaOldEmail(emailOrphonenumber, newEmail);
+    public void updateEmailViaOldEmailAndProfileId(Long profileId,String emailOrphonenumber, String newEmail) {
+        profileRepositoryJpa.updateEmailViaOldEmailAndProfileId(profileId,emailOrphonenumber, newEmail);
     }
 
-    public void updateEmailViaMobileNumber(String emailOrphonenumber, String newEmail) {
-        profileRepositoryJpa.updateEmailViaMobileNumber(emailOrphonenumber, newEmail);
+    public void updateEmailViaMobileNumberAndProfileId(Long profileId,String emailOrphonenumber, String newEmail) {
+        profileRepositoryJpa.updateEmailViaMobileNumberAndProfileId(profileId,emailOrphonenumber, newEmail);
     }
 }

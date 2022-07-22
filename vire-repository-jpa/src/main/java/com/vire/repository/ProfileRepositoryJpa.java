@@ -30,19 +30,19 @@ public interface ProfileRepositoryJpa
     List<ProfileDao> findByProfileIdIn(List<Long> profileIDs);
 
     @Modifying
-    @Query("update ProfileDao p set p.password = :password where p.emailId = :email")
-    void updatePasswordViaEmail(@Param(value = "email") String email, @Param(value = "password") String password);
+    @Query("update ProfileDao p set p.password = :password where p.emailId = :email and p.profileId = :profileId")
+    void updatePasswordViaEmailAndProfileId(@Param(value = "profileId") Long profileId,@Param(value = "email") String email, @Param(value = "password") String password);
 
     @Modifying
-    @Query("update ProfileDao p set p.password = :password where p.mobileNumber = :phonenumber")
-    void updatePasswordViaPhoneNumber(@Param(value = "phonenumber") String phonenumber, @Param(value = "password") String password);
+    @Query("update ProfileDao p set p.password = :password where p.mobileNumber = :phonenumber and p.profileId = :profileId")
+    void updatePasswordViaPhoneNumberAndProfileId(@Param(value = "profileId") Long profileId,@Param(value = "phonenumber") String phonenumber, @Param(value = "password") String password);
 
     @Modifying
-    @Query("update ProfileDao p set p.emailId = :newEmail where p.emailId = :oldEmail")
-    void updateEmailViaOldEmail(@Param(value = "oldEmail") String oldEmail, @Param(value = "newEmail") String newEmail);
+    @Query("update ProfileDao p set p.emailId = :newEmail where p.emailId = :oldEmail and p.profileId = :profileId")
+    void updateEmailViaOldEmailAndProfileId(@Param(value = "profileId") Long profileId,@Param(value = "oldEmail") String oldEmail, @Param(value = "newEmail") String newEmail);
 
     @Modifying
-    @Query("update ProfileDao p set p.emailId = :newEmail where p.mobileNumber = :phonenumber")
-    void updateEmailViaMobileNumber(@Param(value = "phonenumber") String phonenumber, @Param(value = "newEmail") String newEmail);
+    @Query("update ProfileDao p set p.emailId = :newEmail where p.mobileNumber = :phonenumber and p.profileId = :profileId")
+    void updateEmailViaMobileNumberAndProfileId(@Param(value = "profileId") Long profileId,@Param(value = "phonenumber") String phonenumber, @Param(value = "newEmail") String newEmail);
 
 }
