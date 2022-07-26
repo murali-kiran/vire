@@ -203,7 +203,7 @@ public class ProfileService {
 
   private void setProfileSettingTypes(ProfileDto profileDto, Boolean isPersonalProfile){
       List<MasterDto> masterDtos = isPersonalProfile? masterRepository.findByMasterType("Personal_Profile_Setting_Type") : masterRepository.findByMasterType("Firm_Profile_Setting_Type");
-
+      List<MasterDto> restrictMasterDtos = masterRepository.findByMasterType("Profile_Restrict_Setting");
     if(!CollectionUtils.isEmpty(masterDtos)){
       var profileSettings = new ArrayList<ProfileSettingDto>();
       for(var masterDto : masterDtos){
@@ -211,6 +211,16 @@ public class ProfileService {
         profileSetting.setProfileSettingId(snowflake.nextId());
         profileSetting.setSettingType(masterDto.getMasterValue());
         profileSetting.setIsEnable(false);
+        profileSettings.add(profileSetting);
+      }
+      for(var masterDto : restrictMasterDtos){
+        var profileSetting = new ProfileSettingDto();
+        profileSetting.setProfileSettingId(snowflake.nextId());
+        profileSetting.setSettingType(masterDto.getMasterValue());
+        if(masterDto.getMasterValue() != null && masterDto.getMasterValue().equalsIgnoreCase("showFriends"))
+          profileSetting.setIsEnable(true);
+        else
+          profileSetting.setIsEnable(false);
         profileSettings.add(profileSetting);
       }
       profileDto.setProfileSettings(profileSettings);

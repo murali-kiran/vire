@@ -28,6 +28,8 @@ public class PersonalResponse {
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
     private Integer starsCount = 0;
+    private Boolean isPrivateAccount;
+    private Boolean showFriends;
     private List<ProfileSettingResponse> profileSettingTypes;
     private PersonalProfileResponse personalProfile;
     //private FirmProfileResponse firmProfile;
@@ -37,7 +39,6 @@ public class PersonalResponse {
         var personalResponse = new PersonalResponse();
         personalResponse.setProfileId(dto.getProfileId().toString());
         personalResponse.setName(dto.getName());
-        //personalResponse.setPassword(dto.getPassword());
         personalResponse.setEmailId(dto.getEmailId());
         personalResponse.setMobileNumber(dto.getMobileNumber());
         personalResponse.setAadhar(dto.getAadhar());
@@ -47,14 +48,16 @@ public class PersonalResponse {
         personalResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         personalResponse.setProfileWeightage(dto.getProfileWeightage());
         personalResponse.setProfileType(dto.getProfileType());
-
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         personalResponse.setProfileSettingTypes(profileSettingResponse);
-
         personalResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
-
-
+        var restrictSettings = profileSettingResponse.stream().filter(setting -> setting.getSettingType().equals("isPrivate") || setting.getSettingType().equals("showFriends")).collect(Collectors.toList());
+        restrictSettings.stream().forEach((setting) -> {
+            if(setting.getSettingType().equalsIgnoreCase("isPrivate"))
+                personalResponse.setIsPrivateAccount(setting.getIsEnable());
+            else
+                personalResponse.setShowFriends(setting.getIsEnable());
+        });
         return  personalResponse;
-        //return new ModelMapper().map(dto, PersonalResponse.class);
     }
 }

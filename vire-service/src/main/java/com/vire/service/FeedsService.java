@@ -136,7 +136,7 @@ public class FeedsService {
     }
 
     public List<FeedsFullResponse> retrieveFeedPostsByCommunityId(Long communityId, String profileId) {
-        List<Long> feedsIdList = feedsRepo.retrieveByCommunity(communityId);
+        Set<Long> feedsIdList = feedsRepo.retrieveByCommunity(communityId);
         List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
         for (Long feedId : feedsIdList) {
             FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(feedId)
@@ -148,7 +148,7 @@ public class FeedsService {
     }
 
     public List<FeedsFullResponse> retrieveFeedPostsByChannelId(Long channelId, String profileId) {
-        List<Long> feedsIdList = feedsRepo.retrieveByChannel(channelId);
+        Set<Long> feedsIdList = feedsRepo.retrieveByChannel(channelId);
         List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
         for (Long feedId : feedsIdList) {
             FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(feedId)

@@ -10,7 +10,7 @@ public class FeedbackResponse {
 
     private String feedbackId;
     
-    private Long feedbackProviderId;
+    private String feedbackProviderId;
     private Short rating;
     private String description;
     private Long createdTime;
@@ -21,7 +21,7 @@ public class FeedbackResponse {
         var feedback = new FeedbackResponse();
 
         feedback.setFeedbackId(String.valueOf(dto.getFeedbackId()));
-        feedback.setFeedbackProviderId(dto.getFeedbackProviderId());
+        feedback.setFeedbackProviderId(dto.getFeedbackProviderId() == null ? null : String.valueOf(dto.getFeedbackProviderId()));
         feedback.setRating(dto.getRating());
         feedback.setDescription(dto.getDescription());
         feedback.setCreatedTime(dto.getCreatedTime());

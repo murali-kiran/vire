@@ -320,14 +320,15 @@ CREATE TABLE profile_thumbsup (
     PRIMARY KEY (profile_thumbsup_id)
 );
 
-CREATE TABLE Feedback (
+CREATE TABLE feedback (
     feedback_id BIGINT NOT NULL,
     feedback_provider_id BIGINT NOT NULL,
     rating TINYINT NOT NULL,
     description VARCHAR(191) NOT NULL,
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
-    PRIMARY KEY (feedback_id)
+    PRIMARY KEY (feedback_id),
+    UNIQUE KEY feedback_provider_id_UNIQUE (feedback_provider_id)
 );
 
 CREATE TABLE experience_report (
@@ -363,7 +364,7 @@ CREATE TABLE profile_followers (
     PRIMARY KEY (profile_followers_id)
 );
 
-CREATE TABLE Feed_report (
+CREATE TABLE feed_report (
     feed_report_id BIGINT NOT NULL,
     feed_id BIGINT NOT NULL,
     reporter_id BIGINT NOT NULL,

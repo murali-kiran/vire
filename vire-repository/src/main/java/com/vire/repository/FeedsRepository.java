@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,11 +105,16 @@ public class FeedsRepository {
     public Integer countByParentFeedId(Long feedId) {
         return feedsRepositoryJpa.countByParentFeedId(feedId);
     }
-    public List<Long> retrieveByCommunity(Long communityId){
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public Set<Long> retrieveByCommunity(Long communityId){
         return feedsRepositoryJpa.findByCommunity(communityId);
     }
 
-    public List<Long> retrieveByChannel(Long channelId){
+    public Set<Long> retrieveByChannel(Long channelId){
         return feedsRepositoryJpa.findByChannel(channelId);
     }
 }

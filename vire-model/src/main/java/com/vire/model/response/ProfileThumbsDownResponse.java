@@ -10,8 +10,8 @@ public class ProfileThumbsDownResponse {
 
     private String profileThumbsDownId;
     
-    private Long profileId;
-    private Long thumbsDownBy;
+    private String profileId;
+    private String thumbsDownBy;
     private String reason;
     private String description;
     private Long createdTime;
@@ -22,8 +22,8 @@ public class ProfileThumbsDownResponse {
         var profileThumbsDown = new ProfileThumbsDownResponse();
 
         profileThumbsDown.setProfileThumbsDownId(String.valueOf(dto.getProfileThumbsDownId()));
-        profileThumbsDown.setProfileId(dto.getProfileId());
-        profileThumbsDown.setThumbsDownBy(dto.getThumbsDownBy());
+        profileThumbsDown.setProfileId(dto.getProfileId() == null ? null : String.valueOf(dto.getProfileId()));
+        profileThumbsDown.setThumbsDownBy(dto.getThumbsDownBy() == null ? null : String.valueOf(dto.getThumbsDownBy()));
         profileThumbsDown.setReason(dto.getReason());
         profileThumbsDown.setDescription(dto.getDescription());
         profileThumbsDown.setCreatedTime(dto.getCreatedTime());

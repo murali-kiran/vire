@@ -12,8 +12,8 @@ public class ProfileThumbsUpRequest {
 
     private String profileThumbsUpId;
     
-    private Long profileId;
-    private Long thumbsUpBy;
+    private String profileId;
+    private String thumbsUpBy;
     private String reason;
     private String description;
 
@@ -27,8 +27,8 @@ public class ProfileThumbsUpRequest {
             dto.setProfileThumbsUpId(snowflake.nextId());
         }
         
-        dto.setProfileId(this.getProfileId());
-        dto.setThumbsUpBy(this.getThumbsUpBy());
+        dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
+        dto.setThumbsUpBy(this.getThumbsUpBy()  == null ? null : Long.valueOf(this.getThumbsUpBy()));
         dto.setReason(this.getReason());
         dto.setDescription(this.getDescription());
 

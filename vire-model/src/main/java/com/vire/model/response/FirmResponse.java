@@ -25,6 +25,8 @@ public class FirmResponse {
     private Long thumbsDownCount = 0l;
     private Long friendsCount = 0l;
     private Integer starsCount = 0;
+    private Boolean isPrivateAccount;
+    private Boolean showFriends;
     private List<ProfileSettingResponse> profileSettingTypes;
     private FirmProfileResponse firmProfile;
 
@@ -45,7 +47,13 @@ public class FirmResponse {
 
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         firmResponse.setProfileSettingTypes(profileSettingResponse);
-
+        var restrictSettings = profileSettingResponse.stream().filter(setting -> setting.getSettingType().equals("isPrivate") || setting.getSettingType().equals("showFriends")).collect(Collectors.toList());
+        restrictSettings.stream().forEach((setting) -> {
+            if(setting.getSettingType().equalsIgnoreCase("isPrivate"))
+                firmResponse.setIsPrivateAccount(setting.getIsEnable());
+            else
+                firmResponse.setShowFriends(setting.getIsEnable());
+        });
         return firmResponse;
         //return new ModelMapper().map(dto, FirmResponse.class);
     }
