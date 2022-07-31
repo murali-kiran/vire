@@ -12,4 +12,6 @@ public interface ChannelProfileRepositoryJpa
     extends JpaRepository<ChannelProfileDao, Long>, JpaSpecificationExecutor<ChannelProfileDao> {
     Optional<ChannelProfileDao> findByChannelIdAndProfileId(Long communityId, Long profileId);
     Optional<ChannelProfileDao> deleteByChannelId(Long channelId);
+
+    long countByCreatedTime(long toEpochMilli);
 }
