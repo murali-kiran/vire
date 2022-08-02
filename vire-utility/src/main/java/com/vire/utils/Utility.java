@@ -1,5 +1,9 @@
 package com.vire.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,6 +105,11 @@ public class Utility {
     }
     //
 
+    public static String customTimeFormat(Date date){
+        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        return sdf2.format(date);
+    }
     public static String calculateTimeDiff(Long updatedTime) {
         Long currentTime = System.currentTimeMillis();
         Long timeDifferenceMilliseconds = currentTime - updatedTime;
@@ -123,11 +132,20 @@ public class Utility {
         } else if (diffWeeks < 1) {
             return diffDays + " d ";
         } else if (diffMonths < 1) {
-            return diffWeeks + " weeks";
+            if(diffWeeks == 1)
+                return diffWeeks + " week";
+            else
+                return diffWeeks + " weeks";
         } else if (diffYears < 1) {
-            return diffMonths + " months";
+            if(diffMonths == 1)
+                return diffMonths + " month";
+            else
+                return diffMonths + " months";
         } else {
-            return diffYears + " years";
+            if(diffYears == 1)
+                return diffYears + " year";
+            else
+                return diffYears + " years";
         }
     }
 }

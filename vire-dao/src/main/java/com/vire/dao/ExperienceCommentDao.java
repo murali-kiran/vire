@@ -26,7 +26,7 @@ public class ExperienceCommentDao {
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    @OneToMany(mappedBy = "experienceComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "experienceComment", cascade = CascadeType.ALL)
     private List<ExperienceCommentReplyDao> expCommentReplyDaoList;
 
     @Column(name = "created_time", nullable = false , updatable = false)

@@ -36,7 +36,7 @@ public class FeedCommentReplyRepository {
 
     var feedCommentReplyDao = FeedCommentReplyDao.fromDto(feedCommentReplyDto);
     feedCommentReplyDao.onPreUpdate();
-
+    feedCommentReplyDao.setFeedComment(feedCommentRepositoryJpa.getById(feedCommentReplyDto.getCommentId()));
     return feedCommentReplyRepositoryJpa.save(feedCommentReplyDao).toDto();
   }
 

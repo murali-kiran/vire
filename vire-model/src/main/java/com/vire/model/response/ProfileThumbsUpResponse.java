@@ -1,7 +1,10 @@
 package com.vire.model.response;
 
 import com.vire.dto.ProfileThumbsUpDto;
+import com.vire.utils.Utility;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class ProfileThumbsUpResponse {
@@ -12,8 +15,8 @@ public class ProfileThumbsUpResponse {
     private String thumbsUpBy;
     private String reason;
     private String description;
-    private Long createdTime;
-    private Long updatedTime;
+    private MinimalProfileResponse thumbsUpProfile;
+    private String createdTime;
 
     public static ProfileThumbsUpResponse fromDto(final ProfileThumbsUpDto dto) {
 
@@ -24,9 +27,14 @@ public class ProfileThumbsUpResponse {
         profileThumbsUp.setThumbsUpBy(dto.getThumbsUpBy() == null ? null : String.valueOf(dto.getThumbsUpBy()));
         profileThumbsUp.setReason(dto.getReason());
         profileThumbsUp.setDescription(dto.getDescription());
-        profileThumbsUp.setCreatedTime(dto.getCreatedTime());
-        profileThumbsUp.setUpdatedTime(dto.getUpdatedTime());
+        if (dto.getProfileId() != null) {
+            var minProfileRes = new MinimalProfileResponse();
+            minProfileRes.setProfileId(String.valueOf(dto.getThumbsUpBy()));
+            profileThumbsUp.setThumbsUpProfile(minProfileRes);
+        }
+        profileThumbsUp.setCreatedTime(Utility.customTimeFormat(new Date(dto.getCreatedTime())));
 
         return profileThumbsUp;
     }
+
 }

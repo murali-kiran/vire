@@ -2,10 +2,8 @@ package com.vire.service;
 
 import com.vire.model.request.ChannelProfileRequest;
 import com.vire.model.request.ChannelRequest;
+import com.vire.model.response.*;
 import com.vire.model.response.ChannelResponse;
-import com.vire.model.response.ChannelResponse;
-import com.vire.model.response.KeyValueListResponse;
-import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.repository.ChannelRepository;
 import com.vire.utils.Snowflake;
@@ -31,6 +29,8 @@ public class ChannelService {
   ChannelProfileService channelProfileService;
   @Autowired
   ProfileService profileService;
+  @Autowired
+  FeedsSendToService feedsSendToService;
 
 
   public ChannelResponse create(final ChannelRequest request) {
@@ -58,6 +58,7 @@ public class ChannelService {
 
   public ChannelResponse delete(final Long channelId) {
 
+    List<FeedsSendToResponse> responses = feedsSendToService.searchSent("");
     return channelRepository.delete(channelId)
             .map(dto -> ChannelResponse.fromDto(dto))
             .get();

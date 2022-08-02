@@ -3,7 +3,6 @@ package com.vire.service;
 
 import com.vire.dao.ProfileDao;
 import com.vire.dto.*;
-import com.vire.exception.LoginException;
 import com.vire.exception.VerifyEmailMobileNumberException;
 import com.vire.model.request.FirmRequest;
 import com.vire.model.request.PersonalRequest;
@@ -14,6 +13,7 @@ import com.vire.repository.MasterRepository;
 import com.vire.repository.ProfileRepository;
 import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -251,14 +250,14 @@ public class ProfileService {
       if (!StringUtils.isBlank(personalProfileRequest.getOrganizationName())) count++;
       if (!StringUtils.isBlank(personalProfileRequest.getBloodGroup())) count++;
 
-      if (personalProfileRequest.getBloodDonateWillingness() != null) count++;
-      if (personalProfileRequest.getPresentAddress() != null) count++;
-      if (personalProfileRequest.getPermanentAddress() != null) count++;
-      if (!CollectionUtils.isEmpty(personalProfileRequest.getInterests())) count++;
+            if (personalProfileRequest.getBloodDonateWillingness() != null) count++;
+            if (personalProfileRequest.getPresentAddress() != null) count++;
+            if (personalProfileRequest.getPermanentAddress() != null) count++;
+            if (!CollectionUtils.isEmpty(personalProfileRequest.getInterests())) count++;
+        }
+        //double temp = (count/totalCount)*100;
+        return (int) ((count / totalCount) * 100);
     }
-    //double temp = (count/totalCount)*100;
-    return (int) ((count/totalCount)*100);
-  }
 
 
   private int calculateFirmProfileWeightage(FirmRequest request){
@@ -285,99 +284,96 @@ public class ProfileService {
   }
 
     @Transactional
-    public  Optional<UpdatePasswordResponse> updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+    public Optional<UpdatePasswordResponse> updatePassword(UpdatePasswordRequest updatePasswordRequest) {
 
-        Optional<ProfileDao> profileDao = null;
         UpdatePasswordResponse updatePasswordResponse = null;
         boolean isEmail = false;
         String emailOrPassword = updatePasswordRequest.getEmailOrphonenumber();
-        if(Utility.isEmailValid(emailOrPassword)){
-            profileDao =   profileRepository.findByEmailId(emailOrPassword);
-            isEmail = true;
-        }else if(Utility.isPhoneNumberValid(emailOrPassword)){
-            profileDao = profileRepository.findByMobileNumber(emailOrPassword);
-            isEmail = false;
-        }else{
-            updatePasswordResponse = new UpdatePasswordResponse(false,"Invalid email or phone number");
-            return Optional.of(updatePasswordResponse);
-        }
+        var profile = profileRepository.retrieveProfileById(updatePasswordRequest.getProfileId() == null ? null : Long.valueOf(updatePasswordRequest.getProfileId()));
 
-        if(profileDao.isPresent()){
+        if (profile.isPresent()) {
+            var profileDto = profile.get();
+            if (Utility.isEmailValid(emailOrPassword) && profileDto.getEmailId().equalsIgnoreCase(emailOrPassword)) {
+                isEmail = true;
+            } else if (Utility.isPhoneNumberValid(emailOrPassword) && profileDto.getMobileNumber().equalsIgnoreCase(emailOrPassword)) {
+                isEmail = false;
+            } else {
+                updatePasswordResponse = new UpdatePasswordResponse(false, "Invalid email or phone number");
+                return Optional.of(updatePasswordResponse);
+            }
 
             try {
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(emailOrPassword, updatePasswordRequest.getOldPassword()));
 
-                if(isEmail)
-                    profileRepository.updatePasswordViaEmail(emailOrPassword,passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+                if (isEmail)
+                    profileRepository.updatePasswordViaEmailAndProfileId(profileDto.getProfileId(),emailOrPassword, passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
                 else
-                    profileRepository.updatePasswordViaMobileNumber(emailOrPassword,passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+                    profileRepository.updatePasswordViaMobileNumberAndProfileId(profileDto.getProfileId(),emailOrPassword, passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
 
-                updatePasswordResponse = new UpdatePasswordResponse(true,"Password is updated");
+                updatePasswordResponse = new UpdatePasswordResponse(true, "Password is updated");
                 return Optional.of(updatePasswordResponse);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-                updatePasswordResponse = new UpdatePasswordResponse(false,"Existing password does not match");
+                updatePasswordResponse = new UpdatePasswordResponse(false, "Existing password does not match");
                 return Optional.of(updatePasswordResponse);
             }
 
+        } else {
+            updatePasswordResponse = new UpdatePasswordResponse(false, "Profile with this ID does not exists");
+            return Optional.of(updatePasswordResponse);
         }
-
-        updatePasswordResponse = new UpdatePasswordResponse(false,"Password updation failed");
-        return Optional.of(updatePasswordResponse);
 
     }
 
     @Transactional
     public Optional<UpdateEmailResponse> updateEmail(UpdateEmailRequest updateEmailRequest) {
 
-      Optional<ProfileDao> profileDao = null;
-      UpdateEmailResponse updateEmailResponse = null;
-      boolean isEmail = false;
-      String emailOrPassword = updateEmailRequest.getEmailOrphonenumber();
-      if(Utility.isEmailValid(emailOrPassword)){
-        profileDao =   profileRepository.findByEmailId(emailOrPassword);
-        isEmail = true;
-      }else if(Utility.isPhoneNumberValid(emailOrPassword)){
-        profileDao = profileRepository.findByMobileNumber(emailOrPassword);
-        isEmail = false;
-      }else{
-        updateEmailResponse = new UpdateEmailResponse(false,"Invalid email or phone number");
-        return Optional.of(updateEmailResponse);
-      }
+        UpdateEmailResponse updateEmailResponse = null;
+        boolean isEmail = false;
+        String emailOrPassword = updateEmailRequest.getEmailOrphonenumber();
+        Long profileIdL = updateEmailRequest.getProfileId() == null ? null : Long.valueOf(updateEmailRequest.getProfileId());
+        var profile = profileRepository.retrieveProfileById(profileIdL);
 
-      if(profileDao.isPresent()){
-
-        Optional<ProfileDao> newProfile = profileRepository.findByEmailId(updateEmailRequest.getNewEmail());
-
-        if(newProfile.isPresent()){
-          updateEmailResponse = new UpdateEmailResponse(false,"Profile already exists with new  Email ");
-          return Optional.of(updateEmailResponse);
-        } else {
-
-          try {
-
-              if (isEmail)
-                profileRepository.updateEmailViaOldEmail(updateEmailRequest.getEmailOrphonenumber(), updateEmailRequest.getNewEmail());
-              else
-                profileRepository.updateEmailViaMobileNumber(updateEmailRequest.getEmailOrphonenumber(), updateEmailRequest.getNewEmail());
-
-              updateEmailResponse = new UpdateEmailResponse(true, "Email is updated");
-              return Optional.of(updateEmailResponse);
-
-            } catch (Exception e) {
-              e.printStackTrace();
-              updateEmailResponse = new UpdateEmailResponse(false, "Email updation failed :: "+e.getMessage());
-              return Optional.of(updateEmailResponse);
+        if (profile.isPresent()) {
+            var profileDto = profile.get();
+            if (Utility.isEmailValid(emailOrPassword) && profileDto.getEmailId().equalsIgnoreCase(emailOrPassword)) {
+                isEmail = true;
+            } else if (Utility.isPhoneNumberValid(emailOrPassword) && profileDto.getMobileNumber().equalsIgnoreCase(emailOrPassword)) {
+                isEmail = false;
+            } else {
+                updateEmailResponse = new UpdateEmailResponse(false, "Invalid email or phone number");
+                return Optional.of(updateEmailResponse);
             }
+            Optional<ProfileDao> newProfile = profileRepository.findByEmailId(updateEmailRequest.getNewEmail());
 
+            if (newProfile.isPresent()) {
+                updateEmailResponse = new UpdateEmailResponse(false, "Profile already exists with new  Email ");
+                return Optional.of(updateEmailResponse);
+            } else {
+
+                try {
+
+                    if (isEmail)
+                        profileRepository.updateEmailViaOldEmailAndProfileId(profileIdL, updateEmailRequest.getEmailOrphonenumber(), updateEmailRequest.getNewEmail());
+                    else
+                        profileRepository.updateEmailViaMobileNumberAndProfileId(profileIdL, updateEmailRequest.getEmailOrphonenumber(), updateEmailRequest.getNewEmail());
+
+                    updateEmailResponse = new UpdateEmailResponse(true, "Email is updated");
+                    return Optional.of(updateEmailResponse);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    updateEmailResponse = new UpdateEmailResponse(false, "Email updation failed :: " + e.getMessage());
+                    return Optional.of(updateEmailResponse);
+                }
+
+            }
+        } else {
+            updateEmailResponse = new UpdateEmailResponse(false, "Profile with this ID does not exists");
+            return Optional.of(updateEmailResponse);
         }
-
-      } else {
-        updateEmailResponse = new UpdateEmailResponse(false,"Profile with Phone number or Old Email does not exists");
-        return Optional.of(updateEmailResponse);
-      }
 
     }
 }

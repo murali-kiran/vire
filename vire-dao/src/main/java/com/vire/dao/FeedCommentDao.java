@@ -27,7 +27,7 @@ public class FeedCommentDao {
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    @OneToMany(mappedBy = "feedComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "feedComment", cascade = CascadeType.ALL)
     private List<FeedCommentReplyDao> feedCommentReplyDaoList;
 
     @Column(name = "created_time", nullable = false , updatable = false)

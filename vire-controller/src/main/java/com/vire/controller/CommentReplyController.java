@@ -45,7 +45,7 @@ public class CommentReplyController {
                             schema = @Schema(implementation = CommentReplyResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "comment reply updation failed",
                     content = @Content) })
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<CommentReplyResponse> updateReply(@Valid @RequestBody CommentReplyRequest request){
         return new ResponseEntity<>(commentReplyService.updateReply(request), HttpStatus.CREATED);
     }

@@ -113,7 +113,7 @@ create table t_social_post_chat (
 create table t_social_post_comment (
      social_post_comment_id bigint not null,
 	 commenter_profile_id bigint not null,
-	 comment varchar(191),
+	 comment varchar(250),
      social_id bigint not null,
      created_time bigint not null,
      updated_time bigint not null,
@@ -124,7 +124,7 @@ create table t_social_post_comment (
 create table t_social_post_comment_reply (
      social_post_comment_reply_id bigint not null,
 	 comment_replier_profile_id bigint not null,
-	 reply varchar(191),
+	 reply varchar(250),
 	 comment_id bigint not null,
      social_id bigint not null,
      created_time bigint not null,
@@ -176,7 +176,7 @@ CREATE TABLE feed_comment (
     feed_comment_id BIGINT NOT NULL,
     commentor_profile_id BIGINT NOT NULL,
     feed_id BIGINT NOT NULL,
-    comment VARCHAR(191) NOT NULL,
+    comment VARCHAR(250) NOT NULL,
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (feed_comment_id)
@@ -186,7 +186,7 @@ CREATE TABLE feed_comment_reply (
     replier_profile_id BIGINT NOT NULL,
     feed_id BIGINT NOT NULL,
     comment_id BIGINT NOT NULL,
-    reply VARCHAR(191) NOT NULL,
+    reply VARCHAR(250) NOT NULL,
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (feed_comment_reply_id)
@@ -254,7 +254,7 @@ CREATE TABLE experience_comment (
     experience_comment_id BIGINT NOT NULL,
     commentor_profile_id BIGINT NOT NULL,
     experience_id BIGINT NOT NULL,
-    comment VARCHAR(191) NOT NULL,
+    comment VARCHAR(250) NOT NULL,
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (experience_comment_id)
@@ -274,7 +274,7 @@ CREATE TABLE experience_comment_reply (
     replier_profile_id BIGINT NOT NULL,
     experience_id BIGINT NOT NULL,
     comment_id BIGINT NOT NULL,
-    reply VARCHAR(191) NOT NULL,
+    reply VARCHAR(250) NOT NULL,
     created_time BIGINT NOT NULL,
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (experience_comment_reply_id)

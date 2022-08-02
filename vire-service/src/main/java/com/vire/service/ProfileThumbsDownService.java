@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.ProfileThumbsDownRequest;
 import com.vire.model.response.ProfileThumbsDownResponse;
+import com.vire.model.response.ProfileThumbsUpResponse;
 import com.vire.repository.ProfileThumbsDownRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,10 @@ public class ProfileThumbsDownService {
 
   @Autowired
   Snowflake snowflake;
-
   @Autowired
   ProfileThumbsDownRepository profileThumbsDownRepository;
+  @Autowired
+  ProfileService profileService;
 
   public ProfileThumbsDownResponse create(final ProfileThumbsDownRequest request) {
 
@@ -62,11 +64,21 @@ public class ProfileThumbsDownService {
     return profileThumbsDownRepository
             .search(searchString)
             .stream()
-            .map(dto -> ProfileThumbsDownResponse.fromDto(dto))
+            .map(dto -> profileLoader(ProfileThumbsDownResponse.fromDto(dto)))
             .collect(Collectors.toList());
   }
 
   public long getThumbsDownCountOfProfile(Long profileId){
     return profileThumbsDownRepository.getThumbsDownCountOfProfile(profileId);
+  }
+
+  private ProfileThumbsDownResponse profileLoader(ProfileThumbsDownResponse response) {
+    if (response.getThumbsDownProfile() != null
+            && response.getThumbsDownProfile().getProfileId() != null) {
+      response.getThumbsDownProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getThumbsDownProfile().getProfileId())));
+    }
+    return response;
   }
 }

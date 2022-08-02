@@ -36,6 +36,7 @@ public class CommentReplyRepository {
         }
         var commentReplyDao = CommentReplyDao.fromDto(commentReplyDto);
         commentReplyDao.onPreUpdate();
+        commentReplyDao.setSocialPostComment(commentRepositoryJpa.getById(commentReplyDto.getCommentId()));
         return commentReplyReposJpa.save(commentReplyDao).toDto();
     }
 

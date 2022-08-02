@@ -1,21 +1,24 @@
 package com.vire.model.response;
 
 import com.vire.dto.ProfileThumbsDownDto;
+import com.vire.utils.Utility;
 import lombok.Data;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 @Data
 public class ProfileThumbsDownResponse {
 
     private String profileThumbsDownId;
-    
     private String profileId;
     private String thumbsDownBy;
     private String reason;
     private String description;
-    private Long createdTime;
-    private Long updatedTime;
+    private MinimalProfileResponse thumbsDownProfile;
+    private String createdTime;
 
     public static ProfileThumbsDownResponse fromDto(final ProfileThumbsDownDto dto) {
 
@@ -26,8 +29,12 @@ public class ProfileThumbsDownResponse {
         profileThumbsDown.setThumbsDownBy(dto.getThumbsDownBy() == null ? null : String.valueOf(dto.getThumbsDownBy()));
         profileThumbsDown.setReason(dto.getReason());
         profileThumbsDown.setDescription(dto.getDescription());
-        profileThumbsDown.setCreatedTime(dto.getCreatedTime());
-        profileThumbsDown.setUpdatedTime(dto.getUpdatedTime());
+        if (dto.getProfileId() != null) {
+            var minProfileRes = new MinimalProfileResponse();
+            minProfileRes.setProfileId(String.valueOf(dto.getThumbsDownBy()));
+            profileThumbsDown.setThumbsDownProfile(minProfileRes);
+        }
+        profileThumbsDown.setCreatedTime(Utility.customTimeFormat(new Date(dto.getCreatedTime())));
 
         return profileThumbsDown;
     }

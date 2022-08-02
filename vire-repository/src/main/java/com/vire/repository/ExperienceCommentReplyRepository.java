@@ -35,7 +35,7 @@ public class ExperienceCommentReplyRepository {
 
     var experienceCommentReplyDao = ExperienceCommentReplyDao.fromDto(experienceCommentReplyDto);
     experienceCommentReplyDao.onPreUpdate();
-
+    experienceCommentReplyDao.setExperienceComment(experienceCommentRepositoryJpa.getById(experienceCommentReplyDto.getCommentId()));
     return experienceCommentReplyRepositoryJpa.save(experienceCommentReplyDao).toDto();
   }
 

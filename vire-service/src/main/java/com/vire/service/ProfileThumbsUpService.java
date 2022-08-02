@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.model.request.ProfileThumbsUpRequest;
+import com.vire.model.response.CommentResponse;
 import com.vire.model.response.ProfileThumbsUpResponse;
 import com.vire.repository.ProfileThumbsUpRepository;
 import com.vire.utils.Snowflake;
@@ -18,7 +19,8 @@ public class ProfileThumbsUpService {
 
   @Autowired
   ProfileThumbsUpRepository profileThumbsUpRepository;
-
+  @Autowired
+  ProfileService profileService;
   public ProfileThumbsUpResponse create(final ProfileThumbsUpRequest request) {
 
     var dto = request.toDto(snowflake);
@@ -62,12 +64,19 @@ public class ProfileThumbsUpService {
     return profileThumbsUpRepository
             .search(searchString)
             .stream()
-            .map(dto -> ProfileThumbsUpResponse.fromDto(dto))
+            .map(dto -> profileLoader(ProfileThumbsUpResponse.fromDto(dto)))
             .collect(Collectors.toList());
   }
 
   public long getThumbsUpCountOfProfile(Long profileId){
     return profileThumbsUpRepository.getThumbsUpCountOfProfile(profileId);
   }
-
+  private ProfileThumbsUpResponse profileLoader(ProfileThumbsUpResponse response) {
+    if (response.getThumbsUpProfile() != null
+            && response.getThumbsUpProfile().getProfileId() != null) {
+      response.getThumbsUpProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(Long.valueOf(response.getThumbsUpProfile().getProfileId())));
+    }
+    return response;
+  }
 }
