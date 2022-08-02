@@ -29,6 +29,11 @@ public interface ProfileRepositoryJpa
 
     List<ProfileDao> findByProfileIdIn(List<Long> profileIDs);
 
+    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time)) = CURDATE()",nativeQuery = true)
+    int getTodayCreatedProfiles();
+
+    long countByCreatedTime(long currentTimeMillis);
+
     @Modifying
     @Query("update ProfileDao p set p.password = :password where p.emailId = :email and p.profileId = :profileId")
     void updatePasswordViaEmailAndProfileId(@Param(value = "profileId") Long profileId,@Param(value = "email") String email, @Param(value = "password") String password);

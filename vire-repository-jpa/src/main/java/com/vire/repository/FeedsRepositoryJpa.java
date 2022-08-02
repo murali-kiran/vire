@@ -17,4 +17,6 @@ public interface FeedsRepositoryJpa extends JpaRepository<FeedsDao, Long> , JpaS
 
     @Query(value="SELECT s.feed_id FROM t_feeds s JOIN t_feeds_send_to st ON st.feed_id = s.feed_id WHERE st.type='Channel' and st.value = :channelId ORDER BY s.updated_time DESC", nativeQuery = true)
     Set<Long> findByChannel(Long channelId);
+
+    long countByCreatedTime(long currentTimeMillis);
 }
