@@ -29,7 +29,7 @@ public interface ProfileRepositoryJpa
 
     List<ProfileDao> findByProfileIdIn(List<Long> profileIDs);
 
-    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time)) = CURDATE()",nativeQuery = true)
+    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
     int getTodayCreatedProfiles();
 
     long countByCreatedTime(long currentTimeMillis);
