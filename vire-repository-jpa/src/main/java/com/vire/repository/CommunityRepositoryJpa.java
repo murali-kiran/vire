@@ -17,5 +17,6 @@ public interface CommunityRepositoryJpa
     @Query(value = "SELECT c.* FROM community c JOIN community_profile cp ON c.community_id = cp.community_id WHERE cp.profile_id = :profileId AND cp.status IN :statusList ORDER BY c.updated_time DESC", nativeQuery = true)
     List<CommunityDao> findCommunityByProfileIdStatus(Long profileId, List<String> statusList);
 
-    long countByCreatedTime(long toEpochMilli);
+    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
+    int getTodayCreatedCommunityPosts();
 }

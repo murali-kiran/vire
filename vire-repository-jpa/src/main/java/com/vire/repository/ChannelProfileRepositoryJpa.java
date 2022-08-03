@@ -3,6 +3,7 @@ package com.vire.repository;
 import com.vire.dao.ChannelProfileDao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -13,5 +14,6 @@ public interface ChannelProfileRepositoryJpa
     Optional<ChannelProfileDao> findByChannelIdAndProfileId(Long communityId, Long profileId);
     Optional<ChannelProfileDao> deleteByChannelId(Long channelId);
 
-    long countByCreatedTime(long toEpochMilli);
+    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
+    int getTodayCreatedChannels();
 }

@@ -46,25 +46,25 @@ public class AdminPortalService {
         adminHomeResponse.setNewUsersToday(profileRepositoryJpa.getTodayCreatedProfiles());
 
         adminHomeResponse.setTotalFirmAccounts(firmProfileRepositoryJpa.count());
-        adminHomeResponse.setNewFirmAccountsToday(firmProfileRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setNewFirmAccountsToday(firmProfileRepositoryJpa.getTodayCreatedFirmAccounts());
 
         adminHomeResponse.setTotalCommunities(communityRepositoryJpa.count());
-        adminHomeResponse.setNewCommunitiesToday(communityRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setNewCommunitiesToday(communityRepositoryJpa.getTodayCreatedCommunityPosts());
 
         adminHomeResponse.setTotalChannels(channelProfileRepositoryJpa.count());
-        adminHomeResponse.setNewChannelsToday(channelProfileRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setNewChannelsToday(channelProfileRepositoryJpa.getTodayCreatedChannels());
 
         adminHomeResponse.setAllFeedPosts(feedsRepositoryJpa.count());
-        adminHomeResponse.setFeedPostsToday(feedsRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setFeedPostsToday(feedsRepositoryJpa.getTodayCreatedFeedPosts());
 
         adminHomeResponse.setAllSocialPosts(socialRepositoryJpa.count());
-        adminHomeResponse.setSocialPostsToday(socialRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setSocialPostsToday(socialRepositoryJpa.getTodayCreatedSocialPosts());
 
         adminHomeResponse.setAllExperiencePosts(experienceRepositoryJpa.count());
-        adminHomeResponse.setExperiencePostsToday(experienceRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setExperiencePostsToday(experienceRepositoryJpa.getTodayCreatedExperiencePosts());
 
         adminHomeResponse.setAllCommunityPosts(communityRepositoryJpa.count());
-        adminHomeResponse.setCommunityPostsToday(communityRepositoryJpa.countByCreatedTime(Instant.now().toEpochMilli()));
+        adminHomeResponse.setCommunityPostsToday(communityRepositoryJpa.getTodayCreatedCommunityPosts());
 
         adminHomeResponse.setAllReports(feedReportRepositoryJpa.count()
                 +experienceReportRepositoryJpa.count()+socialReportRepositoryJpa.count());
