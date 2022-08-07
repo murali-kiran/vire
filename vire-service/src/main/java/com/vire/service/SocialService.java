@@ -3,6 +3,7 @@ package com.vire.service;
 import com.vire.model.request.SocialRequest;
 import com.vire.model.response.*;
 import com.vire.repository.FileRepository;
+import com.vire.repository.SocialPostRetrievalRepository;
 import com.vire.repository.SocialRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,8 @@ public class SocialService {
     SocialCategoryMasterService socialCategoryMasterService;
     @Autowired
     SocialCallRequestService socialCallRequestService;
+    @Autowired
+    SocialPostRetrievalRepository socialPostRetrievalRepository;
 
     private String LOCATION = null;
     public SocialResponse createSocial(final SocialRequest request) {
@@ -119,7 +122,14 @@ public class SocialService {
         return setSocialDetails(socialId, null);
     }
     public List<SocialPostResponse> retrievePostsByProfileId(String profileId) {
+
         long startTime = System.nanoTime();
+        var data = socialPostRetrievalRepository
+                .getSocialListBySearch(Long.valueOf(profileId))
+                .stream()
+                .map(dao -> dao.toDto())
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .collect(Collectors.toList());
 
         List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
