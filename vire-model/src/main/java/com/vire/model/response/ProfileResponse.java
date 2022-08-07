@@ -34,6 +34,7 @@ public class ProfileResponse {
     private List<ProfileSettingResponse> profileSettingTypes;
     private PersonalProfileResponse personalProfile;
     private FirmProfileResponse firmProfile;
+    private String followStatus;
 
 
 

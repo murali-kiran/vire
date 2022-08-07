@@ -222,7 +222,7 @@ public class FeedsService {
         List<String> profileIds = likesList == null ? null : likesList.stream().map(FeedLikesResponse::getLikerProfileId).collect(Collectors.toList());
         feedsFullResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId)) ? true : false);
         feedsFullResponse.setCreatedTimeStr(setDateFormat(feedsFullResponse.getCreatedTime()));
-        feedsFullResponse.setLocation(setLocation(feedsFullResponse.getFeedsSendTo()));
+        feedsFullResponse.setLocation(setFeedLocation(feedsFullResponse.getFeedsSendTo()));
         MinimalProfileResponse feedCreatorProfile = setMinimalProfile(feedsFullResponse.getProfileId());
         feedsFullResponse.setMinimalProfileResponse(feedCreatorProfile);
         if(feedsFullResponse.getParentFeedResponse() != null){
@@ -231,14 +231,15 @@ public class FeedsService {
         return feedsFullResponse;
     }
 
-    private String setLocation(List<FeedsSendToResponse> feedsSendToResponses){
+    private String setFeedLocation(List<FeedsSendToResponse> feedsSendToResponses){
         if(feedsSendToResponses != null) {
-            Optional<FeedsSendToResponse> feedsSendToResponse = feedsSendToResponses.stream().
-                    filter(p -> p.getType().equals("Location")).
-                    findFirst();
-            if(feedsSendToResponse != null && !feedsSendToResponse.isEmpty()) {
-                return feedsSendToResponse.get().getValue();
-            }
+            FeedsSendToResponse response = null;
+            response = feedsSendToResponses.stream().filter(o -> !o.getValue().equals("all") && o.getType().equals("location_city")).findFirst()
+                    .orElse(feedsSendToResponses.stream().filter(o -> !o.getValue().equals("all") && o.getType().equals("location_district")).findFirst()
+                            .orElse(feedsSendToResponses.stream().filter(o -> o.getType().equals("location_state")).findFirst().orElse(null)
+                            ));
+            if(response != null)
+                return response.getValue();
         }
         return null;
     }
@@ -253,7 +254,7 @@ public class FeedsService {
             MinimalProfileResponse parentFeedCreatorProfile = setMinimalProfile(feedsResponse.getProfileId());
             parentFeedResponse.setMinimalProfileResponse(parentFeedCreatorProfile);
             parentFeedResponse.setDescription(feedsResponse.getDescription());
-            parentFeedResponse.setLocation(setLocation(feedsResponse.getFeedsSendTo()));
+            parentFeedResponse.setLocation(setFeedLocation(feedsResponse.getFeedsSendTo()));
             parentFeedResponse.setFeedFileList(feedsResponse.getFeedFileList());
             parentFeedResponse.setCreatedTimeStr(setDateFormat(feedsResponse.getCreatedTime()));
             parentFeedResponse.setFeedsSendTo(feedsResponse.getFeedsSendTo());

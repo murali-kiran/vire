@@ -27,8 +27,11 @@ public class ExperienceRequest {
     private String title;
     @NotBlank(message = "Description required")
     private String description;
-    @NotBlank(message = "Location required")
-    private String location;
+    @NotBlank(message = "State required")
+    private String locationState;
+    private String locationDistrict;
+    private String locationCity;
+
     private List<ExperienceFileRequest> experienceFileList;
 
     public ExperienceDto toDto(Snowflake snowflake) {
@@ -46,7 +49,9 @@ public class ExperienceRequest {
         //dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
         dto.setTitle(this.getTitle());
         dto.setDescription(this.getDescription());
-        dto.setLocation(this.getLocation());
+        dto.setLocationState(this.getLocationState());
+        dto.setLocationDistrict(this.getLocationDistrict());
+        dto.setLocationCity(this.getLocationCity());
         if (this.getExperienceFileList() != null && !this.getExperienceFileList().isEmpty()) {
             dto.setExperienceFileList(this.getExperienceFileList()
                     .stream()

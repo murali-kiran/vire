@@ -13,6 +13,9 @@ public class LocationMasterDto {
     private String state;
     private String district;
     private String city;
+    private Integer pincode;
+    private Double latitude;
+    private Double longitude;
     public Long createdTime;
     public Long updatedTime;
 }

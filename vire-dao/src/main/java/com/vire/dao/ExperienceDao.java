@@ -33,8 +33,14 @@ public class ExperienceDao {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "location", nullable = false)
-    private String location;
+    @Column(name = "location_state", nullable = false)
+    private String locationState;
+
+    @Column(name = "location_district")
+    private String locationDistrict;
+
+    @Column(name = "location_city")
+    private String locationCity;
 
     @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL)
     private List<ExperienceFileDao> experienceFileList;
@@ -67,7 +73,9 @@ public class ExperienceDao {
         dto.setFileId(this.getFileId());
         dto.setTitle(this.getTitle());
         dto.setDescription(this.getDescription());
-        dto.setLocation(this.getLocation());
+        dto.setLocationState(this.getLocationState());
+        dto.setLocationDistrict(this.getLocationDistrict());
+        dto.setLocationCity(this.getLocationCity());
         if (this.getExperienceFileList() != null && !this.getExperienceFileList().isEmpty()) {
             dto.setExperienceFileList(this.getExperienceFileList()
                     .stream()
@@ -91,7 +99,9 @@ public class ExperienceDao {
         experience.setFileId(dto.getFileId());
         experience.setTitle(dto.getTitle());
         experience.setDescription(dto.getDescription());
-        experience.setLocation(dto.getLocation());
+        experience.setLocationState(dto.getLocationState());
+        experience.setLocationDistrict(dto.getLocationDistrict());
+        experience.setLocationCity(dto.getLocationCity());
         if (dto.getExperienceFileList() != null && !dto.getExperienceFileList().isEmpty()) {
             experience.setExperienceFileList(dto.getExperienceFileList()
                     .stream()

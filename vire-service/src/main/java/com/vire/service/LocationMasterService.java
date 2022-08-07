@@ -71,6 +71,9 @@ public class LocationMasterService {
   public List<String> retrieveCitiesByStateAndDist(String state, String district) {
     return locationMasterRepository.retrieveCitiesByStateAndDist(state, district);
   }
+  public List<String> retrieveStatesByCountry(String country) {
+    return locationMasterRepository.retrieveStatesByCountry(country);
+  }
   public List<LocationMasterResponse> search(final String searchString) {
 
     return locationMasterRepository

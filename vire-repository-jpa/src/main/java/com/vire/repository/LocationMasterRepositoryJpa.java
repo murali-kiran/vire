@@ -16,6 +16,8 @@ public interface LocationMasterRepositoryJpa
 
     @Query("SELECT DISTINCT district FROM LocationMasterDao WHERE state IN (:state)")
     List<String> retrieveDistrictsByState(@Param("state") String state);
+    @Query("SELECT DISTINCT state FROM LocationMasterDao WHERE country IN (:country)")
+    List<String> retrieveStatesByCountry(@Param("country") String country);
     @Query("SELECT DISTINCT city FROM LocationMasterDao WHERE state IN (:state) AND district IN (:district)")
     List<String> retrieveCitiesByStateAndDist(@Param("state") String state, @Param("district") String district);
     List<LocationMasterDao> findDistinctDistrictByState(String state);

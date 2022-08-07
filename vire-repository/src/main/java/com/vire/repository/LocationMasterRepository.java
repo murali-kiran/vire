@@ -70,6 +70,10 @@ public class LocationMasterRepository {
   public List<String> retrieveDistsByState(String state) {
     return locationMasterRepositoryJpa.retrieveDistrictsByState(state);
   }
+  public List<String> retrieveStatesByCountry(String state) {
+    return locationMasterRepositoryJpa.retrieveStatesByCountry(state);
+  }
+
   public List<String> retrieveCitiesByStateAndDist(String state, String dist) {
     return locationMasterRepositoryJpa.retrieveCitiesByStateAndDist(state, dist);
   }

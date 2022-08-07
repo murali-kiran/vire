@@ -57,6 +57,10 @@ public class LocationMasterController {
   public ResponseEntity<List<String>> retrieveDistsByState(@PathVariable String state) {
     return new ResponseEntity<>(locationMasterService.retrieveDistsByState(state), HttpStatus.OK);
   }
+  @GetMapping(value = {"/states/{country}"})
+  public ResponseEntity<List<String>> retrieveStatesByCountry(@PathVariable String country) {
+    return new ResponseEntity<>(locationMasterService.retrieveStatesByCountry(country), HttpStatus.OK);
+  }
   @GetMapping("search")
   public ResponseEntity<List<LocationMasterResponse>> search(
           @RequestParam(value = "search") String searchString) {

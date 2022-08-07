@@ -39,7 +39,7 @@ public class ExperienceDetailResponse {
         //experience.setFileId(String.valueOf(dto.getFileId()));
         experience.setTitle(dto.getTitle());
         experience.setDescription(dto.getDescription());
-        experience.setLocation(dto.getLocation());
+        experience.setLocation(setLocationCity(dto));
         if (dto.getExperienceFileList() != null && !dto.getExperienceFileList().isEmpty()) {
             experience.setExperienceFileList(dto.getExperienceFileList()
                     .stream()
@@ -51,5 +51,14 @@ public class ExperienceDetailResponse {
         experience.setUpdatedTime(dto.getUpdatedTime());
 
         return experience;
+    }
+    private static String setLocationCity(ExperienceDto dto){
+        String location = "";
+        if(dto.getLocationCity() != null && !dto.getLocationCity().equalsIgnoreCase("all"))
+            return dto.getLocationCity();
+        else if(dto.getLocationDistrict() != null && !dto.getLocationDistrict().equalsIgnoreCase("all"))
+            return dto.getLocationDistrict();
+        else
+            return dto.getLocationState();
     }
 }

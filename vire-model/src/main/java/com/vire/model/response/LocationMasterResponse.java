@@ -14,6 +14,9 @@ public class LocationMasterResponse {
     private String state;
     private String district;
     private String city;
+    private Integer pincode;
+    private Double latitude;
+    private Double longitude;
     private Long createdTime;
     private Long updatedTime;
 
@@ -26,6 +29,9 @@ public class LocationMasterResponse {
         locationMaster.setState(dto.getState());
         locationMaster.setDistrict(dto.getDistrict());
         locationMaster.setCity(dto.getCity());
+        locationMaster.setPincode(dto.getPincode());
+        locationMaster.setLatitude(dto.getLatitude());
+        locationMaster.setLongitude(dto.getLongitude());
         locationMaster.setCreatedTime(dto.getCreatedTime());
         locationMaster.setUpdatedTime(dto.getUpdatedTime());
 

@@ -15,7 +15,9 @@ public class ExperienceResponse {
     //private String fileId;
     private String title;
     private String description;
-    private String location;
+    private String locationState;
+    private String locationDistrict;
+    private String locationCity;
     private Long viewCount;
     private List<ExperienceFileResponse> experienceFileList;
     private Long createdTime;
@@ -32,7 +34,9 @@ public class ExperienceResponse {
         experience.setTitle(dto.getTitle());
         experience.setDescription(dto.getDescription());
         experience.setViewCount(dto.getViewCount());
-        experience.setLocation(dto.getLocation());
+        experience.setLocationState(dto.getLocationState());
+        experience.setLocationDistrict(dto.getLocationDistrict());
+        experience.setLocationCity(dto.getLocationCity());
         if (dto.getExperienceFileList() != null && !dto.getExperienceFileList().isEmpty()) {
             experience.setExperienceFileList(dto.getExperienceFileList()
                     .stream()

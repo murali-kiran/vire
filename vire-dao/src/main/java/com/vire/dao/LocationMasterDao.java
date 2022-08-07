@@ -30,6 +30,15 @@ public class LocationMasterDao {
     @Column(name = "city", nullable = false)
     private String city;
 
+    @Column(name = "pincode")
+    private Integer pincode;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -57,6 +66,9 @@ public class LocationMasterDao {
         dto.setState(this.getState());
         dto.setDistrict(this.getDistrict());
         dto.setCity(this.getCity());
+        dto.setPincode(this.getPincode());
+        dto.setLatitude(this.getLatitude());
+        dto.setLongitude(this.getLongitude());
 
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
@@ -74,6 +86,9 @@ public class LocationMasterDao {
         locationMaster.setState(dto.getState());
         locationMaster.setDistrict(dto.getDistrict());
         locationMaster.setCity(dto.getCity());
+        locationMaster.setPincode(dto.getPincode());
+        locationMaster.setLatitude(dto.getLatitude());
+        locationMaster.setLongitude(dto.getLongitude());
 
         return locationMaster;
     }

@@ -127,10 +127,7 @@ public class SocialService {
             var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
-            for (SocialSendToResponse sendTo:sendToList) {
-                if(sendTo.getType() != null && sendTo.getType().equals("Location"))
-                    socialPostResponse.setLocation(sendTo.getValue());
-            }
+            socialPostResponse.setLocation(getLocation(sendToList));
             socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;
@@ -144,10 +141,7 @@ public class SocialService {
             var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
-            for (SocialSendToResponse sendTo:sendToList) {
-                if(sendTo.getType() != null && sendTo.getType().equals("Location"))
-                    socialPostResponse.setLocation(sendTo.getValue());
-            }
+            socialPostResponse.setLocation(getLocation(sendToList));
             socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;
@@ -162,10 +156,7 @@ public class SocialService {
             var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
-            for (SocialSendToResponse sendTo:sendToList) {
-                if(sendTo.getType() != null && sendTo.getType().equals("Location"))
-                    socialPostResponse.setLocation(sendTo.getValue());
-            }
+            socialPostResponse.setLocation(getLocation(sendToList));
             socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;
@@ -187,11 +178,10 @@ public class SocialService {
             }
             socialPostResponse.setCommentsCount(( commentsList != null ? commentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
         } else{
-            Optional<SocialSendToResponse> socialSendToResponse = socialPostResponse.getSendTo().stream().
-                    filter(p -> p.getType().equals("Location")).
-                    findFirst();
-            if(socialSendToResponse != null && socialSendToResponse.get() != null)
-                socialPostResponse.setLocation(socialSendToResponse.get().getValue());
+            log.info("SOCIAL ID##############:"+socialId);
+            var socialSendToResponses = socialPostResponse.getSendTo().stream().
+                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
+            socialPostResponse.setLocation(getLocation(socialSendToResponses));
             MinimalProfileResponse minimalProfileResponse = new MinimalProfileResponse();
             minimalProfileResponse.setProfileId(socialPostResponse.getProfileId());
             socialPostResponse.setMinimalProfileResponse(minimalProfileResponse);
@@ -210,6 +200,18 @@ public class SocialService {
             socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
         }
         return socialPostResponse;
+    }
+
+    private String getLocation(List<SocialSendToResponse> socialSendToResponses){
+        SocialSendToResponse response = null;
+        response = socialSendToResponses.stream().filter(o -> !o.getValue().equals("all") && o.getType().equals("location_city")).findFirst()
+                .orElse(socialSendToResponses.stream().filter(o -> !o.getValue().equals("all") && o.getType().equals("location_district")).findFirst()
+                .orElse(socialSendToResponses.stream().filter(o -> o.getType().equals("location_state")).findFirst().orElse(null)
+                 ));
+        if(response != null)
+            return response.getValue();
+        else
+            return null;
     }
     //TODO:fine tune performance
     private Set<String> getSocialListBySearch(Long profileId) {

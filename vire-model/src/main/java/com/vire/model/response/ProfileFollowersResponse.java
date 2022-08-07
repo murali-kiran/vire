@@ -14,8 +14,8 @@ public class ProfileFollowersResponse {
     private String followerId;
     //private Boolean isFriend;
     private String status;
-    //private Long createdTime;
-    //private Long updatedTime;
+    private MinimalProfileResponse follower;
+    private MinimalProfileResponse profile;
 
     public static ProfileFollowersResponse fromDto(final ProfileFollowersDto dto) {
 
@@ -28,7 +28,16 @@ public class ProfileFollowersResponse {
         profileFollowers.setStatus(dto.getStatus());
         //profileFollowers.setCreatedTime(dto.getCreatedTime());
         //profileFollowers.setUpdatedTime(dto.getUpdatedTime());
-
+        if (dto.getFollowerId() != null) {
+            var minProfileRes = new MinimalProfileResponse();
+            minProfileRes.setProfileId(String.valueOf(dto.getFollowerId()));
+            profileFollowers.setFollower(minProfileRes);
+        }
+        if (dto.getProfileId() != null) {
+            var minProfileRes = new MinimalProfileResponse();
+            minProfileRes.setProfileId(String.valueOf(dto.getProfileId()));
+            profileFollowers.setProfile(minProfileRes);
+        }
         return profileFollowers;
     }
 }

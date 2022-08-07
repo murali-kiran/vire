@@ -93,8 +93,8 @@ public class FirmProfileController {
                             schema = @Schema(implementation = FirmResponse.class)) }),
             @ApiResponse(responseCode = "404", description = "Firm profile with this ID not exist",
                     content = @Content) })
-    @GetMapping(value = "get/{profileid}")
-    public ResponseEntity retrieveFirmProfileById(@PathVariable(value = "profileid") Long profileId) {
+    @GetMapping(value = "get/{profileid}/{loginprofileid}")
+    public ResponseEntity retrieveFirmProfileById(@PathVariable(value = "profileid") Long profileId, @PathVariable(value = "loginprofileid") Long loginProfileId) {
         Optional<FirmResponse> firmResponse = profileService.retrieveFirmProfileById(profileId);
         //return firmResponse.isPresent() ? new ResponseEntity<>(firmResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
         return firmResponse
@@ -102,7 +102,9 @@ public class FirmProfileController {
                 .map(profile -> {
 
                     setProfileCounts(profileId,profile);
-
+                    var profileFollower = profileFollowersService
+                            .search("profileId:"+profileId+" AND followerId:"+loginProfileId);
+                    profile.setFollowStatus((profileFollower != null && !profileFollower.isEmpty()) ? profileFollower.get(0).getStatus() : "Follow Profile");
                     return new ResponseEntity<>(profile, HttpStatus.OK);
                 })
                 .findFirst()

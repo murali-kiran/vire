@@ -53,3 +53,9 @@ ALTER TABLE t_feeds_send_to ADD COLUMN name VARCHAR(191) NULL AFTER feed_id, CHA
 
 ALTER TABLE t_feeds ADD COLUMN parent_feed_id BIGINT NULL AFTER file_id;
 ALTER TABLE Feedback CHANGE COLUMN description description VARCHAR(500) NULL ;
+
+ALTER TABLE location_master ADD COLUMN pincode INT NULL DEFAULT NULL AFTER city, ADD COLUMN latitude DOUBLE NULL DEFAULT NULL AFTER pincode, ADD COLUMN longitude DOUBLE NULL DEFAULT NULL AFTER latitude;
+
+ALTER TABLE experience CHANGE COLUMN location location_city VARCHAR(191) NULL,ADD COLUMN location_district VARCHAR(45) NULL AFTER location_city,ADD COLUMN location_state VARCHAR(45) NOT NULL AFTER location_district;
+
+

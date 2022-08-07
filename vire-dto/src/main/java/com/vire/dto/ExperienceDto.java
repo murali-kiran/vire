@@ -14,7 +14,9 @@ public class ExperienceDto {
     private Long fileId;
     private String title;
     private String description;
-    private String location;
+    private String locationState;
+    private String locationDistrict;
+    private String locationCity;
     private List<ExperienceFileDto> experienceFileList;
     private Long viewCount;
     public Long createdTime;

@@ -99,14 +99,16 @@ public class PersonalProfileController {
                             schema = @Schema(implementation = PersonalResponse.class)) }),
             @ApiResponse(responseCode = "404", description = "Personal profile with this ID not exist",
                     content = @Content) })
-    @GetMapping(value = "get/{profileid}")
-    public ResponseEntity retrievePersonalProfileById(@PathVariable(value = "profileid") Long profileId) {
+    @GetMapping(value = "get/{profileid}/{loginprofileid}")
+    public ResponseEntity retrievePersonalProfileById(@PathVariable(value = "profileid") Long profileId, @PathVariable(value = "loginprofileid") Long loginProfileId) {
         Optional<PersonalResponse> profileResponse = profileService.retrievePersonalProfileById(profileId);
         return profileResponse
                 .stream()
                 .map(profile -> {
                     setProfileCounts(profileId,profile);
-
+                    var profileFollower = profileFollowersService
+                            .search("profileId:"+profileId+" AND followerId:"+loginProfileId);
+                    profile.setFollowStatus((profileFollower != null && !profileFollower.isEmpty()) ? profileFollower.get(0).getStatus() : "Follow Profile");
                     return new ResponseEntity<>(profile, HttpStatus.OK);
                 })
                 .findFirst()

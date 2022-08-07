@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.ProfileFollowersRequest;
 import com.vire.model.response.ProfileFollowersResponse;
+import com.vire.model.response.ProfileThumbsDownResponse;
 import com.vire.repository.ProfileFollowersRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class ProfileFollowersService {
 
   @Autowired
   ProfileFollowersRepository profileFollowersRepository;
+
+  @Autowired
+  ProfileService profileService;
 
   public ProfileFollowersResponse create(final ProfileFollowersRequest request) {
 
@@ -62,14 +66,28 @@ public class ProfileFollowersService {
     return profileFollowersRepository
             .search(searchString)
             .stream()
-            .map(dto -> ProfileFollowersResponse.fromDto(dto))
+            .map(dto -> profileLoader(ProfileFollowersResponse.fromDto(dto)))
             .collect(Collectors.toList());
   }
 
     public long getFriendCountOfProfile(Long profileId) {
       return profileFollowersRepository.getFriendCountOfProfile(profileId,true);
     }
-
+  private ProfileFollowersResponse profileLoader(ProfileFollowersResponse response) {
+    if (response.getProfile() != null
+            && response.getProfile().getProfileId() != null) {
+      response.getProfile().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getProfile().getProfileId())));
+    }
+    if (response.getFollower() != null
+            && response.getFollower().getProfileId() != null) {
+      response.getFollower().cloneProperties(
+              profileService.retrieveProfileDtoById(
+                      Long.valueOf(response.getFollower().getProfileId())));
+    }
+    return response;
+  }
   /*public void getFriendsOfProfile(Long profileId) {
     return profileFollowersRepository.getFriendsOfProfile(profileId,true);
   }*/

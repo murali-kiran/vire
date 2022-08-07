@@ -16,6 +16,9 @@ public class LocationMasterRequest {
     private String state;
     private String district;
     private String city;
+    private Integer pincode;
+    private Double latitude;
+    private Double longitude;
 
     public LocationMasterDto toDto(Snowflake snowflake) {
 
@@ -31,6 +34,9 @@ public class LocationMasterRequest {
         dto.setState(this.getState());
         dto.setDistrict(this.getDistrict());
         dto.setCity(this.getCity());
+        dto.setPincode(this.getPincode());
+        dto.setLatitude(this.getLatitude());
+        dto.setLongitude(this.getLongitude());
 
         return dto;
     }

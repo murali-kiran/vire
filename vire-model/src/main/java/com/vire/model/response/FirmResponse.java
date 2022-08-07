@@ -29,6 +29,7 @@ public class FirmResponse {
     private Boolean showFriends;
     private List<ProfileSettingResponse> profileSettingTypes;
     private FirmProfileResponse firmProfile;
+    private String followStatus;
 
     public static FirmResponse fromDto(final ProfileDto dto) {
 
