@@ -1,20 +1,30 @@
 package com.vire.service;
 
 import com.vire.model.response.AdminHomeResponse;
+import com.vire.model.response.MinimalProfileResponse;
 import com.vire.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminPortalService {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
+    @Autowired
+    ProfileRepository profileRepository;
 
     @Autowired
     FirmProfileRepositoryJpa firmProfileRepositoryJpa;
+
+    @Autowired
+    ProfileThumbsUpService profileThumbsUpService;
+
+    @Autowired
+    ProfileThumbsDownService profileThumbsDownService;
 
     @Autowired
     CommunityRepositoryJpa communityRepositoryJpa;
@@ -70,6 +80,18 @@ public class AdminPortalService {
                 +experienceReportRepositoryJpa.count()+socialReportRepositoryJpa.count());
 
         return adminHomeResponse;
+    }
+
+    public List<MinimalProfileResponse> getAllUsers(){
+
+        List<MinimalProfileResponse> minimalProfileResponses = profileRepository.retrieveAllProfiles().stream().map(profileDto -> MinimalProfileResponse.fromDto(profileDto)).collect(Collectors.toList());
+
+        minimalProfileResponses.forEach(profile -> {
+            profile.setThumbsUp(profileThumbsUpService.search("profileId:"+profile.getProfileId()).size()+"");
+            profile.setThumbsDown(profileThumbsDownService.search("profileId:"+profile.getProfileId()).size()+"");
+        });
+
+        return minimalProfileResponses;
     }
 
 }
