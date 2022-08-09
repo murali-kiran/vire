@@ -13,6 +13,8 @@ public class MinimalProfileResponse {
     private String fileId;
     private String profileType;
     private String location;
+    private String thumbsUp;
+    private String thumbsDown;
 
 
     public static MinimalProfileResponse fromDto(final ProfileDto dto) {
@@ -32,5 +34,7 @@ public class MinimalProfileResponse {
         this.setFileId(response.getFileId());
         this.setProfileType(response.getProfileType());
         this.setLocation(response.getLocation());
+        this.setThumbsDown(response.getThumbsDown());
+        this.setThumbsUp(response.getThumbsUp());
     }
 }
