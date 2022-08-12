@@ -37,6 +37,9 @@ public class ProfileDao {
 
     @Column(name = "is_aadhar_verified", nullable = true)
     private Boolean isAadharVerified;
+    
+    @Column(name = "is_blocked", columnDefinition="BOOLEAN DEFAULT false")
+    private Boolean isBlocked = false;
 
     @Column(name = "date_of_birth", nullable = true)
     private String dateOfBirth;
