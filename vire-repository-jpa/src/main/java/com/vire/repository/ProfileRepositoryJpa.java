@@ -32,7 +32,9 @@ public interface ProfileRepositoryJpa
     @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
     int getTodayCreatedProfiles();
 
-    long countByCreatedTime(long currentTimeMillis);
+    @Modifying
+    @Query("update ProfileDao p set p.isBlocked = :isBlocked where p.profileId = :profileId")
+    void blockProfile(@Param(value = "profileId") long profileId, @Param(value = "isBlocked") Boolean isBlocked);
 
     @Modifying
     @Query("update ProfileDao p set p.password = :password where p.emailId = :email and p.profileId = :profileId")
