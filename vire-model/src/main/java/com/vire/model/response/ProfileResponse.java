@@ -21,6 +21,7 @@ public class ProfileResponse {
     private String mobileNumber;
     private String aadhar;
     private Boolean isAadharVerified;
+    private Boolean isBlocked;
     private String dateOfBirth;
     private Gender gender;
     private String fileId;
@@ -54,6 +55,7 @@ public class ProfileResponse {
         profileResponse.setFirstLogin(dto.getFirstLogin());
         profileResponse.setProfileWeightage(dto.getProfileWeightage());
         profileResponse.setProfileType(dto.getProfileType());
+        profileResponse.setIsBlocked(dto.getIsBlocked());
         var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
         profileResponse.setProfileSettingTypes(profileSettingResponse);
 
