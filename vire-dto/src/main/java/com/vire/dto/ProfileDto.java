@@ -15,6 +15,7 @@ public class ProfileDto {
     private String mobileNumber;
     private String aadhar;
     private Boolean isAadharVerified;
+    private Boolean isBlocked;
     private String dateOfBirth;
     private Gender gender;
     private Long fileId;
