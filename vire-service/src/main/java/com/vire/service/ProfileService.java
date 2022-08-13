@@ -175,6 +175,12 @@ public class ProfileService {
             .map(dto -> PersonalResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+  
+  public List<ProfileResponse> searchAnyProfiles(final String searchString) {
+        return profileRepository.searchProfiles(searchString).stream()
+                .map(dto -> ProfileResponse.fromDto(dto))
+                .collect(Collectors.toList());
+  }
 
   public Optional<ProfileResponse> retrieveProfileById(final Long profileId) {
 
