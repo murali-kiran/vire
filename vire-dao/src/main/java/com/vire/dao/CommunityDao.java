@@ -74,6 +74,7 @@ public class CommunityDao {
         dto.setFileId(this.getFileId());
         dto.setRules(this.getRules());
         dto.setMemberProofRequired(this.getMemberProofRequired());
+        dto.setIsBlocked(this.getIsBlocked());
         /*if (this.getProfiles() != null && !this.getProfiles().isEmpty()) {
             dto.setProfiles(this.getProfiles()
                     .stream()
