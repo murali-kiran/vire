@@ -38,6 +38,9 @@ public class CommunityDao {
 
     @Column(name = "member_proof_required", nullable = false)
     private Boolean memberProofRequired;
+    
+    @Column(name = "is_blocked", columnDefinition="BOOLEAN DEFAULT false")
+    private Boolean isBlocked = false;
 
     /*@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityProfileDao> profiles;*/
