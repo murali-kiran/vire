@@ -171,4 +171,14 @@ public class CommunityService {
                 .map(dto -> KeyValueListResponse.fromDto(dto.getCommunityId(), dto.getName(), "community"))
                 .collect(Collectors.toList());
     }
+    
+    @Transactional
+    public Boolean blockProfile(final Long communityId, final boolean isBlocked) {
+        try {
+        communityRepository.blockProfile(communityId, isBlocked);
+        return true;
+         } catch (Exception ex) {
+            return false;
+        }
+    }
 }
