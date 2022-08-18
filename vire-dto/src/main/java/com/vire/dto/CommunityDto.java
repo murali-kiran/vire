@@ -15,6 +15,7 @@ public class CommunityDto {
     private Long fileId;
     private String rules;
     private Boolean memberProofRequired;
+    private Boolean isBlocked;
     private List<CommunityProfileDto> communityProfiles;
     private List<CommunityFileDto> communityFileList;
     private String profileId;
