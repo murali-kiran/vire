@@ -23,6 +23,7 @@ import java.util.List;
 
 @Validated
 @RestController
+@CrossOrigin
 @RequestMapping(VireConstants.COMMUNITY_REQUEST_PATH_API)
 public class CommunityController {
 
@@ -149,4 +150,11 @@ public class CommunityController {
           @RequestParam(value = "search") String searchString) {
     return new ResponseEntity<>(communityService.search(searchString), HttpStatus.OK);
   }
+  
+  @GetMapping(value = "/blockCommunity/{communityId}")
+  public ResponseEntity<Boolean>  blockProfile(@PathVariable("communityId") String profileId,@RequestParam("isBlocked") Boolean isBlocked) {
+    var blockedStatus = communityService.blockProfile(Long.valueOf(profileId),isBlocked);
+    return new ResponseEntity<>(blockedStatus, HttpStatus.OK);
+  }
+  
 }
