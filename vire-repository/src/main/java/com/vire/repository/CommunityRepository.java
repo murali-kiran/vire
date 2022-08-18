@@ -86,4 +86,9 @@ public class CommunityRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+  
+  public void blockProfile(Long communityId, boolean isBlocked) {
+      communityRepositoryJpa.blockProfile(communityId,isBlocked);
+  }
+  
 }
