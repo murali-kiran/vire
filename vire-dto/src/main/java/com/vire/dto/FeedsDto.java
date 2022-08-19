@@ -2,6 +2,7 @@ package com.vire.dto;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.util.List;
 
 @Data
@@ -13,6 +14,7 @@ public class FeedsDto {
     private List<FeedsSendToDto> feedsSendTo;
     private List<FeedFileDto> feedFileList;
     private Long parentFeedId;
+    private Boolean sendToFollowers;
     private  Long createdTime;
     private  Long updatedTime;
 }

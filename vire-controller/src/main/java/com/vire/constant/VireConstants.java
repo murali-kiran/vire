@@ -48,4 +48,6 @@ public class VireConstants {
 
     public final static String LOCATIONMASTER_REQUEST_PATH_API = "/api/locationmaster";
     public final static String ADMIN_PORTAL_API = "/admin";
+
+    public final static String NOTIFICATION_REQUEST_PATH_API = "/api/notification";
 }

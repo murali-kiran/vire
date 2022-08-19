@@ -104,7 +104,7 @@ public class FirmProfileController {
                     setProfileCounts(profileId,profile);
                     var profileFollower = profileFollowersService
                             .search("profileId:"+profileId+" AND followerId:"+loginProfileId);
-                    profile.setFollowStatus((profileFollower != null && !profileFollower.isEmpty()) ? profileFollower.get(0).getStatus() : "Follow Profile");
+                    profile.setProfileFollowersResponse((profileFollower != null && !profileFollower.isEmpty()) ? profileFollower.get(0) : null);
                     return new ResponseEntity<>(profile, HttpStatus.OK);
                 })
                 .findFirst()

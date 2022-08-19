@@ -35,6 +35,9 @@ public class FeedsDao {
     @Column(name = "parent_feed_id")
     private Long parentFeedId;
 
+    @Column(name = "send_to_followers", nullable = false)
+    private Boolean sendToFollowers;
+
     @Column(name = "created_time", nullable = false)
     private Long createdTime;
 
@@ -61,6 +64,7 @@ public class FeedsDao {
                 ", fileId=" + fileId +
                 ", feedsSendTo=" + feedsSendTo +
                 ", parentFeedId=" + parentFeedId +
+                ", sendToFollowers=" + sendToFollowers +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
                 '}';
@@ -73,6 +77,7 @@ public class FeedsDao {
         dto.setDescription(this.getDescription());
         dto.setFileId(this.getFileId());
         dto.setParentFeedId(this.getParentFeedId());
+        dto.setSendToFollowers(this.getSendToFollowers());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -100,6 +105,7 @@ public class FeedsDao {
         dao.setDescription(dto.getDescription());
         dao.setFileId(dto.getFileId());
         dao.setParentFeedId(dto.getParentFeedId());
+        dao.setSendToFollowers(dto.getSendToFollowers());
         dao.setCreatedTime(dto.getCreatedTime());
         dao.setUpdatedTime(dto.getUpdatedTime());
 

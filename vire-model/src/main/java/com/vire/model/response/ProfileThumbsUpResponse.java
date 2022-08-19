@@ -32,7 +32,7 @@ public class ProfileThumbsUpResponse {
             minProfileRes.setProfileId(String.valueOf(dto.getThumbsUpBy()));
             profileThumbsUp.setThumbsUpProfile(minProfileRes);
         }
-        profileThumbsUp.setCreatedTime(Utility.customTimeFormat(new Date(dto.getCreatedTime())));
+        profileThumbsUp.setCreatedTime(Utility.customTimeFormat(dto.getCreatedTime()));
 
         return profileThumbsUp;
     }

@@ -40,7 +40,12 @@ public class PerformanceLogger {
         StringBuffer stringBuffer = new StringBuffer("");
 
         if(args != null && args.length > 0){
-            Arrays.stream(args).forEach(i -> stringBuffer.append(i.toString()+"##"));
+            Arrays.stream(args).forEach(i -> {
+                if(i!=null)
+                    stringBuffer.append(i.toString()+"##");
+                else
+                    stringBuffer.append("null##");
+            });
         }
 
         if(throwable !=null){

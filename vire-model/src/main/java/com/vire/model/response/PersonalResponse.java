@@ -32,7 +32,8 @@ public class PersonalResponse {
     private Boolean showFriends;
     private List<ProfileSettingResponse> profileSettingTypes;
     private PersonalProfileResponse personalProfile;
-    private String followStatus;
+    //private String followStatus;
+    private ProfileFollowersResponse profileFollowersResponse;
     //private FirmProfileResponse firmProfile;
 
     public static PersonalResponse fromDto(final ProfileDto dto) {

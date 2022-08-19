@@ -17,6 +17,7 @@ public class FeedsResponse {
     private List<FeedsSendToResponse> feedsSendTo;
     private List<FeedFileResponse> feedFileList;
     private String parentFeedId;
+    private Boolean sendToFollowers;
     private  Long createdTime;
     private  Long updatedTime;
 
@@ -26,6 +27,7 @@ public class FeedsResponse {
         response.setProfileId(dto.getProfileId() != null ? String.valueOf(dto.getProfileId()) : null);
         response.setDescription(dto.getDescription());
         response.setParentFeedId(dto.getParentFeedId() != null ? String.valueOf(dto.getParentFeedId()) : null);
+        response.setSendToFollowers(dto.getSendToFollowers());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         if (dto.getFeedsSendTo() != null && !dto.getFeedsSendTo().isEmpty()) {

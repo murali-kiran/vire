@@ -3,8 +3,6 @@ package com.vire.model.request;
 import com.vire.utils.Snowflake;
 import com.vire.dto.ExperienceDto;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.List;

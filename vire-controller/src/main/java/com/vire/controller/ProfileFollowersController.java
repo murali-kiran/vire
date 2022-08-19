@@ -49,4 +49,12 @@ public class ProfileFollowersController {
           @RequestParam(value = "search") String searchString) {
     return new ResponseEntity<>(profileFollowersService.search(searchString), HttpStatus.OK);
   }
+  @GetMapping("/followers/{profileid}/{loginprofileid}")
+  public ResponseEntity<List<ProfileFollowersResponse>> getFollowers(@PathVariable(value = "profileid") String profileId,@PathVariable(value="loginprofileid") String loginProfileId) {
+    return new ResponseEntity<>(profileFollowersService.getFollowers(profileId, loginProfileId), HttpStatus.OK);
+  }
+  @GetMapping("/following/{profileid}/{loginprofileid}")
+  public ResponseEntity<List<ProfileFollowersResponse>> getFollowing(@PathVariable(value = "profileid") String profileId,@PathVariable(value="loginprofileid") String loginProfileId) {
+    return new ResponseEntity<>(profileFollowersService.getFollowing(profileId, loginProfileId), HttpStatus.OK);
+  }
 }

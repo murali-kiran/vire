@@ -1,8 +1,9 @@
 package com.vire.service;
 
+import com.vire.dao.ExperienceFileDao;
+import com.vire.dto.ProfileFollowersDto;
 import com.vire.model.request.ProfileFollowersRequest;
 import com.vire.model.response.ProfileFollowersResponse;
-import com.vire.model.response.ProfileThumbsDownResponse;
 import com.vire.repository.ProfileFollowersRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,27 +67,101 @@ public class ProfileFollowersService {
     return profileFollowersRepository
             .search(searchString)
             .stream()
-            .map(dto -> profileLoader(ProfileFollowersResponse.fromDto(dto)))
+            .map(dto -> profileLoader(ProfileFollowersResponse.fromDto(dto), null))
             .collect(Collectors.toList());
   }
 
     public long getFriendCountOfProfile(Long profileId) {
       return profileFollowersRepository.getFriendCountOfProfile(profileId,true);
     }
-  private ProfileFollowersResponse profileLoader(ProfileFollowersResponse response) {
-    if (response.getProfile() != null
-            && response.getProfile().getProfileId() != null) {
-      response.getProfile().cloneProperties(
-              profileService.retrieveProfileDtoById(
-                      Long.valueOf(response.getProfile().getProfileId())));
-    }
-    if (response.getFollower() != null
-            && response.getFollower().getProfileId() != null) {
-      response.getFollower().cloneProperties(
-              profileService.retrieveProfileDtoById(
-                      Long.valueOf(response.getFollower().getProfileId())));
+
+  private ProfileFollowersResponse profileLoader(ProfileFollowersResponse response, String followType) {
+    if (followType == null) {
+      if (response.getProfile() != null
+              && response.getProfile().getProfileId() != null) {
+        response.getProfile().cloneProperties(
+                profileService.retrieveProfileDtoById(
+                        Long.valueOf(response.getProfile().getProfileId())));
+      }
+      if (response.getFollower() != null
+              && response.getFollower().getProfileId() != null) {
+        response.getFollower().cloneProperties(
+                profileService.retrieveProfileDtoById(
+                        Long.valueOf(response.getFollower().getProfileId())));
+      }
+    }else{
+      if("followers".equals(followType)){
+        if (response.getFollower() != null
+                && response.getFollower().getProfileId() != null) {
+          response.getFollower().cloneProperties(
+                  profileService.retrieveProfileDtoById(
+                          Long.valueOf(response.getFollower().getProfileId())));
+
+        }
+      }
+      if("following".equals(followType)){
+        if (response.getProfile() != null
+                && response.getProfile().getProfileId() != null) {
+          response.getProfile().cloneProperties(
+                  profileService.retrieveProfileDtoById(
+                          Long.valueOf(response.getProfile().getProfileId())));
+
+        }
+      }
     }
     return response;
+  }
+
+  public List<ProfileFollowersResponse> getFollowers(String profileId, String loginProfileId) {
+    var loginProfileFollowers = profileFollowersRepository.search("profileId:"+loginProfileId);
+    var loginProfileFollowing = profileFollowersRepository.search("followerId:"+loginProfileId);
+    return profileFollowersRepository
+            .search("profileId:"+profileId)
+            .stream()
+            .map(dto -> {
+              var response = profileLoader(ProfileFollowersResponse.fromDto(dto), "followers");
+
+             // childDao.setExperience(experience);
+              boolean isFollower = loginProfileFollowers.stream().filter(f -> f.getFollowerId().equals(dto.getFollowerId())).findFirst().isPresent();
+              if(isFollower) {
+                response.setLoginProfileFollowStatus("Follower");
+              }else{
+                boolean isFollowing = loginProfileFollowing.stream().filter(f -> f.getProfileId().equals(dto.getFollowerId())).findFirst().isPresent();
+                if(isFollowing) {
+                  response.setLoginProfileFollowStatus("Following");
+                }else{
+                  response.setLoginProfileFollowStatus("Follow Profile");
+                }
+              }
+
+              return response;
+            })
+            .collect(Collectors.toList());
+  }
+  public List<ProfileFollowersResponse> getFollowing(String profileId, String loginProfileId) {
+    var loginProfileFollowers = profileFollowersRepository.search("profileId:"+loginProfileId);
+    var loginProfileFollowing = profileFollowersRepository.search("followerId:"+loginProfileId);
+    return profileFollowersRepository
+            .search("followerId:"+profileId)
+            .stream()
+            .map(dto -> {
+              var response = profileLoader(ProfileFollowersResponse.fromDto(dto),  "following");
+
+              // childDao.setExperience(experience);
+              boolean isFollower = loginProfileFollowers.stream().filter(f -> f.getFollowerId().equals(dto.getProfileId())).findFirst().isPresent();
+              if(isFollower) {
+                response.setLoginProfileFollowStatus("Follower");
+              }else{
+                boolean isFollowing = loginProfileFollowing.stream().filter(f -> f.getProfileId().equals(dto.getProfileId())).findFirst().isPresent();
+                if(isFollowing) {
+                  response.setLoginProfileFollowStatus("Following");
+                }else{
+                  response.setLoginProfileFollowStatus("Follow Profile");
+                }
+              }
+
+              return response;
+            }).collect(Collectors.toList());
   }
   /*public void getFriendsOfProfile(Long profileId) {
     return profileFollowersRepository.getFriendsOfProfile(profileId,true);

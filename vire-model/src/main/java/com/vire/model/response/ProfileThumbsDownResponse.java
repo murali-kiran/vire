@@ -34,7 +34,7 @@ public class ProfileThumbsDownResponse {
             minProfileRes.setProfileId(String.valueOf(dto.getThumbsDownBy()));
             profileThumbsDown.setThumbsDownProfile(minProfileRes);
         }
-        profileThumbsDown.setCreatedTime(Utility.customTimeFormat(new Date(dto.getCreatedTime())));
+        profileThumbsDown.setCreatedTime(Utility.customTimeFormat(dto.getCreatedTime()));
 
         return profileThumbsDown;
     }

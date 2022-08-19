@@ -6,6 +6,7 @@ import com.vire.repository.FileRepository;
 import com.vire.repository.SocialPostRetrievalRepository;
 import com.vire.repository.SocialRepository;
 import com.vire.utils.Snowflake;
+import com.vire.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,20 +119,30 @@ public class SocialService {
     }
     public SocialPostResponse retrieveSocialDetailsById(Long socialId) {
         log.info("Social ID###:"+socialId);
-
-        return setSocialDetails(socialId, null);
+        SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .get();
+        return setSocialDetails(socialPostResponse, null);
     }
     public List<SocialPostResponse> retrievePostsByProfileId(String profileId) {
 
         long startTime = System.nanoTime();
-        var data = socialPostRetrievalRepository
-                .getSocialListBySearch(Long.valueOf(profileId))
+
+        List<String> categoryFiltersToBeApplied = new ArrayList<>();
+        //categoryFiltersToBeApplied.add("Emergency");
+        //categoryFiltersToBeApplied.add("Employment");
+        //categoryFiltersToBeApplied.add("Share");
+        List<String> commulityIdFilters= new ArrayList<>();
+        //commulityIdFilters.add("1234567890");
+        //commulityIdFilters.add("1234567891");
+        var socialPostResponses = socialPostRetrievalRepository
+                .getSocialListBySearch(Long.valueOf(profileId), 1, 50, categoryFiltersToBeApplied, commulityIdFilters)
                 .stream()
                 .map(dao -> dao.toDto())
                 .map(dto -> SocialPostResponse.fromDto(dto))
                 .collect(Collectors.toList());
 
-        List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
+        /*List<String> socialIds = getSocials().stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
         for (String socialId : socialIds) {
             var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
@@ -139,20 +150,38 @@ public class SocialService {
             var sendToList = socialPostResponse.getSendTo();
             socialPostResponse.setLocation(getLocation(sendToList));
             socialPostResponses.add(socialPostResponse);
+        }*/
+        for (SocialPostResponse socialPostResponse:  socialPostResponses) {
+            setSocialDetails(socialPostResponse, profileId);
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            var sendToList = socialPostResponse.getSendTo().stream().
+                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
+            socialPostResponse.setLocation(getLocation(sendToList));
         }
         return socialPostResponses;
     }
     public List<SocialPostResponse> retrievePostsCreatedByProfile(String profileId) {
         long startTime = System.nanoTime();
 
-        List<String> socialIds = search("profileId:"+profileId).stream().map(SocialResponse::getSocialId).collect(Collectors.toList());
-        List<SocialPostResponse> socialPostResponses = new ArrayList<>();
-        for (String socialId : socialIds) {
+        //List<String> socialIds = search("profileId:"+profileId).stream().map(SocialResponse).collect(Collectors.toList());
+        List<SocialPostResponse> socialPostResponses = socialRepo.search("profileId:"+profileId).stream()
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .collect(Collectors.toList());
+        log.info("social post responses:"+socialPostResponses);
+        /*for (String socialId : socialIds) {
             var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
             socialPostResponse.setLocation(getLocation(sendToList));
             socialPostResponses.add(socialPostResponse);
+        }*/
+        for (SocialPostResponse socialPostResponse:  socialPostResponses) {
+            setSocialDetails(socialPostResponse, profileId);
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            var sendToList = socialPostResponse.getSendTo().stream().
+                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
+            socialPostResponse.setLocation(getLocation(sendToList));
+            //socialPostResponses.add(socialPostResponse);
         }
         return socialPostResponses;
     }
@@ -160,27 +189,36 @@ public class SocialService {
     public List<SocialPostResponse> retrievePostsByCommunity(Long communityId, String profileId) {
         long startTime = System.nanoTime();
 
-        List<Long> socialIds = socialRepo.retrieveByCommunity(communityId);
+        List<SocialPostResponse> socialIds = socialRepo.retrieveByCommunity(communityId).stream()
+                .map(dto -> SocialPostResponse.fromDto(dto))
+                .collect(Collectors.toList());
         List<SocialPostResponse> socialPostResponses = new ArrayList<>();
-        for (Long socialId : socialIds) {
+        /*for (Long socialId : socialIds) {
             var socialPostResponse = setSocialDetails(Long.valueOf(socialId), profileId);
             socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
             var sendToList = socialPostResponse.getSendTo();
             socialPostResponse.setLocation(getLocation(sendToList));
             socialPostResponses.add(socialPostResponse);
+        }*/
+        for (SocialPostResponse socialPostResponse:  socialPostResponses) {
+            setSocialDetails(socialPostResponse, profileId);
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            var sendToList = socialPostResponse.getSendTo().stream().
+                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
+            socialPostResponse.setLocation(getLocation(sendToList));
         }
         return socialPostResponses;
     }
-    private SocialPostResponse setSocialDetails(Long socialId, String profileId) {
-        log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
+    private SocialPostResponse setSocialDetails(SocialPostResponse socialPostResponse, String profileId) {
+        /*log.info("Social ID###:"+socialId+"$$$Profile ID ID###:"+profileId);
         SocialPostResponse socialPostResponse = socialRepo.retrieveById(socialId)
                 .map(dto -> SocialPostResponse.fromDto(dto))
-                .get();
+                .get();*/
         SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPostResponse.getCategoryId()));
-        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialId);
-        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialId);
+        List<CommentResponse> commentsList = commentService.searchComments("socialId:" + socialPostResponse.getSocialId());
+        List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialPostResponse.getSocialId());
         if(profileId != null ) {
-            List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialId);
+            List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialPostResponse.getSocialId());
             if (socialPostResponse.getSocialCallRequestResponses() != null) {
                 SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId);
                 if (socialCallRequestResponse != null)
@@ -188,7 +226,7 @@ public class SocialService {
             }
             socialPostResponse.setCommentsCount(( commentsList != null ? commentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
         } else{
-            log.info("SOCIAL ID##############:"+socialId);
+            log.info("SOCIAL ID##############:"+socialPostResponse.getSocialId());
             var socialSendToResponses = socialPostResponse.getSendTo().stream().
                     filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
             socialPostResponse.setLocation(getLocation(socialSendToResponses));
@@ -202,9 +240,7 @@ public class SocialService {
             socialPostResponse.setLikes(likesList);
         }
         socialPostResponse.setLikesCount( likesList == null ? 0 : likesList.size() );
-        DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
-        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        socialPostResponse.setCreatedTimeStr(sdf2.format(new Date(socialPostResponse.getCreatedTime())));
+        socialPostResponse.setCreatedTimeStr(Utility.customTimeFormat(socialPostResponse.getCreatedTime()));
         if(categoryMasterResponse != null) {
             socialPostResponse.setCategoryName(categoryMasterResponse.getCategory());
             socialPostResponse.setCategoryColorCode(categoryMasterResponse.getColorCode());
@@ -216,8 +252,8 @@ public class SocialService {
         SocialSendToResponse response = null;
         response = socialSendToResponses.stream().filter(o -> !o.getValue().equals("all") && o.getType().equals("location_city")).findFirst()
                 .orElse(socialSendToResponses.stream().filter(o -> !o.getValue().equals("all") && o.getType().equals("location_district")).findFirst()
-                .orElse(socialSendToResponses.stream().filter(o -> o.getType().equals("location_state")).findFirst().orElse(null)
-                 ));
+                        .orElse(socialSendToResponses.stream().filter(o -> o.getType().equals("location_state")).findFirst().orElse(null)
+                        ));
         if(response != null)
             return response.getValue();
         else

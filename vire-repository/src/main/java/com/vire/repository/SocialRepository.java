@@ -131,7 +131,9 @@ public class SocialRepository {
         List<SocialDto> resultList = query.getResultList();
         return resultList;
     }
-    public List<Long> retrieveByCommunity(Long communityId){
-        return socialRepositoryJpa.findByCommunity(communityId);
+    public List<SocialDto> retrieveByCommunity(Long communityId){
+        return socialRepositoryJpa.findByCommunity(communityId).stream()
+                .map(dao -> dao.toDto())
+                .collect(Collectors.toList());
     }
 }

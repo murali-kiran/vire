@@ -24,6 +24,7 @@ public class FeedsRequest {
     private List<FeedsSendToRequest> feedsSendTo;
     private List<FeedFileRequest> feedFileList;
     private String parentFeedId;
+    private Boolean sendToFollowers;
     private  Long createdTime;
     private  Long updatedTime;
 
@@ -32,6 +33,7 @@ public class FeedsRequest {
         dto.setFeedId(this.getFeedId() == null ? null : Long.valueOf(this.getFeedId()));
         dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
        // dto.setFileId(this.getFileId() == null ? null : Long.valueOf(this.getFileId()));
+        dto.setSendToFollowers(this.getSendToFollowers());
         dto.setDescription(this.getDescription());
         dto.setParentFeedId(this.getParentFeedId() == null ? null : Long.valueOf(this.getParentFeedId()));
         if (this.getFeedsSendTo() != null && !this.getFeedsSendTo().isEmpty()) {

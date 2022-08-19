@@ -4,6 +4,7 @@ import com.vire.dao.ProfileFollowersDao;
 import com.vire.dto.ProfileFollowersDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class ProfileFollowersRepository {
 
     var spec = new CustomSpecificationResolver<ProfileFollowersDao>(searchString).resolve();
 
-    return profileFollowersRepositoryJpa.findAll(spec).stream()
+    return profileFollowersRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

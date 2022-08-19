@@ -105,10 +105,10 @@ public class Utility {
     }
     //
 
-    public static String customTimeFormat(Date date){
+    public static String customTimeFormat(Long timeMillis){
         DateFormat sdf2 = new SimpleDateFormat("MMMM dd 'at' HH:mm");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        return sdf2.format(date);
+        return sdf2.format(new Date(timeMillis));
     }
     public static String calculateTimeDiff(Long updatedTime) {
         Long currentTime = System.currentTimeMillis();

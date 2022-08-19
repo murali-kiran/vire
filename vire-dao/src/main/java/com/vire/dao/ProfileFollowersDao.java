@@ -16,7 +16,7 @@ public class ProfileFollowersDao {
     @Id
     @Column(name = "profile_followers_id")
     private Long profileFollowersId;
-    
+
 
     @Column(name = "profile_id", nullable = false)
     private Long profileId;

@@ -16,6 +16,7 @@ public class ProfileFollowersResponse {
     private String status;
     private MinimalProfileResponse follower;
     private MinimalProfileResponse profile;
+    private String loginProfileFollowStatus;
 
     public static ProfileFollowersResponse fromDto(final ProfileFollowersDto dto) {
 
