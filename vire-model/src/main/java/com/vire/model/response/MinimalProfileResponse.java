@@ -15,6 +15,8 @@ public class MinimalProfileResponse {
     private String location;
     private Integer profileWeightage;
 
+    private String thumbsUp;
+    private String thumbsDown;
 
 
     public static MinimalProfileResponse fromDto(final ProfileDto dto) {
@@ -25,7 +27,6 @@ public class MinimalProfileResponse {
         profileResponse.setProfileType(dto.getProfileType());
         profileResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
         profileResponse.setLocation(dto.getPersonalProfile() != null ? dto.getPersonalProfile().getPresentAddress().getCityTownVillage():dto.getFirmProfile().getAddress().getCityTownVillage());
-        profileResponse.setProfileWeightage(dto.getProfileWeightage());
         return profileResponse;
     }
 
@@ -35,6 +36,8 @@ public class MinimalProfileResponse {
         this.setFileId(response.getFileId());
         this.setProfileType(response.getProfileType());
         this.setLocation(response.getLocation());
+        this.setThumbsDown(response.getThumbsDown());
+        this.setThumbsUp(response.getThumbsUp());
         this.setProfileWeightage(response.getProfileWeightage());
     }
 }

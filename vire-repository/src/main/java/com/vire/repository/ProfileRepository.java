@@ -232,4 +232,8 @@ public class ProfileRepository {
     public void updateEmailViaMobileNumberAndProfileId(Long profileId,String emailOrphonenumber, String newEmail) {
         profileRepositoryJpa.updateEmailViaMobileNumberAndProfileId(profileId,emailOrphonenumber, newEmail);
     }
+    
+    public void blockProfile(Long profileId,Boolean isBlock) {
+        profileRepositoryJpa.blockProfile(profileId,isBlock);
+    }
 }

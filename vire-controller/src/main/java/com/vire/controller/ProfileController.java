@@ -17,12 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import javax.validation.Valid;
 
 @Validated
 @RestController
 @RequestMapping(VireConstants.PROFILE_PATH_API)
+@CrossOrigin
 public class ProfileController {
 
     @Autowired
@@ -135,6 +136,18 @@ public class ProfileController {
                 .findFirst()
                 .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
 
+    }
+    
+    @Operation(summary = "Search Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Seach Profile Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProfileResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Search Profile Failed",
+                    content = @Content) })
+    @GetMapping("/search")
+    public ResponseEntity<List<ProfileResponse>> searchProfiles(@RequestParam(value = "search") String searchString) {
+        return new ResponseEntity<>(profileService.searchAnyProfiles(searchString), HttpStatus.OK);
     }
 
 

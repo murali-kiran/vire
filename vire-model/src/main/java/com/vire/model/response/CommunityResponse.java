@@ -1,5 +1,6 @@
 package com.vire.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vire.dto.CommunityDto;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommunityResponse {
 
     private String communityId;
@@ -19,6 +21,7 @@ public class CommunityResponse {
     private List<CommunityFileResponse> communityFileList;
     private String rules;
     private Boolean memberProofRequired;
+    private Boolean isBlocked;
     private List<CommunityProfileResponse> communityProfiles;
     private String profileCommunityStatus;
     private String loginProfileId;
@@ -51,6 +54,7 @@ public class CommunityResponse {
         }
         community.setRules(dto.getRules());
         community.setMemberProofRequired(dto.getMemberProofRequired());
+        community.setIsBlocked(dto.getIsBlocked());
         if (dto.getCommunityProfiles() != null && !dto.getCommunityProfiles().isEmpty()) {
             community.setCommunityProfiles(dto.getCommunityProfiles()
                     .stream()

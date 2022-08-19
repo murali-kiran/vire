@@ -1,20 +1,31 @@
 package com.vire.service;
 
 import com.vire.model.response.AdminHomeResponse;
+import com.vire.model.response.ProfileResponse;
 import com.vire.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminPortalService {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
+    @Autowired
+    ProfileRepository profileRepository;
 
     @Autowired
     FirmProfileRepositoryJpa firmProfileRepositoryJpa;
+
+    @Autowired
+    ProfileThumbsUpService profileThumbsUpService;
+
+    @Autowired
+    ProfileThumbsDownService profileThumbsDownService;
 
     @Autowired
     CommunityRepositoryJpa communityRepositoryJpa;
@@ -70,6 +81,38 @@ public class AdminPortalService {
                 +experienceReportRepositoryJpa.count()+socialReportRepositoryJpa.count());
 
         return adminHomeResponse;
+    }
+
+    public List<ProfileResponse> getAllUsers(){
+
+        List<ProfileResponse> profileResponses = profileRepository.retrieveAllProfiles().stream().map(profileDto -> ProfileResponse.fromDto(profileDto)).collect(Collectors.toList());
+
+        profileResponses.forEach(profile -> {
+            profile.setThumbsUpCount(Long.valueOf(profileThumbsUpService.search("profileId:"+profile.getProfileId()).size()));
+            profile.setThumbsDownCount(Long.valueOf(profileThumbsDownService.search("profileId:"+profile.getProfileId()).size()));
+        });
+
+        return profileResponses;
+    }
+
+    @Transactional
+    public Optional<ProfileResponse> deleteProfile(final Long profileId) {
+        if (profileRepository.isPersonalProfileExists(profileId) || profileRepository.isFirmProfileExists(profileId)) {
+            return profileRepository.deleteProfile(profileId).map(dto -> ProfileResponse.fromDto(dto));
+        } else {
+            return Optional.empty();
+        }
+
+    }
+
+    @Transactional
+    public  Boolean blockProfile(final Long profileId, final boolean isBlock) {
+        try{
+            profileRepository.blockProfile(profileId, isBlock);
+            return true;
+        }catch (Exception ex){
+            return  false;
+        }
     }
 
 }
