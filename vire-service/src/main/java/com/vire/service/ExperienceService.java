@@ -1,6 +1,5 @@
 package com.vire.service;
 
-import com.vire.dto.ExperienceDto;
 import com.vire.dto.ExperienceViewsCountDto;
 import com.vire.model.request.ExperienceRequest;
 import com.vire.model.response.*;
@@ -8,14 +7,15 @@ import com.vire.repository.ExperienceRepository;
 import com.vire.repository.ExperienceViewsCountRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -89,50 +89,67 @@ public class ExperienceService {
   }
 
     public List<ExperienceDetailResponse> retrieveAllByProfile(Long profileId) {
-      List<String> experienceIds = getAll().stream().map(ExperienceResponse::getExperienceId).collect(Collectors.toList());
+      /*List<String> experienceIds = getAll().stream().map(ExperienceResponse::getExperienceId).collect(Collectors.toList());
       List<ExperienceDetailResponse> experienceDetailResponseList = new ArrayList<>();
       for (String experienceId : experienceIds) {
         var experienceDetailResponse = setExperienceDetails(Long.valueOf(experienceId), false, profileId);
-        /*List<String> profileIds = experienceDetailResponse.getLikesResponseList() != null ? experienceDetailResponse.getLikesResponseList().stream().map(ExperienceLikesResponse::getLikerProfileId).collect(Collectors.toList()) : null;
-        experienceDetailResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId+"")) ? true : false);
-        */
+        //List<String> profileIds = experienceDetailResponse.getLikesResponseList() != null ? experienceDetailResponse.getLikesResponseList().stream().map(ExperienceLikesResponse::getLikerProfileId).collect(Collectors.toList()) : null;
+        //experienceDetailResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId+"")) ? true : false);
+
         experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
         experienceDetailResponseList.add(experienceDetailResponse);
       }
-      return experienceDetailResponseList;
+      return experienceDetailResponseList;*/
+  List<String> categoryFiltersToBeApplied = new ArrayList<>();
+  var experienceDetailResponses = experienceRepository
+          .getExperienceListByProfile(Long.valueOf(profileId), 1, 50, categoryFiltersToBeApplied)
+          .stream()
+          .map(dao -> dao.toDto())
+          .map(dto -> ExperienceDetailResponse.fromDto(dto))
+          .collect(Collectors.toList());
+      for (ExperienceDetailResponse experienceDetailResponse : experienceDetailResponses) {
+        setExperienceDetails(experienceDetailResponse, false, profileId);
+        experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
+      }
+      return experienceDetailResponses;
     }
 
   public List<ExperienceDetailResponse> retrieveAllCreatedByProfile(String profileId) {
-    List<String> experienceIds = search("profileId:"+profileId).stream().map(ExperienceResponse::getExperienceId).collect(Collectors.toList());
-    List<ExperienceDetailResponse> experienceDetailResponseList = new ArrayList<>();
-    for (String experienceId : experienceIds) {
-      var experienceDetailResponse = setExperienceDetails(Long.valueOf(experienceId), false, Long.valueOf(profileId));
+    List<ExperienceDetailResponse> experienceDetailResponses = experienceRepository
+            .search("profileId:"+profileId)
+            .stream()
+            .map(dto -> ExperienceDetailResponse.fromDto(dto))
+            .collect(Collectors.toList());
+    for (ExperienceDetailResponse experienceDetailResponse : experienceDetailResponses) {
+      setExperienceDetails(experienceDetailResponse, false, Long.valueOf(profileId));
       experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
-      experienceDetailResponseList.add(experienceDetailResponse);
     }
-    return experienceDetailResponseList;
+    return experienceDetailResponses;
   }
 
   public ExperienceDetailResponse retrieveExperienceDetailsById(Long experienceId, Long profileId) {
     log.info("Experience ID###:"+experienceId);
-    ExperienceDetailResponse experienceDetailResponse = setExperienceDetails(experienceId, true, profileId);
-    return experienceDetailResponse;
+    var experienceDetailDto = experienceRepository.retrieveById(experienceId);
+
+    if(experienceDetailDto != null && experienceDetailDto.get() != null){
+      var experienceDetailResponse = ExperienceDetailResponse.fromDto(experienceDetailDto.get());
+      setExperienceDetails(experienceDetailResponse, true, profileId);
+      return experienceDetailResponse;
+    }else {
+      throw new RuntimeException("No Experiment found with id:"+experienceId);
+    }
+
   }
 
-  private ExperienceDetailResponse setExperienceDetails(Long experienceId, Boolean setViewCount, Long profileId){
-    ExperienceDetailResponse experienceDetailResponse = experienceRepository.retrieveById(experienceId)
-            .map(dto -> ExperienceDetailResponse.fromDto(dto))
-            .get();
-    if(experienceDetailResponse == null){
-      throw new RuntimeException("Record not found for experience id:"+experienceId);
-    }
-    var experienceDto = experienceViewsCountRepository.retrieveByProfileIdExperienceId(experienceId, profileId);
+  private ExperienceDetailResponse setExperienceDetails(ExperienceDetailResponse experienceDetailResponse, Boolean setViewCount, Long profileId){
+
+    var experienceDto = experienceViewsCountRepository.retrieveByProfileIdExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()), profileId);
     List<ExperienceCommentResponse> experienceCommentsList = experienceCommentService.search("experienceId:" + experienceDetailResponse.getExperienceId());
     List<ExperienceLikesResponse> likesList = experienceLikesService.search("experienceId:" + experienceDetailResponse.getExperienceId());
     if(setViewCount) {
       if(experienceDto.isEmpty()) {
         ExperienceViewsCountDto experienceViewsCountDto = new ExperienceViewsCountDto();
-        experienceViewsCountDto.setExperienceId(experienceId);
+        experienceViewsCountDto.setExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()));
         experienceViewsCountDto.setProfileId(profileId);
         experienceViewsCountDto.setViewsCountId(snowflake.nextId());
         experienceViewsCountRepository.create(experienceViewsCountDto);
@@ -143,7 +160,7 @@ public class ExperienceService {
     List<String> profileIds = likesList == null ? null : likesList.stream().map(ExperienceLikesResponse::getLikerProfileId).collect(Collectors.toList());
     experienceDetailResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId+"")) ? true : false);
     experienceDetailResponse.setLikesCount( likesList == null ? 0 : likesList.size() );
-    Long viewsCount = experienceViewsCountRepository.countByExperienceId(experienceId);
+    Long viewsCount = experienceViewsCountRepository.countByExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()));
     MasterResponse experienceCategoryResponse = masterService.retrieveById(Long.valueOf(experienceDetailResponse.getCategoryId()));
     experienceDetailResponse.setCategoryResponse(experienceCategoryResponse);
     List<ExperienceCommentReplyResponse> replyList = experienceCommentReplyService.search("experienceId:" + experienceDetailResponse.getExperienceId());

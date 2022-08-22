@@ -1,1 +1,0 @@
-ALTER TABLE community ADD COLUMN IS_BLOCKED  TINYINT(1) NULL DEFAULT 0 AFTER member_proof_required;

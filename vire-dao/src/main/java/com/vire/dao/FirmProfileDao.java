@@ -6,6 +6,8 @@ import com.vire.enumeration.BloodDonateWillingness;
 import com.vire.enumeration.FieldOfBusiness;
 import com.vire.enumeration.ProductOrService;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
@@ -38,6 +40,8 @@ public class FirmProfileDao  {
     @OneToOne
     @MapsId
     @JoinColumn(name = "firm_profile_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private ProfileDao profile;
 
     @Column(name = "created_time", nullable = false, updatable = false)

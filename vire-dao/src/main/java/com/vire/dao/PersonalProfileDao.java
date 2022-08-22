@@ -5,6 +5,8 @@ import com.vire.enumeration.BloodDonateWillingness;
 import com.vire.enumeration.Gender;
 import com.vire.enumeration.WorkStatus;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
@@ -85,6 +87,8 @@ public class PersonalProfileDao  {
     @OneToOne
     @MapsId
     @JoinColumn(name = "personal_profile_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private ProfileDao profile;
 
     @Column(name = "created_time", nullable = false, updatable = false)

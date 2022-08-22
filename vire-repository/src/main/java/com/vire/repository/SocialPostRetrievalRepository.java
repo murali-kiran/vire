@@ -107,7 +107,8 @@ public class SocialPostRetrievalRepository {
 
                 query.append("SELECT social.* FROM (");
                 query.append("SELECT ts.* FROM t_social ts WHERE ts.profile_id="+profileDao.getProfileId());
-                query.append("\nUNION ");
+                query.append("\nUNION ")
+                ;
                 for (String categoryFilter : categoryFiltersToBeApplied) {
                     if (query.toString().contains(")")) {
                         query.append("\nUNION ");

@@ -125,9 +125,7 @@ public class SocialService {
         return setSocialDetails(socialPostResponse, null);
     }
     public List<SocialPostResponse> retrievePostsByProfileId(String profileId) {
-
         long startTime = System.nanoTime();
-
         List<String> categoryFiltersToBeApplied = new ArrayList<>();
         //categoryFiltersToBeApplied.add("Emergency");
         //categoryFiltersToBeApplied.add("Employment");

@@ -1,32 +1,46 @@
 package com.vire.repository;
 
+import com.vire.dao.AddressDao;
 import com.vire.dao.ExperienceDao;
-import com.vire.dao.ExperienceViewsCountDao;
+import com.vire.dao.ProfileDao;
+import com.vire.dao.SocialDao;
 import com.vire.dto.ExperienceDto;
-import com.vire.dto.ExperienceViewsCountDto;
-import com.vire.repository.ExperienceRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
-import org.hibernate.Session;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ExperienceRepository {
 
+  @PersistenceContext
+  EntityManager entityManager;
   @Autowired
   ExperienceRepositoryJpa experienceRepositoryJpa;
   @Autowired
   SessionFactory sessionFactory;
   @Autowired
   ExperienceViewsCountRepositoryJpa experienceViewsCountRepositoryJpa;
-
+  @Autowired
+  ProfileRepositoryJpa profileRepositoryJpa;
+  private static final String BASIC_QUERY = "SELECT e.* FROM experience e "+
+  "WHERE ( e.category_id IN (%s) ";
+  private static final String COMMON_WHERE = " %s = '%s'";
+  private static final String SEND_TO_TYPE_LOCATION_CITY = "location_city";
+  private static final String SEND_TO_TYPE_LOCATION_DIST = "location_district";
+  private static final String SEND_TO_TYPE_LOCATION_STATE = "location_state";
   @Transactional
   public ExperienceDto create(final ExperienceDto experienceDto) {
 
@@ -82,4 +96,80 @@ public class ExperienceRepository {
             .collect(Collectors.toList());
   }
 
+    public List<ExperienceDao> getExperienceListByProfile(Long profileId, int pageNumber, int pageSize, List<String> categoryFiltersToBeApplied) {
+
+      ProfileDao profileDao = profileRepositoryJpa.findById(profileId).get();
+      StringBuffer query = new StringBuffer();
+      AddressDao address = null;
+
+      StringBuffer categoryQuery = new StringBuffer("select m.master_id from master m where " );
+      if(profileDao.getPersonalProfile()!=null) {
+        address = profileDao.getPersonalProfile().getPresentAddress();
+        var designation = profileDao.getPersonalProfile().getDesignation();
+        var fieldProfessionBusiness = profileDao.getPersonalProfile().getFieldProfessionBusiness();
+
+        if(StringUtils.isEmpty(designation) && StringUtils.isEmpty(fieldProfessionBusiness)){
+          return new ArrayList<>();
+        }
+
+        StringBuffer sb = new StringBuffer("");
+        if(!StringUtils.isEmpty(designation)){
+          sb.append("(m.master_type = 'Designation' AND m.master_value= '"+designation+"')");
+        }
+
+        if(!StringUtils.isEmpty(fieldProfessionBusiness)){
+         if(!sb.toString().isEmpty()){
+           sb.append(" OR ");
+         }
+          sb.append("(m.master_type = 'Field_Profession_Business' AND m.master_value= '"+fieldProfessionBusiness+"')");
+        }
+        categoryQuery.append(sb.toString());
+      }else{
+        address = profileDao.getFirmProfile().getAddress();
+        if(StringUtils.isEmpty(profileDao.getFirmProfile().getFieldOfBusiness())){
+          return new ArrayList<>();
+        }else{
+          categoryQuery.append("(m.master_type = 'Field_Profession_Business' " +
+                  "AND m.master_value= '"+profileDao.getFirmProfile().getFieldOfBusiness()+"')");
+        }
+      }
+
+      query.append(frameAddressQuery(categoryQuery.toString(), address));
+      query.append(" ) OR e.profile_id="+profileDao.getProfileId());
+      query.append(" ORDER BY e.updated_time DESC ");
+      log.info("Generated Query is {}", query.toString());
+      var queryObject = entityManager.createNativeQuery(query.toString(), ExperienceDao.class);
+      queryObject.setFirstResult((pageNumber - 1) * pageSize);
+      queryObject.setMaxResults(pageSize);
+      return queryObject.getResultList();
+    }
+
+  private StringBuffer frameAddressQuery(String categoryIds, AddressDao address) {
+
+    var city = address.getCityTownVillage();
+    var district = address.getDistrict();
+    var state = address.getState();
+
+    StringBuffer sb = new StringBuffer(String.format(BASIC_QUERY, categoryIds));
+    sb.append(" AND");
+    sb.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_STATE, state));
+
+    StringBuffer cityAndDistrictQuery = new StringBuffer("");
+    if (!StringUtils.isEmpty(city)) {
+      cityAndDistrictQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_CITY, city));
+    }
+
+    if (!StringUtils.isEmpty(district)) {
+      if(!cityAndDistrictQuery.toString().isEmpty()) {
+        cityAndDistrictQuery.append(" OR");
+      }
+      cityAndDistrictQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_DIST, district));
+    }
+
+    if(!cityAndDistrictQuery.toString().isEmpty()) {
+      sb.append(" OR ( "+cityAndDistrictQuery.toString()+" )");
+    }
+
+    return sb;
+  }
 }

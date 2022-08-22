@@ -49,14 +49,27 @@ public class PerformanceLogger {
         }
 
         if(throwable !=null){
-            log.info("Execution of " + classname+ "." + methodName + ": args " +
+            log.error("Execution of " + classname+ "." + methodName + ": args " +
                     stringBuffer.toString() + ": throwed exception "+ throwable.getMessage());
             throw throwable;
         }
 
-        log.info("Execution of " + classname+ "." + methodName + ": args " +
-                stringBuffer.toString() + ": took " +
-                TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+        if(log.isDebugEnabled() && retval!=null) {
+
+            String toString = "";
+            try{
+                toString = retval.toString();
+            }catch (StackOverflowError error){
+                toString= "";
+            }
+            log.info("Execution of " + classname + "." + methodName + ": args " +
+                    stringBuffer.toString() + ": returned: "+ toString+": took " +
+                    TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+        }else {
+            log.info("Execution of " + classname + "." + methodName + ": args " +
+                    stringBuffer.toString() + ": took " +
+                    TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");
+        }
 
         return retval;
     }
