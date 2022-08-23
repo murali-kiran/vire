@@ -58,7 +58,7 @@ public class ChannelService {
 
   public ChannelResponse delete(final Long channelId) {
 
-    List<FeedsSendToResponse> responses = feedsSendToService.searchSent("");
+    //List<FeedsSendToResponse> responses = feedsSendToService.searchSent("type:channel AND value:"+channelId);
     return channelRepository.delete(channelId)
             .map(dto -> ChannelResponse.fromDto(dto))
             .get();

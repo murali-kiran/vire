@@ -2,6 +2,7 @@ package com.vire.service;
 
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.*;
+import com.vire.repository.FeedPostRetrievalRepository;
 import com.vire.repository.FeedsRepository;
 import com.vire.repository.FileRepository;
 import com.vire.utils.Snowflake;
@@ -48,6 +49,8 @@ public class FeedsService {
     CommunityService communityService;
     @Autowired
     FeedsRepository feedRepository;
+    @Autowired
+    FeedPostRetrievalRepository feedPostRetrievalRepository;
 
     public FeedsResponse createFeeds(final FeedsRequest request) {
         /*if(request.getParentFeedId() != null ){
@@ -124,13 +127,23 @@ public class FeedsService {
         return feedsFullResponseList;
     }
     public List<FeedsFullResponse> retrieveFeedPostsByProfileId(String profileId) {
-        List<String> feedsIdList = getAll().stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
+        /*List<String> feedsIdList = getAll().stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
         List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
         for (String feedId : feedsIdList) {
             FeedsFullResponse feedsFullResponse = feedsRepo.retrieveById(Long.valueOf(feedId))
                     .map(dto -> FeedsFullResponse.fromDto(dto))
                     .get();
             feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId, true));
+        }*/
+        
+        var feedsFullResponseList = feedPostRetrievalRepository
+                .getFeedListBySearch(Long.valueOf(profileId), 1, 50)
+                .stream()
+                .map(dao -> dao.toDto())
+                .map(dto -> FeedsFullResponse.fromDto(dto))
+                .collect(Collectors.toList());
+        for(FeedsFullResponse feedsFullResponse : feedsFullResponseList){
+            setFeedsDetailResponse(feedsFullResponse, profileId, true);
         }
         return feedsFullResponseList;
     }

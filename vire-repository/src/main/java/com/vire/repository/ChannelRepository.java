@@ -3,6 +3,7 @@ package com.vire.repository;
 import com.vire.dao.ChannelDao;
 import com.vire.dto.ChannelDto;
 import com.vire.dto.ChannelDto;
+import com.vire.dto.FeedsSendToDto;
 import com.vire.repository.ChannelRepositoryJpa;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class ChannelRepository {
   ChannelRepositoryJpa channelRepositoryJpa;
   @Autowired
   ChannelProfileRepositoryJpa channelProfileRepositoryJpa;
+  @Autowired
+  FeedsSendToRepository feedsSendToRepository;
 
   public ChannelDto create(final ChannelDto channelDto) {
 
@@ -47,16 +50,19 @@ public class ChannelRepository {
   @Transactional
   public Optional<ChannelDto> delete(final Long channelId) {
 
-    var optionalSocial = retrieveById(channelId);
+    var optionalChannel = retrieveById(channelId);
+    var feedsSendToDtos = feedsSendToRepository.searchSent("type:channel AND value:"+channelId);
 
-    if (optionalSocial.isPresent()) {
+    if (optionalChannel.isPresent()) {
       channelProfileRepositoryJpa.deleteByChannelId(channelId);
       channelRepositoryJpa.deleteById(channelId);
     } else {
       throw new RuntimeException("Object not exists in DB to delete");
     }
-
-    return optionalSocial;
+    for (FeedsSendToDto feedsSendToDto : feedsSendToDtos) {
+      feedsSendToRepository.deleteSent(feedsSendToDto.getFeedsSendToId());
+    }
+    return optionalChannel;
   }
   public List<ChannelDto> getAll() {
 
