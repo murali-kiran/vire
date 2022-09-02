@@ -135,7 +135,13 @@ public class FeedsService {
                     .get();
             feedsFullResponseList.add(setFeedsDetailResponse(feedsFullResponse, profileId, true));
         }*/
-        
+
+       /* var feedsFullResponseList = feedsRepo.getAllFeeds().stream()
+                .map(dto -> FeedsFullResponse.fromDto(dto)).collect(Collectors.toList());
+        for(FeedsFullResponse feedsFullResponse : feedsFullResponseList){
+            setFeedsDetailResponse(feedsFullResponse, profileId, true);
+        }
+        return feedsFullResponseList;*/
         var feedsFullResponseList = feedPostRetrievalRepository
                 .getFeedListBySearch(Long.valueOf(profileId), 1, 50)
                 .stream()

@@ -6,6 +6,7 @@ import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
@@ -59,16 +60,19 @@ public class FeedsRepository {
         return feedsRepositoryJpa.save(feedsDao).toDto();
     }
 
-    public Optional<FeedsDto> deleteFeedsPost(final Long feedsId) {
+    @Transactional
+    public Optional<FeedsDto> deleteFeedsPost(final Long feedId) {
 
-        var optionalFeeds = retrieveById(feedsId);
-
+        var optionalFeeds = retrieveById(feedId);
+        List<FeedsDto> childFeeds = search("parentFeedId:"+feedId);
         if (optionalFeeds.isPresent()) {
-            feedsRepositoryJpa.deleteById(feedsId);
+            feedsRepositoryJpa.deleteById(feedId);
         } else {
             throw new RuntimeException("Feeds Post Object not exists in DB");
         }
-
+        for(FeedsDto feedsDto : childFeeds){
+            feedsRepositoryJpa.deleteById(feedsDto.getFeedId());
+        }
         return optionalFeeds;
     }
 

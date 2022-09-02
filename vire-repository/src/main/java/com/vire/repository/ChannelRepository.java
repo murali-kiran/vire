@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +25,11 @@ public class ChannelRepository {
   ChannelProfileRepositoryJpa channelProfileRepositoryJpa;
   @Autowired
   FeedsSendToRepository feedsSendToRepository;
+
+  @Autowired
+  FeedsRepositoryJpa feedsRepositoryJpa;
+  @Autowired
+  FeedsRepository feedsRepository;
 
   public ChannelDto create(final ChannelDto channelDto) {
 
@@ -59,8 +65,17 @@ public class ChannelRepository {
     } else {
       throw new RuntimeException("Object not exists in DB to delete");
     }
+
+    var communityAllFeeds=new ArrayList<Long>();
     for (FeedsSendToDto feedsSendToDto : feedsSendToDtos) {
+      var communityFeed = feedsRepositoryJpa.findByCommunityAndFeedId(feedsSendToDto.getFeedId());
+      if(communityFeed != null && communityFeed.isEmpty()) {
+        communityAllFeeds.add(feedsSendToDto.getFeedId());
+      }
       feedsSendToRepository.deleteSent(feedsSendToDto.getFeedsSendToId());
+    }
+    for(var feedId: communityAllFeeds) {
+      feedsRepository.deleteFeedsPost(feedId);
     }
     return optionalChannel;
   }

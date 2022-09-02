@@ -26,7 +26,7 @@ public class FeedsDao {
     @Column(name = "file_id", nullable = false)
     private Long fileId;
 
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FeedsSendToDao> feedsSendTo;
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -89,18 +89,17 @@ public class ExperienceService {
   }
 
     public List<ExperienceDetailResponse> retrieveAllByProfile(Long profileId) {
-      /*List<String> experienceIds = getAll().stream().map(ExperienceResponse::getExperienceId).collect(Collectors.toList());
-      List<ExperienceDetailResponse> experienceDetailResponseList = new ArrayList<>();
-      for (String experienceId : experienceIds) {
-        var experienceDetailResponse = setExperienceDetails(Long.valueOf(experienceId), false, profileId);
-        //List<String> profileIds = experienceDetailResponse.getLikesResponseList() != null ? experienceDetailResponse.getLikesResponseList().stream().map(ExperienceLikesResponse::getLikerProfileId).collect(Collectors.toList()) : null;
-        //experienceDetailResponse.setLoginUserLiked((profileIds != null && profileIds.contains(profileId+"")) ? true : false);
-
+      List<ExperienceDetailResponse> experienceDetailResponseList = experienceRepository
+              .getAll()
+              .stream()
+              .map(dto -> ExperienceDetailResponse.fromDto(dto))
+              .collect(Collectors.toList());
+      for (ExperienceDetailResponse experienceDetailResponse : experienceDetailResponseList) {
+        setExperienceDetails(experienceDetailResponse, false, profileId);
         experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
-        experienceDetailResponseList.add(experienceDetailResponse);
       }
-      return experienceDetailResponseList;*/
-  List<String> categoryFiltersToBeApplied = new ArrayList<>();
+      return experienceDetailResponseList;
+  /*List<String> categoryFiltersToBeApplied = new ArrayList<>();
   var experienceDetailResponses = experienceRepository
           .getExperienceListByProfile(Long.valueOf(profileId), 1, 50, categoryFiltersToBeApplied)
           .stream()
@@ -111,7 +110,7 @@ public class ExperienceService {
         setExperienceDetails(experienceDetailResponse, false, profileId);
         experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
       }
-      return experienceDetailResponses;
+      return experienceDetailResponses;*/
     }
 
   public List<ExperienceDetailResponse> retrieveAllCreatedByProfile(String profileId) {
@@ -143,10 +142,10 @@ public class ExperienceService {
 
   private ExperienceDetailResponse setExperienceDetails(ExperienceDetailResponse experienceDetailResponse, Boolean setViewCount, Long profileId){
 
-    var experienceDto = experienceViewsCountRepository.retrieveByProfileIdExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()), profileId);
     List<ExperienceCommentResponse> experienceCommentsList = experienceCommentService.search("experienceId:" + experienceDetailResponse.getExperienceId());
     List<ExperienceLikesResponse> likesList = experienceLikesService.search("experienceId:" + experienceDetailResponse.getExperienceId());
     if(setViewCount) {
+      var experienceDto = experienceViewsCountRepository.retrieveByProfileIdExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()), profileId);
       if(experienceDto.isEmpty()) {
         ExperienceViewsCountDto experienceViewsCountDto = new ExperienceViewsCountDto();
         experienceViewsCountDto.setExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()));
