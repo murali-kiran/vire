@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.vire.dto.ProfileDto;
+import com.vire.model.response.PageWiseSearchResponse;
 
 @Service
 public class AdminPortalService {
@@ -83,16 +85,26 @@ public class AdminPortalService {
         return adminHomeResponse;
     }
 
-    public List<ProfileResponse> getAllUsers(){
+    public PageWiseSearchResponse<ProfileResponse> getAllUsers(Integer pageNumber, Integer pageSize) {
 
-        List<ProfileResponse> profileResponses = profileRepository.retrieveAllProfiles().stream().map(profileDto -> ProfileResponse.fromDto(profileDto)).collect(Collectors.toList());
+        PageWiseSearchResponse<ProfileDto> searchResponse = profileRepository.retrieveAllProfilesPaged(pageNumber,pageSize);
+        List<ProfileDto> profileDtos = searchResponse.getList();
+
+        List<ProfileResponse> profileResponses = profileDtos.stream()
+                .map(dto -> ProfileResponse.fromDto(dto))
+                .collect(Collectors.toList());
+
 
         profileResponses.forEach(profile -> {
             profile.setThumbsUpCount(Long.valueOf(profileThumbsUpService.search("profileId:"+profile.getProfileId()).size()));
             profile.setThumbsDownCount(Long.valueOf(profileThumbsDownService.search("profileId:"+profile.getProfileId()).size()));
         });
 
-        return profileResponses;
+        PageWiseSearchResponse<ProfileResponse> response = new PageWiseSearchResponse<ProfileResponse>();
+        response.setPageCount(searchResponse.getPageCount());
+        response.setList(profileResponses);
+
+        return response;
     }
 
     @Transactional
