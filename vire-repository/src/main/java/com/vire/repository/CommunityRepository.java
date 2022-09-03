@@ -2,8 +2,11 @@ package com.vire.repository;
 
 import com.vire.dao.CommunityDao;
 import com.vire.dto.CommunityDto;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -53,6 +56,7 @@ public class CommunityRepository {
 
     return optionalCommunity;
   }
+
   public List<CommunityDto> getAll() {
 
     return communityRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime"))
@@ -60,6 +64,22 @@ public class CommunityRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+  public PageWiseSearchResponse<CommunityDto> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+    PageWiseSearchResponse<CommunityDto> response = new PageWiseSearchResponse<>();
+    PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+    Page<CommunityDao> page = communityRepositoryJpa.findAll(request);
+    List<CommunityDto> communityDtos = page.stream().map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+
+    response.setPageCount(page.getTotalPages());
+    response.setList(communityDtos);
+
+    return response;
+  }
+
   public Optional<CommunityDto> retrieveById(Long communityId) {
 
     return communityRepositoryJpa.findById(communityId).map(dao -> dao.toDto());
@@ -70,6 +90,16 @@ public class CommunityRepository {
     var spec = new CustomSpecificationResolver<CommunityDao>(searchString).resolve();
 
     return communityRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
+
+  public List<CommunityDto> searchPaged(final String searchString,Integer pageNumber,Integer pageSize) {
+
+    var spec = new CustomSpecificationResolver<CommunityDao>(searchString).resolve();
+    PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+    return communityRepositoryJpa.findAll(spec, request).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
@@ -86,9 +116,8 @@ public class CommunityRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
-  
-  public void blockProfile(Long communityId, boolean isBlocked) {
+
+    public void blockProfile(Long communityId, boolean isBlocked) {
       communityRepositoryJpa.blockProfile(communityId,isBlocked);
-  }
-  
+    }
 }
