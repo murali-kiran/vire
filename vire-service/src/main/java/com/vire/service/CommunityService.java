@@ -1,11 +1,9 @@
 package com.vire.service;
 
+import com.vire.dto.CommunityDto;
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.request.CommunityRequest;
-import com.vire.model.response.CommunityProfileResponse;
-import com.vire.model.response.CommunityResponse;
-import com.vire.model.response.KeyValueListResponse;
-import com.vire.model.response.MinimalProfileResponse;
+import com.vire.model.response.*;
 import com.vire.repository.CommunityProfileRepository;
 import com.vire.repository.CommunityRepository;
 import com.vire.utils.Snowflake;
@@ -79,6 +77,21 @@ public class CommunityService {
                 .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
                 .collect(Collectors.toList());
     }
+    
+    public PageWiseSearchResponse<CommunityResponse> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+        PageWiseSearchResponse<CommunityDto> searchResponse = communityRepository.getAllPaged(pageNumber,pageSize);
+        List<CommunityResponse> communityResponses = searchResponse.getList().stream()
+                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+
+        PageWiseSearchResponse<CommunityResponse> response = new PageWiseSearchResponse<CommunityResponse>();
+        response.setPageCount(searchResponse.getPageCount());
+        response.setList(communityResponses);
+
+        return response;
+   }
+    
     public List<CommunityResponse> getAll(String profileId) {
 
         return communityRepository
