@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import com.vire.model.response.PageWiseSearchResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -77,6 +77,22 @@ public class CommunityController {
   public ResponseEntity<List<CommunityResponse>> retrieveAll() {
     return new ResponseEntity<>(communityService.getAll(), HttpStatus.OK);
   }
+  
+  @Operation(summary = "Get all communities PageWise")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Successfully got all communities",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = CommunityResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "communities retrieval failed",
+                  content = @Content) })
+  @GetMapping("/allPageWise")
+  public ResponseEntity<PageWiseSearchResponse<CommunityResponse>> retrieveAllPageWise(@RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+                                                                       @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
+
+    return new ResponseEntity<>(communityService.getAllPaged(pageNumber,pageSize), HttpStatus.OK);
+  }
+  
+  
   @Operation(summary = "Get all communities with logged in profile id status")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Successfully got all communities",
