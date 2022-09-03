@@ -4,11 +4,14 @@ import com.vire.dao.AddressDao;
 import com.vire.dao.ProfileDao;
 import com.vire.dao.ProfileSettingDao;
 import com.vire.dto.ProfileDto;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -156,6 +159,23 @@ public class ProfileRepository {
                 .collect(Collectors.toList());
     }
 
+    public PageWiseSearchResponse<ProfileDto> retrieveAllProfilesPaged(Integer pageNumber, Integer pageSize) {
+
+        PageWiseSearchResponse searchResponse = new PageWiseSearchResponse<ProfileDto>();
+        PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+
+        Page<ProfileDao> page = profileRepositoryJpa.findAll(request);
+        searchResponse.setPageCount(page.getTotalPages());
+        List<ProfileDto> profileDtos =  page.stream()
+                .map(dao -> dao.toDto())
+                .collect(Collectors.toList());
+
+        searchResponse.setList(profileDtos);
+
+        return searchResponse;
+    }
+
     public boolean isPersonalProfileExists(final Long profileId){
         return personalProfileRepositoryJpa.existsById(profileId);
     }
@@ -184,6 +204,24 @@ public class ProfileRepository {
         return profileRepositoryJpa.findAll(spec).stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
+    }
+
+    public PageWiseSearchResponse searchProfilesPaged(final String searchString,Integer pageNumber,Integer pageSize) {
+
+        PageWiseSearchResponse searchResponse = new PageWiseSearchResponse<ProfileDto>();
+        PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+        var spec = new CustomSpecificationResolver<ProfileDao>(searchString).resolve();
+
+        Page<ProfileDao> page = profileRepositoryJpa.findAll(spec,request);
+        searchResponse.setPageCount(page.getTotalPages());
+        List<ProfileDto> profileDtos =  page.stream()
+                .map(dao -> dao.toDto())
+                .collect(Collectors.toList());
+
+        searchResponse.setList(profileDtos);
+
+        return searchResponse;
     }
 
     public  Optional<ProfileDao> loginWithEmail(final String email, final String password){
@@ -232,7 +270,7 @@ public class ProfileRepository {
     public void updateEmailViaMobileNumberAndProfileId(Long profileId,String emailOrphonenumber, String newEmail) {
         profileRepositoryJpa.updateEmailViaMobileNumberAndProfileId(profileId,emailOrphonenumber, newEmail);
     }
-    
+
     public void blockProfile(Long profileId,Boolean isBlock) {
         profileRepositoryJpa.blockProfile(profileId,isBlock);
     }
