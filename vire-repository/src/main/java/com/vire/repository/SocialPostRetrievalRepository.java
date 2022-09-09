@@ -304,20 +304,22 @@ public class SocialPostRetrievalRepository {
         var district = address.getDistrict();
         var state = address.getState();
 
-        StringBuffer sb = new StringBuffer(String.format(BASIC_QUERY, categoryId));
-        sb.append(" WHERE");
-        sb.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_CITY, "all"));
-        sb.append(" OR");
-        sb.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_DIST, "all"));
+        StringBuffer cityQuery = new StringBuffer(String.format(BASIC_QUERY, categoryId));
+        cityQuery.append(" WHERE");
+        cityQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_CITY, "all"));
 
         if (!StringUtils.isEmpty(city)) {
-            sb.append(" OR");
-            sb.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_CITY, city));
+            cityQuery.append(" OR");
+            cityQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_CITY, city));
         }
 
+        StringBuffer districtQuery = new StringBuffer(String.format(BASIC_QUERY, categoryId));
+        districtQuery.append(" WHERE");
+        districtQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_DIST, "all"));
+
         if (!StringUtils.isEmpty(district)) {
-            sb.append(" OR");
-            sb.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_DIST, district));
+            districtQuery.append(" OR");
+            districtQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_DIST, district));
         }
 
         StringBuffer stateQuery = new StringBuffer(" SELECT state.* FROM ( ");
@@ -325,7 +327,9 @@ public class SocialPostRetrievalRepository {
         stateQuery.append(" WHERE");
         stateQuery.append(String.format(COMMON_WHERE, SEND_TO_TYPE_LOCATION_STATE, state))
                 .append(" ) as state JOIN ( ")
-                .append(sb)
+                .append(districtQuery)
+                .append(" ) as dist ON state.social_id = dist.social_id JOIN ( ")
+                .append(cityQuery)
                 .append(" ) as city ON state.social_id = city.social_id");
 
         return stateQuery;

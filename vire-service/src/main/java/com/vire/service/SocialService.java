@@ -69,7 +69,7 @@ public class SocialService {
 
     public SocialResponse updateSocial(final SocialRequest request) {
 
-        var dto = request.toDto(snowflake);
+        var dto = request.toDto(null);
 
         return SocialResponse.fromDto(socialRepo.updateSocial(dto));
     }

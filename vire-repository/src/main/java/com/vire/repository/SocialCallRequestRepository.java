@@ -20,7 +20,6 @@ public class SocialCallRequestRepository {
   public SocialCallRequestDto create(final SocialCallRequestDto socialCallRequestDto) {
 
     var socialCallRequestDao = SocialCallRequestDao.fromDto(socialCallRequestDto);
-    socialCallRequestDao.setSocial(socialRepositoryJpa.getById(socialCallRequestDto.getSocialId()));
     socialCallRequestDao.onPrePersist();
 
     return socialCallRequestRepositoryJpa.save(socialCallRequestDao).toDto();

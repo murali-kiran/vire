@@ -49,8 +49,8 @@ public class SocialDao {
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
 
-    @OneToMany(mappedBy = "social", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SocialCallRequestDao> socialCallRequestList;
+    /*@OneToMany(mappedBy = "social", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SocialCallRequestDao> socialCallRequestList;*/
 
     @OneToMany(mappedBy = "social", cascade = CascadeType.ALL)
     private List<SocialFileDao> socialFileList;
@@ -80,7 +80,6 @@ public class SocialDao {
                 ", sendTo=" + sendTo +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
-                ", socialCallRequestList=" + socialCallRequestList +
                 ", socialFileList=" + socialFileList +
                 '}';
     }
@@ -113,12 +112,12 @@ public class SocialDao {
                     .collect(Collectors.toList())
             );
         }
-        if (this.getSocialCallRequestList() != null && !this.getSocialCallRequestList().isEmpty()) {
+        /*if (this.getSocialCallRequestList() != null && !this.getSocialCallRequestList().isEmpty()) {
             dto.setSocialCallRequestList(this.getSocialCallRequestList()
                     .stream()
                     .map(child -> child.toDto())
                     .collect(Collectors.toList()));
-        }
+        }*/
 
         return dto;
     }
@@ -152,7 +151,7 @@ public class SocialDao {
                     .collect(Collectors.toList())
             );
         }
-        if (dto.getSocialCallRequestList() != null && !dto.getSocialCallRequestList().isEmpty()) {
+       /* if (dto.getSocialCallRequestList() != null && !dto.getSocialCallRequestList().isEmpty()) {
             dao.setSocialCallRequestList(dto.getSocialCallRequestList()
                     .stream()
                     .map(child -> {
@@ -160,7 +159,7 @@ public class SocialDao {
                         childDao.setSocial(dao);
                         return childDao;
                     })                    .collect(Collectors.toList()));
-        }
+        }*/
         return dao;
     }
 }

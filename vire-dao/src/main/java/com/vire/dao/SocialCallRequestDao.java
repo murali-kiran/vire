@@ -26,10 +26,8 @@ public class SocialCallRequestDao {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name="social_id", nullable=false)
-    @ToString.Exclude
-    private SocialDao social;
+    @Column(name = "social_id", nullable = false)
+    private Long socialId;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -53,7 +51,7 @@ public class SocialCallRequestDao {
         var dto = new SocialCallRequestDto();
 
         dto.setSocialCallRequestId(this.getSocialCallRequestId());
-        dto.setSocialId(this.getSocial().getSocialId());
+        dto.setSocialId(this.getSocialId());
         dto.setProfileId(this.getProfileId());
         dto.setRequesterProfileId(this.getRequesterProfileId());
         dto.setStatus(this.getStatus());
@@ -73,7 +71,8 @@ public class SocialCallRequestDao {
         socialCallRequest.setProfileId(dto.getProfileId());
         socialCallRequest.setRequesterProfileId(dto.getRequesterProfileId());
         socialCallRequest.setStatus(dto.getStatus());
-        //socialCallRequest.setSocial();
+        socialCallRequest.setSocialId(dto.getSocialId());
+
         return socialCallRequest;
     }
 }

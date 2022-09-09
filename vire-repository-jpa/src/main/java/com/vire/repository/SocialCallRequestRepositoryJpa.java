@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SocialCallRequestRepositoryJpa
-    extends JpaRepository<SocialCallRequestDao, Long>, JpaSpecificationExecutor<SocialCallRequestDao> {}
+    extends JpaRepository<SocialCallRequestDao, Long>, JpaSpecificationExecutor<SocialCallRequestDao> {
+    void deleteBySocialId(Long socialId);
+}

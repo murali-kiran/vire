@@ -17,12 +17,11 @@ public class SocialFileDao {
     @Id
     @Column(name = "social_file_id")
     private Long socialFileId;
-    
 
     @Column(name = "file_id", nullable = false)
     private Long fileId;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "social_id")
     @ToString.Exclude
     private SocialDao social;
