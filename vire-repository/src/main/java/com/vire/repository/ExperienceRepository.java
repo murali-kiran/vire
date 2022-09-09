@@ -1,9 +1,6 @@
 package com.vire.repository;
 
-import com.vire.dao.AddressDao;
-import com.vire.dao.ExperienceDao;
-import com.vire.dao.ProfileDao;
-import com.vire.dao.SocialDao;
+import com.vire.dao.*;
 import com.vire.dto.ExperienceDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -35,6 +33,10 @@ public class ExperienceRepository {
   ExperienceViewsCountRepositoryJpa experienceViewsCountRepositoryJpa;
   @Autowired
   ProfileRepositoryJpa profileRepositoryJpa;
+  @Autowired
+  ExperinceFileRepositoryJpa experienceFileRepositoryJpa;
+
+
   private static final String BASIC_QUERY = "SELECT e.* FROM experience e "+
   "WHERE ( e.category_id IN (%s) ";
   private static final String COMMON_WHERE = " %s = '%s'";
@@ -51,13 +53,33 @@ public class ExperienceRepository {
 
   public ExperienceDto update(final ExperienceDto experienceDto) {
 
+    var files = experienceFileRepositoryJpa.findByExperienceId(experienceDto.getExperienceId());
+    var fileIds = files.stream().map(f -> f.getExperienceFileId()).collect(Collectors.toList());
+    for(var fileid: fileIds){
+      experienceFileRepositoryJpa.deleteById(fileid);
+    }
+
     var existingObject = experienceRepositoryJpa.findById(experienceDto.getExperienceId());
 
     if(existingObject.isEmpty()) {
       throw new RuntimeException("Object not exists in db to update");
     }
 
-    var experienceDao = ExperienceDao.fromDto(experienceDto);
+    var experienceDao = existingObject.get();
+    experienceDao.setDescription(experienceDto.getDescription());
+    if (experienceDto.getExperienceFileList() != null && !experienceDto.getExperienceFileList().isEmpty()) {
+      experienceDao.setExperienceFileList(experienceDto.getExperienceFileList()
+              .stream()
+              .map(experienceFileDto -> ExperienceFileDao.fromDto(experienceFileDto))
+              .collect(Collectors.toList())
+      );
+    }
+    if (!CollectionUtils.isEmpty(experienceDao.getExperienceFileList())) {
+      for (var experienceFile : experienceDao.getExperienceFileList()) {
+        experienceFile.setExperience(experienceDao);
+        experienceFile.onPrePersist();
+      }
+    }
     experienceDao.onPreUpdate();
 
     return experienceRepositoryJpa.save(experienceDao).toDto();

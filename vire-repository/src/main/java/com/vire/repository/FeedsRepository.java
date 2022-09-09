@@ -1,6 +1,7 @@
 package com.vire.repository;
 
 import com.vire.dao.FeedsDao;
+import com.vire.dao.FeedFileDao;
 import com.vire.dto.FeedsDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class FeedsRepository {
     FeedsRepositoryJpa feedsRepositoryJpa;
     @Autowired
     FeedsSendToRepository feedsSendToRepository;
+    @Autowired
+    FeedFileRepositoryJpa feedsFileRepositoryJpa;
+
     @PersistenceContext
     private EntityManager entityManager;
     public FeedsDto createFeeds(final FeedsDto feedsDto) {
@@ -42,20 +46,37 @@ public class FeedsRepository {
     }
 
     public FeedsDto updateFeeds(final FeedsDto feedsDto) {
+        var files = feedsFileRepositoryJpa.findByFeedId(feedsDto.getFeedId());
+        var fileIds = files.stream().map(f -> f.getFeedFileId()).collect(Collectors.toList());
+        for(var fileid: fileIds){
+            feedsFileRepositoryJpa.deleteById(fileid);
+        }
         var existingObject = feedsRepositoryJpa.findById(feedsDto.getFeedId());
-
         if (existingObject.isEmpty()) {
             throw new RuntimeException("Object not exists in db to update");
         }
-        var feedsDao = FeedsDao.fromDto(feedsDto);
-        if (!CollectionUtils.isEmpty(feedsDao.getFeedsSendTo())) {
+        var feedsDao = existingObject.get();
+        /*if (!CollectionUtils.isEmpty(feedsDao.getFeedsSendTo())) {
             for (var sendToDto : feedsDao.getFeedsSendTo()) {
                 sendToDto.setFeed(feedsDao);
                 sendToDto.onPreUpdate();
                 sendToDto.setCreatedTime(existingObject.get().getCreatedTime());
             }
+        }*/
+        if (feedsDto.getFeedFileList() != null && !feedsDto.getFeedFileList().isEmpty()) {
+            feedsDao.setFeedFileList(feedsDto.getFeedFileList()
+                    .stream()
+                    .map(feedFileDto -> FeedFileDao.fromDto(feedFileDto))
+                    .collect(Collectors.toList())
+            );
         }
-        feedsDao.setCreatedTime(existingObject.get().getCreatedTime());
+        if (!CollectionUtils.isEmpty(feedsDao.getFeedFileList())) {
+            for (var feedFile : feedsDao.getFeedFileList()) {
+                feedFile.setFeed(feedsDao);
+                feedFile.onPrePersist();
+            }
+        }
+        feedsDao.setDescription(feedsDto.getDescription());
         feedsDao.onPreUpdate();
         return feedsRepositoryJpa.save(feedsDao).toDto();
     }

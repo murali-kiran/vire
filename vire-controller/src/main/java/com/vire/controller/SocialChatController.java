@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 @Validated
 @RestController
 @RequestMapping(VireConstants.CHAT_REQUEST_PATH_API)
@@ -97,5 +99,16 @@ public class SocialChatController {
     public ResponseEntity<List<SocialChatResponse>> search(
             @RequestParam(value = "search") String searchString) {
         return new ResponseEntity<>(socialChatService.search(searchString), HttpStatus.OK);
+    }
+    @Operation(summary = "Group by date Social chat")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Group by date chat Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialChatResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Group by date Social chat Failed",
+                    content = @Content) })
+    @GetMapping("/{senderprofileid}/{socialid}")
+    public ResponseEntity<Map<String, List<SocialChatResponse>>> retrieveBySenderProfileIdAndSocialId(@PathVariable(name = "senderprofileid") String senderProfileId, @PathVariable(name = "socialid") String socialId) {
+        return new ResponseEntity<>(socialChatService.retrieveBySenderProfileIdAndSocialPostId(senderProfileId, socialId), HttpStatus.OK);
     }
 }

@@ -39,6 +39,7 @@ public class SocialPostRetrievalRepository {
     private static final String SEND_TO_TYPE_LOCATION_DIST = "location_district";
     private static final String SEND_TO_TYPE_LOCATION_STATE = "location_state";
     private static final String SEND_TO_TYPE_BLOOD_GROUP = "Blood_Group";
+    private static final String SEND_TO_TYPE_REQUEST_TYPE = "Request_Type";
     private static final String SEND_TO_TYPE_DESIGNATION = "Designation";
     private static final String SEND_TO_TYPE_COMMUNITY = "Community";
     private static final String SEND_TO_TYPE_FIELD_PROFESSION_BUSINESS = "Field_Profession_Business";
@@ -151,6 +152,8 @@ public class SocialPostRetrievalRepository {
         if (profileDao.getPersonalProfile() != null) {
             var bloodGroupQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_BLOOD_GROUP, profileDao.getPersonalProfile().getBloodGroup());
             emergencyQuery.append(" JOIN ( ").append(bloodGroupQuery).append(" ) as blood_group on address.social_id = blood_group.social_id ");
+            var bloodWillingNessQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_REQUEST_TYPE, profileDao.getPersonalProfile().getBloodDonateWillingness().toString().toLowerCase());
+            emergencyQuery.append(" JOIN ( ").append(bloodWillingNessQuery).append(" ) as request_type on address.social_id = request_type.social_id ");
         }
         return emergencyQuery.toString();
     }
