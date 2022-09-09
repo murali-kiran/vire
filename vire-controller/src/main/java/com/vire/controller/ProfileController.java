@@ -3,6 +3,7 @@ package com.vire.controller;
 import com.vire.constant.VireConstants;
 import com.vire.model.request.UpdateEmailRequest;
 import com.vire.model.request.UpdatePasswordRequest;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.model.response.ProfileResponse;
 import com.vire.model.response.UpdateEmailResponse;
 import com.vire.model.response.UpdatePasswordResponse;
@@ -17,8 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 import javax.validation.Valid;
+import java.util.List;
 
 @Validated
 @RestController
@@ -137,7 +139,7 @@ public class ProfileController {
                 .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
 
     }
-    
+
     @Operation(summary = "Search Profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Seach Profile Successful",
@@ -150,6 +152,18 @@ public class ProfileController {
         return new ResponseEntity<>(profileService.searchAnyProfiles(searchString), HttpStatus.OK);
     }
 
-
+    @Operation(summary = "Search Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Search Profile Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProfileResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Search Profile Failed",
+                    content = @Content) })
+    @GetMapping("/searchPageWise")
+    public ResponseEntity<PageWiseSearchResponse<ProfileResponse>> searchProfilesPageWise(@RequestParam(value = "search") String searchString,
+                                                                                          @RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+                                                                                          @RequestParam(value = "size", defaultValue = "3", required = false) Integer pageSize) {
+        return new ResponseEntity<>(profileService.searchAnyProfilesPaged(searchString,pageNumber,pageSize), HttpStatus.OK);
+    }
 
 }

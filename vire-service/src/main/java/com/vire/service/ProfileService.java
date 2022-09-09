@@ -175,11 +175,27 @@ public class ProfileService {
             .map(dto -> PersonalResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
-  
+
   public List<ProfileResponse> searchAnyProfiles(final String searchString) {
         return profileRepository.searchProfiles(searchString).stream()
                 .map(dto -> ProfileResponse.fromDto(dto))
                 .collect(Collectors.toList());
+  }
+
+  public PageWiseSearchResponse<ProfileResponse> searchAnyProfilesPaged(final String searchString,Integer pageNumber,Integer pageSize) {
+
+      PageWiseSearchResponse<ProfileDto> searchResponse = profileRepository.searchProfilesPaged(searchString,pageNumber,pageSize);
+      List<ProfileDto> profileDtos = searchResponse.getList();
+
+      List<ProfileResponse> profileResponses = profileDtos.stream()
+                .map(dto -> ProfileResponse.fromDto(dto))
+                .collect(Collectors.toList());
+
+      PageWiseSearchResponse<ProfileResponse> response = new PageWiseSearchResponse<ProfileResponse>();
+      response.setPageCount(searchResponse.getPageCount());
+      response.setList(profileResponses);
+
+      return response;
   }
 
   public Optional<ProfileResponse> retrieveProfileById(final Long profileId) {

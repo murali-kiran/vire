@@ -2,6 +2,7 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.response.AdminHomeResponse;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.model.response.ProfileResponse;
 import com.vire.service.AdminPortalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,11 @@ public class AdminPortalController {
   }
 
   @GetMapping(value = "/users")
-  public List<ProfileResponse> getUsers() {
-    return adminPortalService.getAllUsers();
+  public PageWiseSearchResponse<ProfileResponse> getUsers(
+          @RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+          @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize
+  ) {
+    return adminPortalService.getAllUsers(pageNumber, pageSize);
   }
 
   @GetMapping(value = "/deleteProfile/{profileId}")
