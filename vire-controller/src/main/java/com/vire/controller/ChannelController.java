@@ -4,6 +4,7 @@ import com.vire.constant.VireConstants;
 import com.vire.model.request.ChannelRequest;
 import com.vire.model.response.ChannelResponse;
 import com.vire.model.response.MinimalProfileResponse;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(VireConstants.CHANNEL_REQUEST_PATH_API)
+@CrossOrigin
 public class ChannelController {
 
   @Autowired
@@ -70,6 +72,20 @@ public class ChannelController {
   @GetMapping("/all")
   public ResponseEntity<List<ChannelResponse>> retrieveAll() {
     return new ResponseEntity<>(channelService.getAll(), HttpStatus.OK);
+  }
+  
+  @Operation(summary = "Get all channels PageWise")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Successfully got all channels",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ChannelResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "channels retrieval failed",
+                  content = @Content) })
+  @GetMapping("/allPageWise")
+  public ResponseEntity<PageWiseSearchResponse<ChannelResponse>> retrieveAllPageWise(@RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+                                                                                       @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
+
+    return new ResponseEntity<>(channelService.getAllPaged(pageNumber,pageSize), HttpStatus.OK);
   }
 
   @Operation(summary = "Get all channels with logged in profile id status")
