@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.vire.model.response.PageWiseSearchResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +86,22 @@ public class ChannelRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+  
+  public PageWiseSearchResponse<ChannelDto> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+    PageWiseSearchResponse<ChannelDto> response = new PageWiseSearchResponse<>();
+    PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+    Page<ChannelDao> page = channelRepositoryJpa.findAll(request);
+    List<ChannelDto> channelDtos = page.stream().map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+
+    response.setPageCount(page.getTotalPages());
+    response.setList(channelDtos);
+
+    return response;
+  }
+  
   public Optional<ChannelDto> retrieveById(Long channelId) {
 
     return channelRepositoryJpa.findById(channelId).map(dao -> dao.toDto());
