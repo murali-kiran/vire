@@ -7,6 +7,7 @@ import com.vire.model.response.ChannelResponse;
 import com.vire.repository.ChannelProfileRepository;
 import com.vire.repository.ChannelRepository;
 import com.vire.utils.Snowflake;
+import com.vire.dto.ChannelDto;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,21 @@ public class ChannelService {
             .map(dto -> profileLoader(ChannelResponse.fromDto(dto)))
             .collect(Collectors.toList());
   }
+  
+  public PageWiseSearchResponse<ChannelResponse> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+    PageWiseSearchResponse<ChannelDto> searchResponse = channelRepository.getAllPaged(pageNumber,pageSize);
+    List<ChannelResponse> channelResponses = searchResponse.getList().stream()
+            .map(dto -> profileLoader(ChannelResponse.fromDto(dto)))
+            .collect(Collectors.toList());
+
+    PageWiseSearchResponse<ChannelResponse> response = new PageWiseSearchResponse<ChannelResponse>();
+    response.setPageCount(searchResponse.getPageCount());
+    response.setList(channelResponses);
+
+    return response;
+  }
+  
   public List<ChannelResponse> getAll(String profileId) {
 
     return channelRepository
