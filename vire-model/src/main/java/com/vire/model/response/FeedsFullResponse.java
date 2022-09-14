@@ -1,9 +1,7 @@
 package com.vire.model.response;
 
-
 import com.vire.dto.FeedsDto;
 import lombok.Data;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +22,7 @@ public class FeedsFullResponse {
     private String location;
     private Integer commentsCount;
     private Boolean loginUserLiked;
+    private Boolean sendToFollowers;
     private Integer shareCount;
     private Integer likesCount;
     private  Long createdTime;
@@ -55,6 +54,7 @@ public class FeedsFullResponse {
                     .collect(Collectors.toList())
             );
         }
+        response.setSendToFollowers(dto.getSendToFollowers());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
 

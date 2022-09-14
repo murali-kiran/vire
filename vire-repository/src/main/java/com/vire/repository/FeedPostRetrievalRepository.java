@@ -59,11 +59,12 @@ public class FeedPostRetrievalRepository {
         } else {
             return new ArrayList<>();
         }
-        log.info("Generated Query: {}", query);
+        var finalQuery = query.toString().replaceAll("__profile_id__",""+profileId);
+        log.info("Generated Query: {}", finalQuery);
 
         /*return entityManager.createNativeQuery(query.toString(), FeedDao.class)
                 .getResultList();*/
-        var queryObject = entityManager.createNativeQuery(query.toString(), FeedsDao.class);
+        var queryObject = entityManager.createNativeQuery(finalQuery, FeedsDao.class);
         queryObject.setFirstResult((pageNumber - 1) * pageSize);
         queryObject.setMaxResults(pageSize);
         return queryObject.getResultList();
@@ -71,10 +72,12 @@ public class FeedPostRetrievalRepository {
 
     private String communityChannelCode(ProfileDao profileDao, List<String> communityIdFilters, List<String> channelIdFilters) {
 
-        var communityChannelQuery = new StringBuffer("SELECT address.* FROM ");
+
+        var communityChannelQuery = new StringBuffer("SELECT community.* FROM ");
+        /*var communityChannelQuery = new StringBuffer("SELECT address.* FROM ");
         AddressDao addressDao = profileDao.getFirmProfile()!=null ? profileDao.getFirmProfile().getAddress() : profileDao.getPersonalProfile().getPresentAddress();
         var addressQuery = frameAddressQuery(addressDao);
-        communityChannelQuery.append(" ( ").append(addressQuery).append(" ) as address ");
+        communityChannelQuery.append(" ( ").append(addressQuery).append(" ) as address ");*/
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
             var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
@@ -90,8 +93,13 @@ public class FeedPostRetrievalRepository {
 
         var communityQuery = frameQuery(SEND_TO_TYPE_COMMUNITY, communityProfileList);
         var channelQuery = frameQuery(SEND_TO_TYPE_CHANNEL, channelProfileList);
-        communityChannelQuery.append(" JOIN ( ").append(communityQuery).append(" ) as community on address.feed_id = community.feed_id ");
-        communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on address.feed_id = channel.feed_id ");
+       // communityChannelQuery.append(" JOIN ( ").append(communityQuery).append(" ) as community on address.feed_id = community.feed_id ");
+        communityChannelQuery.append(" ( ").append(communityQuery).append(" ) as community ");
+     //   communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on address.feed_id = channel.feed_id ");
+        communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on community.feed_id = channel.feed_id ");
+        communityChannelQuery.append( " JOIN ( SELECT s.* FROM t_feeds s where " +
+                "s.send_to_followers=0 OR ( s.send_to_followers=1 AND ( s.profile_id in (select pf.profile_id from profile_followers pf where pf.follower_id = __profile_id__)))" +
+                ") as followers on community.feed_id = followers.feed_id ");
         return communityChannelQuery.toString();
     }
     
@@ -143,7 +151,8 @@ public class FeedPostRetrievalRepository {
     private StringBuffer frameQuery( String sentToType, List<String> values) {
 
         StringBuffer sb = new StringBuffer(BASIC_QUERY);
-        sb.append(" WHERE");
+        sb.append(" WHERE ");
+
         sb.append(String.format(COMMON_WHERE, sentToType, "all"));
 
         if (!CollectionUtils.isEmpty(values)) {

@@ -2,6 +2,7 @@ package com.vire.controller;
 
 import com.vire.constant.VireConstants;
 import com.vire.model.request.SocialChatRequest;
+import com.vire.model.response.SocialChatMapResponse;
 import com.vire.model.response.SocialChatResponse;
 import com.vire.service.SocialChatService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -104,11 +105,23 @@ public class SocialChatController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Group by date chat Successful",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SocialChatResponse.class)) }),
+                            schema = @Schema(implementation = SocialChatMapResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Group by date Social chat Failed",
                     content = @Content) })
     @GetMapping("/{senderprofileid}/{socialid}")
     public ResponseEntity<Map<String, List<SocialChatResponse>>> retrieveBySenderProfileIdAndSocialId(@PathVariable(name = "senderprofileid") String senderProfileId, @PathVariable(name = "socialid") String socialId) {
         return new ResponseEntity<>(socialChatService.retrieveBySenderProfileIdAndSocialPostId(senderProfileId, socialId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "get all chats for social")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "get all chats for social Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialChatResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "get all chats for social Failed",
+                    content = @Content) })
+    @GetMapping("/list/{loginuserid}/{socialid}")
+    public ResponseEntity<List<SocialChatResponse>> retrieveChatListByLoginUser(@PathVariable(name = "loginuserid") String loginUserId, @PathVariable(name = "socialid") String socialId) {
+        return new ResponseEntity<>(socialChatService.retrieveChatListByLoginUser(loginUserId, socialId), HttpStatus.OK);
     }
 }

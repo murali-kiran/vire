@@ -104,7 +104,11 @@ public class Utility {
 
     }
     //
-
+    public static String hhmmampmTimeFormat(Long timeMillis){
+        DateFormat sdf2 = new SimpleDateFormat("hh:mm a");
+        sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        return sdf2.format(new Date(timeMillis));
+    }
     public static String DdMMMYYYYTimeFormat(Long timeMillis){
         DateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy");
         sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));

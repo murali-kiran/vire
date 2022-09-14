@@ -29,7 +29,7 @@ public class FeedsDao {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FeedsSendToDao> feedsSendTo;
 
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<FeedFileDao> feedFileList;
 
     @Column(name = "parent_feed_id")

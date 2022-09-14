@@ -4,6 +4,7 @@ import com.vire.dao.SocialChatDao;
 import com.vire.dto.SocialChatDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class SocialChatRepository {
     public List<SocialChatDto> search(final String searchString) {
         var spec = new CustomSpecificationResolver<SocialChatDao>(searchString).resolve();
 
-        return socialPostChatRepositoryJpa.findAll(spec).stream()
+        return socialPostChatRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "createdTime")).stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
     }

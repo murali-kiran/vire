@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.model.request.SocialChatRequest;
+import com.vire.model.response.FeedCommentResponse;
 import com.vire.model.response.SocialChatResponse;
 import com.vire.repository.SocialChatRepository;
 import com.vire.utils.Snowflake;
@@ -8,10 +9,7 @@ import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -23,6 +21,9 @@ public class SocialChatService {
 
     @Autowired
     SocialChatRepository socialPostChatRepo;
+
+    @Autowired
+    ProfileService profileService;
 
     public SocialChatResponse create(final SocialChatRequest request) {
 
@@ -66,7 +67,7 @@ public class SocialChatService {
         var searchList = search(
                 String.format("( senderProfileId:%s ) AND ( socialId:%s )", senderProfileId, socialPostId));
         for(var socialchatResponse : searchList){
-            String key = Utility.DdMMMYYYYTimeFormat(socialchatResponse.getCreatedTime());
+            String key = socialchatResponse.getChatDate();
             var valueList = map.get(key);
             if(!map.containsKey(key)){
                 valueList = new ArrayList<>();
@@ -80,7 +81,31 @@ public class SocialChatService {
     public List<SocialChatResponse> search(final String searchString) {
 
         return socialPostChatRepo.search(searchString).stream()
-                .map(dto -> SocialChatResponse.fromDto(dto))
+                .map(dto -> profileLoader(SocialChatResponse.fromDto(dto)))
                 .collect(Collectors.toList());
+    }
+    private SocialChatResponse profileLoader(SocialChatResponse response) {
+        if (response.getSenderMinimalProfile() != null
+                && response.getSenderMinimalProfile().getProfileId() != null) {
+            response.getSenderMinimalProfile().cloneProperties(
+                    profileService.retrieveProfileDtoById(
+                            Long.valueOf(response.getSenderMinimalProfile().getProfileId())));
+        }
+        return response;
+    }
+
+    public List<SocialChatResponse>  retrieveChatListByLoginUser(String loginUserId, String socialId) {
+        var socialChatList = socialPostChatRepo.search(String.format("( chatInitiatorProfileId:%s ) AND ( socialId:%s )", loginUserId, socialId)).stream()
+                .map(dto -> profileLoader(SocialChatResponse.fromDto(dto)))
+                .collect(Collectors.toList());
+        Set<String> senderIds = new HashSet<>();
+        List<SocialChatResponse> newSenderList = new ArrayList<>();
+        for(var socialchatResponse : socialChatList){
+            if(!senderIds.contains(socialchatResponse.getSenderProfileId())){
+                newSenderList.add(socialchatResponse);
+            }
+            senderIds.add(socialchatResponse.getSenderProfileId());
+        }
+        return newSenderList;
     }
 }

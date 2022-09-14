@@ -25,7 +25,7 @@ public class ExperienceRequest {
     private String title;
     @NotBlank(message = "Description required")
     private String description;
-    @NotBlank(message = "State required")
+    //@NotBlank(message = "State required")
     private String locationState;
     private String locationDistrict;
     private String locationCity;

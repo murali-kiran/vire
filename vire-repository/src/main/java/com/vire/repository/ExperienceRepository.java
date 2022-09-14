@@ -67,6 +67,7 @@ public class ExperienceRepository {
 
     var experienceDao = existingObject.get();
     experienceDao.setDescription(experienceDto.getDescription());
+    experienceDao.setTitle(experienceDto.getTitle());
     if (experienceDto.getExperienceFileList() != null && !experienceDto.getExperienceFileList().isEmpty()) {
       experienceDao.setExperienceFileList(experienceDto.getExperienceFileList()
               .stream()
