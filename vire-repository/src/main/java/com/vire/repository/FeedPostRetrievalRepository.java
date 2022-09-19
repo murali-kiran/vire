@@ -52,10 +52,10 @@ public class FeedPostRetrievalRepository {
 
         StringBuilder query = new StringBuilder();
         if (Objects.nonNull(profileDao)) {
-                query.append("SELECT feed.* FROM (SELECT s.* FROM t_feeds s where s.profile_id="+profileId+" UNION (");
+                query.append("SELECT feed.* FROM (SELECT s.* FROM t_feeds s where s.profile_id="+profileId+" UNION ");
                 query.append(communityChannelCode(profileDao,new ArrayList<>(), new ArrayList<>()));
 
-                query.append(")) AS feed ORDER BY feed.updated_time DESC");
+                query.append(") AS feed ORDER BY feed.updated_time DESC");
         } else {
             return new ArrayList<>();
         }
@@ -73,7 +73,7 @@ public class FeedPostRetrievalRepository {
     private String communityChannelCode(ProfileDao profileDao, List<String> communityIdFilters, List<String> channelIdFilters) {
 
 
-        var communityChannelQuery = new StringBuffer("SELECT community.* FROM ");
+        var communityChannelQuery = new StringBuffer(" ");
         /*var communityChannelQuery = new StringBuffer("SELECT address.* FROM ");
         AddressDao addressDao = profileDao.getFirmProfile()!=null ? profileDao.getFirmProfile().getAddress() : profileDao.getPersonalProfile().getPresentAddress();
         var addressQuery = frameAddressQuery(addressDao);
@@ -94,12 +94,12 @@ public class FeedPostRetrievalRepository {
         var communityQuery = frameQuery(SEND_TO_TYPE_COMMUNITY, communityProfileList);
         var channelQuery = frameQuery(SEND_TO_TYPE_CHANNEL, channelProfileList);
        // communityChannelQuery.append(" JOIN ( ").append(communityQuery).append(" ) as community on address.feed_id = community.feed_id ");
-        communityChannelQuery.append(" ( ").append(communityQuery).append(" ) as community ");
+        communityChannelQuery.append(" ( ").append(communityQuery).append("  ");
      //   communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on address.feed_id = channel.feed_id ");
-        communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on community.feed_id = channel.feed_id ");
-        communityChannelQuery.append( " JOIN ( SELECT s.* FROM t_feeds s where " +
-                "s.send_to_followers=0 OR ( s.send_to_followers=1 AND ( s.profile_id in (select pf.profile_id from profile_followers pf where pf.follower_id = __profile_id__)))" +
-                ") as followers on community.feed_id = followers.feed_id ");
+        communityChannelQuery.append(") UNION ( ").append(channelQuery).append(") ");
+        communityChannelQuery.append( " UNION ( SELECT s.* FROM t_feeds s where " +
+                " ( s.send_to_followers=1 AND ( s.profile_id in (select pf.profile_id from profile_followers pf where pf.follower_id = __profile_id__)))" +
+                ")  ");
         return communityChannelQuery.toString();
     }
     

@@ -15,4 +15,6 @@ CREATE TABLE t_notification (
 ALTER TABLE t_feeds ADD COLUMN send_to_followers TINYINT NULL DEFAULT 0 AFTER parent_feed_id;
 
 ALTER TABLE profile ADD COLUMN IS_BLOCKED  TINYINT(1) NULL DEFAULT 0 AFTER weightage;
+ALTER TABLE t_social_post_chat ADD COLUMN is_creator_message TINYINT NULL DEFAULT 0 AFTER social_id, CHANGE COLUMN chat_initiator_profile_id social_creator_profile_id BIGINT NOT NULL ;
+
 

@@ -1,5 +1,6 @@
 package com.vire.service;
 
+import com.vire.dto.FeedsSendToDto;
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.*;
 import com.vire.repository.FeedPostRetrievalRepository;
@@ -67,10 +68,29 @@ public class FeedsService {
         }*/
         var dto = request.toDto(snowflake);
         dto.setFeedId(snowflake.nextId());
+
         if (!CollectionUtils.isEmpty(dto.getFeedsSendTo())) {
             for (var sendToDto : dto.getFeedsSendTo()) {
                 sendToDto.setFeedsSendToId(snowflake.nextId());
             }
+        }else if(dto.getSendToFollowers()){
+            dto.setFeedsSendTo(new ArrayList<>());
+            FeedsSendToDto feedsSendToDto= new FeedsSendToDto();
+            feedsSendToDto.setFeedsSendToId(snowflake.nextId());
+            feedsSendToDto.setFeedId(dto.getFeedId());
+            feedsSendToDto.setName("all");
+            feedsSendToDto.setValue("all");
+            feedsSendToDto.setType("community");
+            dto.getFeedsSendTo().add(feedsSendToDto);
+
+            feedsSendToDto= new FeedsSendToDto();
+            feedsSendToDto.setFeedsSendToId(snowflake.nextId());
+            feedsSendToDto.setFeedId(dto.getFeedId());
+            feedsSendToDto.setName("all");
+            feedsSendToDto.setValue("all");
+            feedsSendToDto.setType("channel");
+            dto.getFeedsSendTo().add(feedsSendToDto);
+
         }
         return FeedsResponse.fromDto(feedsRepo.createFeeds(dto));
     }
@@ -277,6 +297,7 @@ public class FeedsService {
             parentFeedResponse.setFeedFileList(feedsResponse.getFeedFileList());
             parentFeedResponse.setCreatedTimeStr(setDateFormat(feedsResponse.getCreatedTime()));
             parentFeedResponse.setFeedsSendTo(feedsResponse.getFeedsSendTo());
+            parentFeedResponse.setSendToFollowers(feedsResponse.getSendToFollowers());
             return parentFeedResponse;
         }
         return null;

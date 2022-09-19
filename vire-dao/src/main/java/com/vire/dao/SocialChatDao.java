@@ -15,8 +15,8 @@ public class SocialChatDao extends BaseDao{
     @Column(name = "social_post_chat_id", nullable = false)
     private Long id;
 
-    @Column(name = "chat_initiator_profile_id", nullable = false)
-    private Long chatInitiatorProfileId;
+    @Column(name = "social_creator_profile_id", nullable = false)
+    private Long socialCreatorProfileId;
 
     @Column(name = "sender_profile_id", nullable = false)
     private Long senderProfileId;
@@ -26,6 +26,9 @@ public class SocialChatDao extends BaseDao{
 
     @Column(name = "social_id", nullable = false)
     private Long socialId;
+
+    @Column(name = "is_creator_message", nullable = false)
+    private Boolean isCreatorMessage;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -45,20 +48,23 @@ public class SocialChatDao extends BaseDao{
     public SocialChatDto toDto(){
         var dto = new SocialChatDto();
         dto.setId(this.getId());
-        dto.setChatInitiatorProfileId(this.getChatInitiatorProfileId());
+        dto.setSocialCreatorProfileId(this.getSocialCreatorProfileId());
         dto.setSenderProfileId(this.getSenderProfileId());
         dto.setMessage(this.getMessage());
         dto.setSocialPostId(this.getSocialId());
+        dto.setIsCreatorMessage(this.getIsCreatorMessage());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
+
         return dto;
     }
     public static SocialChatDao fromDto(SocialChatDto dto){
         var dao = new SocialChatDao();
         dao.setId(dto.getId());
-        dao.setChatInitiatorProfileId(dto.getChatInitiatorProfileId());
+        dao.setSocialCreatorProfileId(dto.getSocialCreatorProfileId());
         dao.setSenderProfileId(dto.getSenderProfileId());
         dao.setMessage(dto.getMessage());
+        dao.setIsCreatorMessage(dto.getIsCreatorMessage());
         dao.setSocialId(dto.getSocialPostId());
         return dao;
     }

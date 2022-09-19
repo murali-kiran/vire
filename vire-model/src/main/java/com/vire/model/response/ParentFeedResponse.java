@@ -11,6 +11,7 @@ public class ParentFeedResponse {
     private MinimalProfileResponse minimalProfileResponse;
     private List<FeedsSendToResponse> feedsSendTo;
     private List<FeedFileResponse> feedFileList;
+    private Boolean sendToFollowers;
     private String createdTimeStr;
     private String location;
 }

@@ -9,11 +9,12 @@ import java.io.Serializable;
 @Data
 public class SocialChatResponse implements Serializable {
     private  String id;
-    private  String chatInitiatorProfileId;
+    private  String socialCreatorProfileId;
     private  String senderProfileId;
     private MinimalProfileResponse senderMinimalProfile;
     private  String message;
     private  String socialPostId;
+    private  Boolean isCreatorMessage;
     private Long createdTime;
     private Long updatedTime;
     private String messageTime;
@@ -21,10 +22,11 @@ public class SocialChatResponse implements Serializable {
     public static SocialChatResponse fromDto(SocialChatDto dto){
         var response = new SocialChatResponse();
         response.setId(String.valueOf(dto.getId()));
-        response.setChatInitiatorProfileId(String.valueOf(dto.getChatInitiatorProfileId()));
+        response.setSocialCreatorProfileId(String.valueOf(dto.getSocialCreatorProfileId()));
         response.setSenderProfileId(String.valueOf(dto.getSenderProfileId()));
         response.setMessage(dto.getMessage());
         response.setSocialPostId(String.valueOf(dto.getSocialPostId()));
+        response.setIsCreatorMessage(dto.getIsCreatorMessage());
         response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
         response.setMessageTime(Utility.hhmmampmTimeFormat(dto.getCreatedTime()));

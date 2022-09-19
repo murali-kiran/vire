@@ -95,7 +95,7 @@ public class SocialChatService {
     }
 
     public List<SocialChatResponse>  retrieveChatListByLoginUser(String loginUserId, String socialId) {
-        var socialChatList = socialPostChatRepo.search(String.format("( chatInitiatorProfileId:%s ) AND ( socialId:%s )", loginUserId, socialId)).stream()
+        var socialChatList = socialPostChatRepo.search(String.format("( socialCreatorProfileId:%s ) AND ( socialId:%s )", loginUserId, socialId)).stream()
                 .map(dto -> profileLoader(SocialChatResponse.fromDto(dto)))
                 .collect(Collectors.toList());
         Set<String> senderIds = new HashSet<>();

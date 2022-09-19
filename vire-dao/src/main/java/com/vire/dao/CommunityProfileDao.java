@@ -31,7 +31,7 @@ public class CommunityProfileDao {
 
     /*@Column(name = "file_id")
     private Long fileId;*/
-    @OneToMany(mappedBy = "communityProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "communityProfile", cascade = CascadeType.ALL)
     private List<CommunityProfileFileDao> communityFileList;
 
     @Column(name = "created_time", nullable = false , updatable = false)
