@@ -122,7 +122,7 @@ public class SocialPostRetrievalForCommandRepository {
                 query.append(" JOIN ( ").append(interestQuery).append(" ) as interest on address.social_id = interest.social_id ");
             }
         }
-        var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+        var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
         var communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId()+"").collect(Collectors.toList());
 
         var communityQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_COMMUNITY, communityProfileList);
@@ -138,7 +138,7 @@ public class SocialPostRetrievalForCommandRepository {
         var addressQuery = frameAddressQuery(emergencyCategoryId, addressDao);
         query.append(" ( ").append(addressQuery).append(" ) as address ");
 
-        var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+        var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
         var communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId()+"").collect(Collectors.toList());
 
         var communityQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_COMMUNITY, communityProfileList);
@@ -163,7 +163,7 @@ public class SocialPostRetrievalForCommandRepository {
         query.append(" ( ").append(addressQuery).append(" ) as address ");
 
 
-        var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+        var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
         var communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId()+"").collect(Collectors.toList());
 
         var communityQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_COMMUNITY, communityProfileList);

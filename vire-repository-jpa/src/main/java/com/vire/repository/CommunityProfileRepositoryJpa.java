@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CommunityProfileRepositoryJpa
     extends JpaRepository<CommunityProfileDao, Long>, JpaSpecificationExecutor<CommunityProfileDao> {
 
-    List<CommunityProfileDao> findAllByProfileId(Long profileId);
+    List<CommunityProfileDao> findAllByProfileIdAndStatus(Long profileId, String status);
     Optional<CommunityProfileDao> findByCommunityIdAndProfileId(Long communityId, Long profileId);
     List<CommunityProfileDao> deleteByCommunityId(Long communityId);
 }

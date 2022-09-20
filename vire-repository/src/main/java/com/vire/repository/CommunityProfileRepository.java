@@ -2,6 +2,7 @@ package com.vire.repository;
 
 import com.vire.dao.CommunityProfileDao;
 import com.vire.dto.CommunityProfileDto;
+import com.vire.model.request.CommunityProfileRequest;
 import com.vire.repository.search.CustomSpecificationResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class CommunityProfileRepository {
     }*/
     return communityProfileRepositoryJpa.save(communityProfileDao).toDto();
   }
-
+  
   public Optional<CommunityProfileDto> delete(final Long communityProfileId) {
 
     var optionalSocial = retrieveById(communityProfileId);

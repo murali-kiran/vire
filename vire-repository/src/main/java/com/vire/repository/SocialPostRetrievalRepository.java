@@ -166,7 +166,7 @@ public class SocialPostRetrievalRepository {
         vacancyQuery.append(" ( ").append(addressQuery).append(" ) as address ");
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
-            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
             communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId() + "").collect(Collectors.toList());
             communityProfileList.add("all");
         }
@@ -184,7 +184,7 @@ public class SocialPostRetrievalRepository {
         requestForBiddingQuery.append(" ( ").append(addressQuery).append(" ) as address ");
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
-            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
             communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId() + "").collect(Collectors.toList());
             communityProfileList.add("all");
         }
@@ -220,7 +220,7 @@ public class SocialPostRetrievalRepository {
         }
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
-            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
             communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId() + "").collect(Collectors.toList());
             communityProfileList.add("all");
         }
@@ -255,7 +255,7 @@ public class SocialPostRetrievalRepository {
 
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
-            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
             communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId() + "").collect(Collectors.toList());
             communityProfileList.add("all");
         }
@@ -284,7 +284,7 @@ public class SocialPostRetrievalRepository {
 
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
-            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
             communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId() + "").collect(Collectors.toList());
             communityProfileList.add("all");
         }

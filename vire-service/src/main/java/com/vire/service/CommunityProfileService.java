@@ -47,6 +47,14 @@ public class CommunityProfileService {
             .retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
     if(communityProfile != null && !communityProfile.isEmpty()) {
       communityProfile.get().setStatus(request.getStatus());
+      if(request.getStatus().equals("Requested")){
+        if (request.getCommunityFileList() != null && !request.getCommunityFileList().isEmpty()) {
+          communityProfile.get().setCommunityFileList(request.getCommunityFileList()
+                  .stream()
+                  .map(child -> child.toDto(snowflake))
+                  .collect(Collectors.toList()));
+        }
+      }
       return CommunityProfileResponse.fromDto(communityProfileRepository.update(communityProfile.get()));
     }else{
       throw new RuntimeException("No record found with given profile and community Ids.");

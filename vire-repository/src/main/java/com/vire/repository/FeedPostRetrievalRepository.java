@@ -80,15 +80,15 @@ public class FeedPostRetrievalRepository {
         communityChannelQuery.append(" ( ").append(addressQuery).append(" ) as address ");*/
         var communityProfileList = communityIdFilters;
         if (CollectionUtils.isEmpty(communityIdFilters)) {
-            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var communityProfiles = communityProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(),"Accepted");
             communityProfileList = communityProfiles.stream().map(c -> c.getCommunityId() + "").collect(Collectors.toList());
-            communityProfileList.add("all");
+            communityProfileList.add("none");
         }
         var channelProfileList = channelIdFilters;
         if (CollectionUtils.isEmpty(channelProfileList)) {
             var channelProfiles = channelProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
             channelProfileList = channelProfiles.stream().map(c -> c.getChannelId() + "").collect(Collectors.toList());
-            channelProfileList.add("all");
+            channelProfileList.add("none");
         }
 
         var communityQuery = frameQuery(SEND_TO_TYPE_COMMUNITY, communityProfileList);
@@ -141,7 +141,7 @@ public class FeedPostRetrievalRepository {
         if (value == null) {
             StringBuffer sb = new StringBuffer(BASIC_QUERY);
             sb.append(" WHERE");
-            sb.append(String.format(COMMON_WHERE, sentToType, "all"));
+            sb.append(String.format(COMMON_WHERE, sentToType, "none"));
             return sb;
         } else {
             return frameQuery(sentToType, Arrays.asList(value));
@@ -153,7 +153,7 @@ public class FeedPostRetrievalRepository {
         StringBuffer sb = new StringBuffer(BASIC_QUERY);
         sb.append(" WHERE ");
 
-        sb.append(String.format(COMMON_WHERE, sentToType, "all"));
+        sb.append(String.format(COMMON_WHERE, sentToType, "none"));
 
         if (!CollectionUtils.isEmpty(values)) {
             for (String value : values) {
