@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.SocialFilterRequest;
 import com.vire.model.request.SocialRequest;
 import com.vire.model.response.SocialPostResponse;
 import com.vire.model.response.SocialResponse;
@@ -147,6 +148,17 @@ public class SocialController {
         return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsCreatedByProfile(profileId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Find Social posts by filter")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Find Social posts created by filter Successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SocialPostResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Find Social posts created by filter Failed",
+                    content = @Content)})
+    @PostMapping("filtersocials")
+    public ResponseEntity<List<SocialPostResponse>> retrievePostsByFilters(@RequestBody SocialFilterRequest request) {
+        return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsByFilters(request), HttpStatus.OK);
+    }
     @Operation(summary = "Find Social posts by community")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Find Social posts by community Successful",

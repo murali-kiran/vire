@@ -1,8 +1,10 @@
 package com.vire.service;
 
+import com.vire.model.request.SocialFilterRequest;
 import com.vire.model.request.SocialRequest;
 import com.vire.model.response.*;
 import com.vire.repository.FileRepository;
+import com.vire.repository.SocialPostFilterRetrievalRepository;
 import com.vire.repository.SocialPostRetrievalRepository;
 import com.vire.repository.SocialRepository;
 import com.vire.utils.Snowflake;
@@ -46,6 +48,8 @@ public class SocialService {
     SocialCallRequestService socialCallRequestService;
     @Autowired
     SocialPostRetrievalRepository socialPostRetrievalRepository;
+    @Autowired
+    SocialPostFilterRetrievalRepository socialPostFilterRetrievalRepository;
 
     private String LOCATION = null;
     public SocialResponse createSocial(final SocialRequest request) {
@@ -305,4 +309,23 @@ public class SocialService {
         return uniqueSocialSet;
     }
 
+    public List<SocialPostResponse> retrievePostsByFilters(SocialFilterRequest request) {
+        if (request == null) {
+            throw new RuntimeException("Filter Request Object is null");
+        }
+        var socialPostResponses = socialPostFilterRetrievalRepository
+                    .getSocialListByFilters(Long.valueOf(request.getProfileId()), 1, 50, request.getCategoryList(), request.getCommunityList())
+                    .stream()
+                    .map(dao -> dao.toDto())
+                    .map(dto -> SocialPostResponse.fromDto(dto))
+                    .collect(Collectors.toList());
+        for (SocialPostResponse socialPostResponse:  socialPostResponses) {
+            setSocialDetails(socialPostResponse, request.getProfileId());
+            socialPostResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPostResponse.getProfileId())));
+            var sendToList = socialPostResponse.getSendTo().stream().
+                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
+            socialPostResponse.setLocation(getLocation(sendToList));
+        }
+        return socialPostResponses;
+    }
 }

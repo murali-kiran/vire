@@ -1,10 +1,8 @@
 package com.vire.model.request;
 
-import com.vire.utils.Snowflake;
 import com.vire.dto.CommunityProfileDto;
-import lombok.Builder;
+import com.vire.utils.Snowflake;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

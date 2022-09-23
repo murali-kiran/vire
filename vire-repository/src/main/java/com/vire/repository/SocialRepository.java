@@ -164,7 +164,7 @@ public class SocialRepository {
 
         var spec = new CustomSpecificationResolver<SocialDao>(searchString).resolve();
 
-        return socialRepositoryJpa.findAll(spec).stream()
+        return socialRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
     }
