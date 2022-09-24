@@ -12,12 +12,18 @@ import java.util.stream.Collectors;
 import com.vire.dto.ProfileDto;
 import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.model.response.view.FeedsViewResponse;
+import com.vire.dto.view.FeedsViewDto;
+import com.vire.repository.view.FeedsViewRepositoryJpa;
 
 @Service
 public class AdminPortalService {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
+    
+    @Autowired
+    FeedsViewRepositoryJpa feedsViewRepositoryJpa;
+    
     @Autowired
     ProfileRepository profileRepository;
 
