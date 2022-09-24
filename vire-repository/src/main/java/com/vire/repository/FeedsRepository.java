@@ -3,13 +3,14 @@ package com.vire.repository;
 import com.vire.dao.FeedsDao;
 import com.vire.dao.FeedFileDao;
 import com.vire.dto.FeedsDto;
+import com.vire.dto.view.FeedsViewDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
+import com.vire.repository.view.FeedsViewRepositoryJpa;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -27,6 +28,8 @@ public class FeedsRepository {
     FeedsSendToRepository feedsSendToRepository;
     @Autowired
     FeedFileRepositoryJpa feedsFileRepositoryJpa;
+    @Autowired
+    FeedsViewRepositoryJpa feedsViewRepositoryJpa;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -141,5 +144,14 @@ public class FeedsRepository {
 
     public Set<Long> retrieveByChannel(Long channelId){
         return feedsRepositoryJpa.findByChannel(channelId);
+    }
+    
+    public List<FeedsViewDto> getAllFeedsViewDtos(){
+
+        var feedsViewDtos = feedsViewRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
+                .map(dao->dao.toDto())
+                .collect(Collectors.toList());
+
+        return feedsViewDtos;
     }
 }
