@@ -53,6 +53,9 @@ public class AdminPortalService {
 
     @Autowired
     SocialReportRepositoryJpa socialReportRepositoryJpa;
+    
+    @Autowired
+    FeedsRepository feedsRepository;
 
     public AdminHomeResponse getHomePageDetails() {
         AdminHomeResponse adminHomeResponse = new AdminHomeResponse();
