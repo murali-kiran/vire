@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.vire.dto.ProfileDto;
 import com.vire.model.response.PageWiseSearchResponse;
+import com.vire.model.response.view.FeedsViewResponse;
 
 @Service
 public class AdminPortalService {
@@ -125,6 +126,10 @@ public class AdminPortalService {
         }catch (Exception ex){
             return  false;
         }
+    }
+    
+    public List<FeedsViewResponse> getAllFeeds() {
+        return  feedsRepository.getAllFeedsViewDtos().stream().map(dto->FeedsViewResponse.fromDto(dto)).collect(Collectors.toList());
     }
 
 }
