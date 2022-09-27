@@ -1,8 +1,10 @@
 package com.vire.service;
 
 import com.vire.dto.FeedsSendToDto;
+import com.vire.model.request.FeedFilterRequest;
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.*;
+import com.vire.repository.FeedPostFilterRetrievalRepository;
 import com.vire.repository.FeedPostRetrievalRepository;
 import com.vire.repository.FeedsRepository;
 import com.vire.repository.FileRepository;
@@ -52,6 +54,8 @@ public class FeedsService {
     FeedsRepository feedRepository;
     @Autowired
     FeedPostRetrievalRepository feedPostRetrievalRepository;
+    @Autowired
+    FeedPostFilterRetrievalRepository feedPostFilterRetrievalRepository;
 
     public FeedsResponse createFeeds(final FeedsRequest request) {
         /*if(request.getParentFeedId() != null ){
@@ -170,6 +174,20 @@ public class FeedsService {
                 .collect(Collectors.toList());
         for(FeedsFullResponse feedsFullResponse : feedsFullResponseList){
             setFeedsDetailResponse(feedsFullResponse, profileId, true);
+        }
+        return feedsFullResponseList;
+    }
+
+    public List<FeedsFullResponse> retrieveFeedsByFilter(FeedFilterRequest request) {
+
+        var feedsFullResponseList = feedPostFilterRetrievalRepository
+                .getFeedListBySearch(Long.valueOf(request.getProfileId()), request.getCommunityList(), request.getSendToFollowers(), 1, 50)
+                .stream()
+                .map(dao -> dao.toDto())
+                .map(dto -> FeedsFullResponse.fromDto(dto))
+                .collect(Collectors.toList());
+        for(FeedsFullResponse feedsFullResponse : feedsFullResponseList){
+            setFeedsDetailResponse(feedsFullResponse, request.getProfileId(), true);
         }
         return feedsFullResponseList;
     }

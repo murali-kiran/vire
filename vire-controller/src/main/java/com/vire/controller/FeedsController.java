@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.FeedFilterRequest;
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.FeedsFullResponse;
 import com.vire.model.response.FeedsResponse;
@@ -147,6 +148,19 @@ public class FeedsController {
     public ResponseEntity<List<FeedsFullResponse>>
     findByIdProfileId(@PathVariable(name = "profileid") String profileId) {
         return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByProfileId(profileId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Find Feeds By Feeds Filter")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Find Feeds By Feeds Filter Successful",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FeedsFullResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Find Feeds By Feeds Filter Failed",
+                    content = @Content) })
+    @PostMapping("/filterposts")
+    public ResponseEntity<List<FeedsFullResponse>>
+    findFeedsByFilter(@RequestBody FeedFilterRequest request) {
+        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedsByFilter(request), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Feeds By community Id")

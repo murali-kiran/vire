@@ -1,1 +1,0 @@
-ALTER TABLE feed_report CHANGE COLUMN reportDescription report_description VARCHAR(191) NOT NULL ;
