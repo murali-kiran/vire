@@ -11,12 +11,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.vire.dto.ProfileDto;
 import com.vire.model.response.PageWiseSearchResponse;
+import com.vire.model.response.view.FeedsViewResponse;
+import com.vire.dto.view.FeedsViewDto;
+import com.vire.repository.view.FeedsViewRepositoryJpa;
 
 @Service
 public class AdminPortalService {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
+    
+    @Autowired
+    FeedsViewRepositoryJpa feedsViewRepositoryJpa;
+    
     @Autowired
     ProfileRepository profileRepository;
 
@@ -52,6 +59,9 @@ public class AdminPortalService {
 
     @Autowired
     SocialReportRepositoryJpa socialReportRepositoryJpa;
+    
+    @Autowired
+    FeedsRepository feedsRepository;
 
     public AdminHomeResponse getHomePageDetails() {
         AdminHomeResponse adminHomeResponse = new AdminHomeResponse();
@@ -125,6 +135,10 @@ public class AdminPortalService {
         }catch (Exception ex){
             return  false;
         }
+    }
+    
+    public List<FeedsViewResponse> getAllFeeds() {
+        return  feedsRepository.getAllFeedsViewDtos().stream().map(dto->FeedsViewResponse.fromDto(dto)).collect(Collectors.toList());
     }
 
 }
