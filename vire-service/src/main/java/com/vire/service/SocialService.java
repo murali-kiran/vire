@@ -314,7 +314,7 @@ public class SocialService {
             throw new RuntimeException("Filter Request Object is null");
         }
         var socialPostResponses = socialPostFilterRetrievalRepository
-                    .getSocialListByFilters(Long.valueOf(request.getProfileId()), 1, 50, request.getCategoryList(), request.getCommunityList())
+                    .getSocialListBySearchFilter(Long.valueOf(request.getProfileId()), 1, 50, request.getCategoryList(), request.getCommunityList())
                     .stream()
                     .map(dao -> dao.toDto())
                     .map(dto -> SocialPostResponse.fromDto(dto))

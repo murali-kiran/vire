@@ -32,7 +32,8 @@ public class SocialPostFilterRetrievalRepository {
 
     private static final String BASIC_QUERY = "SELECT s.* FROM t_social s " +
             "JOIN t_social_post_send_to sst ON s.social_id = sst.social_id " +
-            "AND s.category_id IN (select social_category_master_id from social_category_master where category in (%s))";
+            "AND s.category_id IN (select social_category_master_id from social_category_master where category in (%s))" ;
+
     private static final String COMMON_WHERE = " ( sst.`type` ='%s' AND sst.value='%s' )";
 
     private static final String SEND_TO_TYPE_LOCATION_CITY = "location_city";
@@ -46,7 +47,7 @@ public class SocialPostFilterRetrievalRepository {
     private static final String SEND_TO_TYPE_PRODUCT_OR_SERVICE = "Product_Service";
     private static final String SEND_TO_TYPE_INTERESTS = "Interests";
 
-    public List<SocialDao> getSocialListBySearch(Long profileId, int pageNumber, int pageSize,
+    public List<SocialDao> getSocialListBySearchFilter(Long profileId, int pageNumber, int pageSize,
                                                  List<String> categoryFilters, List<String> communityIdFilters) {
         ProfileDao profileDao = profileRepositoryJpa.findById(profileId).get();
 
@@ -75,8 +76,16 @@ public class SocialPostFilterRetrievalRepository {
         if (Objects.nonNull(profileDao)) {
             if (profileDao.getPersonalProfile() != null) {
                 query.append("SELECT social.* FROM (");
-                /*query.append("SELECT ts.* FROM t_social ts WHERE ts.profile_id="+profileDao.getProfileId());
-                query.append("\nUNION ");*/
+                if(categoryFiltersToBeApplied != null) {
+
+                    query.append(String.format(BASIC_QUERY, formatStringFromList(categoryFiltersToBeApplied)));
+                    if(communityIdFilters != null && communityIdFilters.size() > 0){
+                        query.append(" AND sst.type='community' AND sst.value IN ("+String.join(", ", communityIdFilters)+")");
+                    }
+                    query.append(" AND s.profile_id=" + profileDao.getProfileId());
+                    //query.append("\nUNION ");
+                }
+
                 for (String categoryFilter : categoryFiltersToBeApplied) {
                     if (query.toString().contains(")")) {
                         query.append("\nUNION ");
@@ -107,8 +116,8 @@ public class SocialPostFilterRetrievalRepository {
             } else {
 
                 query.append("SELECT social.* FROM (");
-                /*query.append("SELECT ts.* FROM t_social ts WHERE ts.profile_id="+profileDao.getProfileId());
-                query.append("\nUNION ")*/
+                query.append("SELECT ts.* FROM t_social ts WHERE ts.profile_id="+profileDao.getProfileId());
+                query.append("\nUNION ")
                 ;
                 for (String categoryFilter : categoryFiltersToBeApplied) {
                     if (query.toString().contains(")")) {
@@ -133,13 +142,18 @@ public class SocialPostFilterRetrievalRepository {
             return new ArrayList<>();
         }
         log.info("Generated Query: {}", query);
-
-        /*return entityManager.createNativeQuery(query.toString(), SocialDao.class)
-                .getResultList();*/
         var queryObject = entityManager.createNativeQuery(query.toString(), SocialDao.class);
         queryObject.setFirstResult((pageNumber - 1) * pageSize);
         queryObject.setMaxResults(pageSize);
         return queryObject.getResultList();
+    }
+
+    private String formatStringFromList(List<String> categoryFiltersToBeApplied) {
+        if(categoryFiltersToBeApplied.size() == 1){
+            return "'"+String.join(", ", categoryFiltersToBeApplied)+"'";
+        }else {
+            return "'"+String.join("', '", categoryFiltersToBeApplied)+"'";
+        }
     }
 
     private String emergencyCode(ProfileDao profileDao, List<String> communityIdFilters) {
