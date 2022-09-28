@@ -105,6 +105,14 @@ public class ExperienceRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+
+  public List<ExperienceDto> retreveByFilterList(List<Long> categoryList) {
+
+    return experienceRepositoryJpa.findByCategoryList(categoryList)
+            .stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
   public Optional<ExperienceDto> retrieveById(Long experienceId) {
 
     return experienceRepositoryJpa.findById(experienceId).map(dao -> dao.toDto());

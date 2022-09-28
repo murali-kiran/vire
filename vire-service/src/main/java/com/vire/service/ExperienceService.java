@@ -1,6 +1,7 @@
 package com.vire.service;
 
 import com.vire.dto.ExperienceViewsCountDto;
+import com.vire.model.request.ExperienceFilterRequest;
 import com.vire.model.request.ExperienceRequest;
 import com.vire.model.response.*;
 import com.vire.repository.ExperienceRepository;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -113,6 +111,26 @@ public class ExperienceService {
       return experienceDetailResponses;*/
     }
 
+  public List<ExperienceDetailResponse> retrieveAllByFilter(ExperienceFilterRequest request) {
+    if(request != null && request.getCategoryList() != null) {
+      List<ExperienceDetailResponse> experienceDetailResponseList = experienceRepository
+              .retreveByFilterList(request.getCategoryList())
+              .stream()
+              .map(dto -> ExperienceDetailResponse.fromDto(dto))
+              .collect(Collectors.toList());
+      for (ExperienceDetailResponse experienceDetailResponse : experienceDetailResponseList) {
+        setExperienceDetails(experienceDetailResponse, false, Long.valueOf(request.getProfileId()));
+        experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
+      }
+      return experienceDetailResponseList;
+    }else{
+      if(request.getProfileId() != null)
+        return retrieveAllByProfile(Long.valueOf(request.getProfileId()));
+      else
+        return new ArrayList<>();
+    }
+
+  }
   public List<ExperienceDetailResponse> retrieveAllCreatedByProfile(String profileId) {
     List<ExperienceDetailResponse> experienceDetailResponses = experienceRepository
             .search("profileId:"+profileId)

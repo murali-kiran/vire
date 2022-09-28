@@ -80,14 +80,23 @@ public class SocialPostFilterRetrievalRepository {
 
                     query.append(String.format(BASIC_QUERY, formatStringFromList(categoryFiltersToBeApplied)));
                     if(communityIdFilters != null && communityIdFilters.size() > 0){
-                        query.append(" AND sst.type='community' AND sst.value IN ("+String.join(", ", communityIdFilters)+")");
+                        //query.append(" AND sst.type='community' AND sst.value IN ("+String.join(", ", communityIdFilters)+")");
+                        StringBuilder sb= new StringBuilder("");
+                        communityIdFilters.forEach(value -> {
+                            if(!sb.toString().isEmpty()){
+                                sb.append(" OR ");
+                            }
+                            sb.append(" ( sst.type='community' AND sst.value = '"+ value + "' )");
+                        });
+                        query.append(" AND "+sb.toString());
+
                     }
                     query.append(" AND s.profile_id=" + profileDao.getProfileId());
                     //query.append("\nUNION ");
                 }
 
                 for (String categoryFilter : categoryFiltersToBeApplied) {
-                    if (query.toString().contains(")")) {
+                    if (query.toString().contains(")") && !query.toString().endsWith("UNION ")) {
                         query.append("\nUNION ");
                     }
                     if ("Emergency".equalsIgnoreCase(categoryFilter)) {

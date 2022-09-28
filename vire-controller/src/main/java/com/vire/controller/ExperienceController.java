@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.ExperienceFilterRequest;
 import com.vire.model.request.ExperienceRequest;
 import com.vire.model.response.ExperienceDetailResponse;
 import com.vire.model.response.ExperienceResponse;
@@ -85,6 +86,18 @@ public class ExperienceController {
   @GetMapping("byprofile/{profileid}")
   public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@PathVariable(name = "profileid") Long profileId) {
     return new ResponseEntity<>(experienceService.retrieveAllByProfile(profileId), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Retrieve All Experience by Filter")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve All Experience by Filter Successful",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ExperienceDetailResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "Retrieve All Experience by Filter Failed",
+                  content = @Content) })
+  @PostMapping("/filterexperience")
+  public ResponseEntity<List<ExperienceDetailResponse>> retrieveAllByProfile(@Valid @RequestBody ExperienceFilterRequest request) {
+    return new ResponseEntity<>(experienceService.retrieveAllByFilter(request), HttpStatus.OK);
   }
   @Operation(summary = "Retrieve Experience by ID")
   @ApiResponses(value = {
