@@ -9,10 +9,15 @@ import com.vire.repository.ExperienceViewsCountRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -193,6 +198,28 @@ public class ExperienceService {
     experienceDetailResponse.setCommentsCount(( experienceCommentsList != null ? experienceCommentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
     experienceDetailResponse.setViewsCount(viewsCount);
     return experienceDetailResponse;
+  }
+  
+  
+
+  public PageWiseSearchResponse<ExperienceDetailResponse> getAllPaged(Integer pageNumber, Integer pageSize) {
+    var pageWiseExperienceResponse = experienceRepository.getAllPaged(pageNumber,pageSize);
+
+    List<ExperienceDetailResponse> experienceDetailResponses = pageWiseExperienceResponse.getList()
+            .stream()
+            .map(dto -> ExperienceDetailResponse.fromDto(dto))
+            .collect(Collectors.toList());
+
+    for (ExperienceDetailResponse experienceDetailResponse : experienceDetailResponses) {
+      setExperienceDetails(experienceDetailResponse, false, Long.valueOf(experienceDetailResponse.getProfileId()));
+      experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
+      experienceDetailResponse.setCategoryResponse(masterService.retrieveById(Long.valueOf(experienceDetailResponse.getCategoryId())));
+    }
+
+    PageWiseSearchResponse<ExperienceDetailResponse> response = new PageWiseSearchResponse<>();
+    response.setList(experienceDetailResponses);
+    response.setPageCount(pageWiseExperienceResponse.getPageCount());
+    return response;
   }
 
 
