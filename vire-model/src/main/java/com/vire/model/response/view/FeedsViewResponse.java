@@ -5,6 +5,7 @@ import com.vire.dto.view.FeedCommentViewDto;
 import com.vire.dto.view.FeedLikesViewDto;
 import com.vire.dto.view.FeedReportViewDto;
 import com.vire.dto.view.FeedsViewDto;
+import com.vire.model.response.MinimalProfileResponse;
 import lombok.Data;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public class FeedsViewResponse {
     private Long createdTime;
     private Long updatedTime;
     private List<FeedCommentViewDto> feedComments;
+    private MinimalProfileResponse minimalProfileResponse;
     //private List<FeedLikesViewDto> feedLikes;
     //private List<FeedReportViewDto> feedReports;
-
 
     public static FeedsViewResponse fromDto(FeedsViewDto dto){
 
