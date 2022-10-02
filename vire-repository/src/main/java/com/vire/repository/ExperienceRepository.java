@@ -2,10 +2,13 @@ package com.vire.repository;
 
 import com.vire.dao.*;
 import com.vire.dto.ExperienceDto;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.CustomSpecificationResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,4 +206,21 @@ public class ExperienceRepository {
 
     return sb;
   }
+  
+  
+  public PageWiseSearchResponse<ExperienceDto> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+      PageWiseSearchResponse<ExperienceDto> response = new PageWiseSearchResponse<>();
+      PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+      Page<ExperienceDao> page = experienceRepositoryJpa.findAll(request);
+
+      List<ExperienceDto> experienceDtos = page.stream().map(dao -> dao.toDto())
+              .collect(Collectors.toList());
+      response.setPageCount(page.getTotalPages());
+      response.setList(experienceDtos);
+
+      return response;
+
+  }
+  
 }
