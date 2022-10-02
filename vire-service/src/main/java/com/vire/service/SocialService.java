@@ -1,5 +1,7 @@
 package com.vire.service;
 
+import com.vire.dto.CommunityDto;
+import com.vire.dto.SocialDto;
 import com.vire.model.request.SocialFilterRequest;
 import com.vire.model.request.SocialRequest;
 import com.vire.model.response.*;
@@ -101,6 +103,34 @@ public class SocialService {
                 .get();
     }
 
+    
+    public PageWiseSearchResponse<SocialPostResponse> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+        var socialPostResponse = socialRepo.getAllPaged(pageNumber,pageSize);
+
+        var socialPostResponses = socialPostResponse
+                                                        .getList()
+                                                        .stream()
+                                                        .map(dto -> SocialPostResponse.fromDto(dto))
+                                                        .collect(Collectors.toList());
+
+        for (SocialPostResponse socialPost:  socialPostResponses) {
+            SocialCategoryMasterResponse categoryMasterResponse = socialCategoryMasterService.retrieveById(Long.valueOf(socialPost.getCategoryId()));
+            socialPost.setCategoryName(categoryMasterResponse.getCategory());
+            socialPost.setCategoryColorCode(categoryMasterResponse.getColorCode());
+
+            socialPost.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPost.getProfileId())));
+            var sendToList = socialPost.getSendTo().stream().
+                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
+            socialPost.setLocation(getLocation(sendToList));
+        }
+
+        PageWiseSearchResponse<SocialPostResponse> response = new PageWiseSearchResponse<SocialPostResponse>();
+        response.setPageCount(socialPostResponse.getPageCount());
+        response.setList(socialPostResponses);
+
+        return response;
+    }
 
 
     private static SocialCallRequestResponse findCallRequestByProfileId(Collection<SocialCallRequestResponse> listCallRequest, String profileId) {
