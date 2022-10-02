@@ -1,7 +1,7 @@
 package com.vire.service;
 
-import com.vire.model.response.AdminHomeResponse;
-import com.vire.model.response.ProfileResponse;
+import com.vire.model.response.*;
+import com.vire.model.response.view.SocialViewResponse;
 import com.vire.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,7 @@ import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.vire.dto.ProfileDto;
-import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.model.response.view.FeedsViewResponse;
-import com.vire.dto.view.FeedsViewDto;
 import com.vire.repository.view.FeedsViewRepositoryJpa;
 
 @Service
@@ -20,10 +18,10 @@ public class AdminPortalService {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
-    
+
     @Autowired
     FeedsViewRepositoryJpa feedsViewRepositoryJpa;
-    
+
     @Autowired
     ProfileRepository profileRepository;
 
@@ -59,9 +57,18 @@ public class AdminPortalService {
 
     @Autowired
     SocialReportRepositoryJpa socialReportRepositoryJpa;
-    
+
     @Autowired
     FeedsRepository feedsRepository;
+
+    @Autowired
+    SocialService socialService;
+
+    @Autowired ExperienceService experienceService;
+
+    @Autowired FeedsService feedsService;
+
+    @Autowired ProfileService profileService;
 
     public AdminHomeResponse getHomePageDetails() {
         AdminHomeResponse adminHomeResponse = new AdminHomeResponse();
@@ -138,7 +145,34 @@ public class AdminPortalService {
     }
     
     public List<FeedsViewResponse> getAllFeeds() {
-        return  feedsRepository.getAllFeedsViewDtos().stream().map(dto->FeedsViewResponse.fromDto(dto)).collect(Collectors.toList());
+        var feedsViewResponseList = feedsRepository.getAllFeedsViewDtos().stream().map(dto->FeedsViewResponse.fromDto(dto)).collect(Collectors.toList());
+
+        for(FeedsViewResponse feedsViewResponse : feedsViewResponseList){
+            feedsViewResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(feedsViewResponse.getProfileId())));
+        }
+
+        return feedsViewResponseList;
     }
+
+    public PageWiseSearchResponse<SocialPostResponse> getAllSocialsPaged(int pageNumber, int pageSize) {
+        return socialService.getAllPaged(pageNumber,pageSize);
+    }
+
+    public PageWiseSearchResponse<ExperienceDetailResponse> getAllExperiencesPaged(Integer pageNumber, Integer pageSize) {
+        return experienceService.getAllPaged(pageNumber,pageSize);
+    }
+
+    public FeedsResponse deleteFeed(String feedId) {
+        return feedsService.deleteFeedsPost(Long.valueOf(feedId));
+    }
+
+    public SocialResponse deleteSocial(String socialId) {
+        return socialService.deleteSocialPost(Long.valueOf(socialId));
+    }
+
+    public ExperienceResponse deleteExperience(String experienceId) {
+        return  experienceService.delete(Long.valueOf(experienceId));
+    }
+
 
 }
