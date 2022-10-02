@@ -1,14 +1,14 @@
 package com.vire.repository;
 
-import com.vire.dao.SocialDao;
-import com.vire.dao.SocialFileDao;
-import com.vire.dao.SocialReportDao;
-import com.vire.dao.SocialSendToDao;
+import com.vire.dao.*;
 import com.vire.dto.SocialDto;
 import com.vire.dto.SocialSendToDto;
+import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.CustomSpecificationResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -180,5 +180,21 @@ public class SocialRepository {
         return socialRepositoryJpa.findByCommunity(communityId).stream()
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
+    }
+    
+    
+    public PageWiseSearchResponse<SocialDto> getAllPaged(Integer pageNumber, Integer pageSize) {
+
+        PageWiseSearchResponse<SocialDto> response = new PageWiseSearchResponse<>();
+        PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+        Page<SocialDao> page = socialRepositoryJpa.findAll(request);
+        List<SocialDto> socialDtos = page.stream().map(dao -> dao.toDto())
+                .collect(Collectors.toList());
+
+        response.setPageCount(page.getTotalPages());
+        response.setList(socialDtos);
+
+        return response;
     }
 }
