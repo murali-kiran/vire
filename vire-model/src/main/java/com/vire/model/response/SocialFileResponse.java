@@ -2,8 +2,6 @@ package com.vire.model.response;
 
 import com.vire.dto.SocialFileDto;
 import lombok.Data;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class SocialFileResponse {

@@ -29,4 +29,4 @@ file:
   type: "images"
 
 auth:
-  whitelist: "/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/create**/**,/api/v1/personalProfile/create**/**,/file/**,/api/master/search**/**,/content/**"
+  whitelist: "/admin/**,/v3/api-docs/**,/swagger-ui/**,/h2-console/**,/api/v1/login/**,/api/v1/firmProfile/create**/**,/api/v1/personalProfile/create**/**,/file/**,/api/master/search**/**,/content/**"
