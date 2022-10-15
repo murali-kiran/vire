@@ -16,8 +16,15 @@ import java.util.stream.Collectors;
 @Repository
 public interface ChannelRepositoryJpa
     extends JpaRepository<ChannelDao, Long>, JpaSpecificationExecutor<ChannelDao> {
+    
     List<ChannelDao> findByChannelIdIn(List<Long> channelIDs, Sort sort);
+    
     List<ChannelDao> findAll(Sort sort);
+    
     @Query(value = "SELECT c.* FROM channel c JOIN channel_profile cp ON c.channel_id = cp.channel_id WHERE cp.profile_id = :profileId AND cp.status IN :statusList ORDER BY c.updated_time DESC", nativeQuery = true)
     List<ChannelDao> findChannelByProfileIdStatus(Long profileId, List<String> statusList);
+    
+    @Query(value = "select count(*) from channel where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
+    int getTodayCreatedChannels();
+    
 }
