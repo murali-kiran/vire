@@ -13,7 +13,7 @@ import java.util.List;
 public interface ExperienceRepositoryJpa
     extends JpaRepository<ExperienceDao, Long>, JpaSpecificationExecutor<ExperienceDao> {
 
-    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
+    @Query(value = "select count(*) from experience where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
     int getTodayCreatedExperiencePosts();
 
     @Query(value = "SELECT e.* FROM experience e WHERE e.category_id IN :categoryList ORDER BY e.updated_time DESC",nativeQuery = true)
