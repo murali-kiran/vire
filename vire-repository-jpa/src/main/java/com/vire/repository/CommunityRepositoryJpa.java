@@ -19,10 +19,11 @@ public interface CommunityRepositoryJpa
     @Query(value = "SELECT c.* FROM community c JOIN community_profile cp ON c.community_id = cp.community_id WHERE cp.profile_id = :profileId AND cp.status IN :statusList ORDER BY c.updated_time DESC", nativeQuery = true)
     List<CommunityDao> findCommunityByProfileIdStatus(Long profileId, List<String> statusList);
 
-    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
+    @Query(value = "select count(*) from community where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
     int getTodayCreatedCommunityPosts();
-    
+
     @Modifying
     @Query("update CommunityDao c set c.isBlocked = :isBlocked where c.communityId = :communityId")
     void blockProfile(@Param(value = "communityId") long communityId, @Param(value = "isBlocked") Boolean isBlocked);
+
 }
