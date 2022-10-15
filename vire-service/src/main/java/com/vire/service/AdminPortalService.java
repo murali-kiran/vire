@@ -38,7 +38,7 @@ public class AdminPortalService {
     CommunityRepositoryJpa communityRepositoryJpa;
 
     @Autowired
-    ChannelProfileRepositoryJpa channelProfileRepositoryJpa;
+    ChannelRepositoryJpa channelRepositoryJpa;
 
     @Autowired
     SocialRepositoryJpa socialRepositoryJpa;
@@ -81,8 +81,8 @@ public class AdminPortalService {
         adminHomeResponse.setTotalCommunities(communityRepositoryJpa.count());
         adminHomeResponse.setNewCommunitiesToday(communityRepositoryJpa.getTodayCreatedCommunityPosts());
 
-        adminHomeResponse.setTotalChannels(channelProfileRepositoryJpa.count());
-        adminHomeResponse.setNewChannelsToday(channelProfileRepositoryJpa.getTodayCreatedChannels());
+        adminHomeResponse.setTotalChannels(channelRepositoryJpa.count());
+        adminHomeResponse.setNewChannelsToday(channelRepositoryJpa.getTodayCreatedChannels());
 
         adminHomeResponse.setAllFeedPosts(feedsRepositoryJpa.count());
         adminHomeResponse.setFeedPostsToday(feedsRepositoryJpa.getTodayCreatedFeedPosts());
