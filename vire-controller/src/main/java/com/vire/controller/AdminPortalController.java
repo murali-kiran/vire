@@ -51,6 +51,15 @@ public class AdminPortalController {
     return adminPortalService.getAllUsers(pageNumber, pageSize);
   }
 
+
+  @GetMapping(value = "/blockerUsers")
+  public PageWiseSearchResponse<ProfileResponse> getBlockedUsers(
+          @RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+          @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize
+  ) {
+    return adminPortalService.getAllBlockedUsers(pageNumber, pageSize);
+  }
+
   @GetMapping(value = "/deleteProfile/{profileId}")
   public ResponseEntity<ProfileResponse> deleteProfile(@PathVariable("profileId") String profileId) {
     var minimalProfile = adminPortalService.deleteProfile(Long.valueOf(profileId));
