@@ -1,6 +1,10 @@
 package com.vire.service;
 
+import com.vire.dto.FeedNotificationType;
+import com.vire.dto.NotificationType;
+import com.vire.model.request.FeedNotificationRequest;
 import com.vire.model.request.NotificationRequest;
+import com.vire.model.response.ExperienceDetailResponse;
 import com.vire.model.response.NotificationResponse;
 import com.vire.repository.NotificationRepository;
 import com.vire.utils.Snowflake;
@@ -18,6 +22,8 @@ public class NotificationService {
 
   @Autowired
   NotificationRepository notificationRepository;
+  @Autowired
+  ProfileService profileService;
 
   public NotificationResponse create(final NotificationRequest request) {
 
@@ -59,10 +65,30 @@ public class NotificationService {
 
   public List<NotificationResponse> search(final String searchString) {
 
-    return notificationRepository
+    List<NotificationResponse> notificationResponseList = notificationRepository
             .search(searchString)
             .stream()
             .map(dto -> NotificationResponse.fromDto(dto))
             .collect(Collectors.toList());
+    for (NotificationResponse notificationResponse : notificationResponseList) {
+      if(notificationResponse.getFeedNotification() != null) {
+        notificationResponse.getFeedNotification().setResponderProfile(profileService.retrieveProfileDtoById(Long.valueOf(notificationResponse.getFeedNotification().getProfileId())));
+      }
+    }
+    return notificationResponseList;
+  }
+
+  public void createFeedNotification(NotificationType notificationType, String notifierProfileId, Long responderProfileId,FeedNotificationType feedNotificationType, Long feedId){
+
+    var notificationRequest = new NotificationRequest();
+    notificationRequest.setNotificationType(notificationType);
+    notificationRequest.setNotifierProfileId(notifierProfileId);
+    notificationRequest.setIsRead(false);
+    var feedNotification = new FeedNotificationRequest();
+    feedNotification.setFeedNotificationType(feedNotificationType);
+    feedNotification.setProfileId(responderProfileId);
+    feedNotification.setFeedId(feedId);
+    notificationRequest.setFeedNotification(feedNotification);
+    create(notificationRequest);
   }
 }

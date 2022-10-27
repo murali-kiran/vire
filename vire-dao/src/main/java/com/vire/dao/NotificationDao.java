@@ -1,10 +1,13 @@
 package com.vire.dao;
 
 import com.vire.dto.NotificationDto;
+import com.vire.dto.NotificationType;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="t_notification")
@@ -16,20 +19,31 @@ public class NotificationDao {
     private Long notificationId;
     
 
-    @Column(name = "creator_profile_id", nullable = false)
-    private Long creatorProfileId;
+    @Column(name = "notification_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
-    @Column(name = "responder_profile_id", nullable = false)
-    private Long responderProfileId;
+    @Column(name = "notifier_profile_id", nullable = false)
+    private Long notifierProfileId;
 
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
+    @Column(name = "is_read", nullable = false)
+    private Boolean isRead;
 
-    @Column(name = "post_type", nullable = false)
-    private String postType;
+    @OneToOne(mappedBy = "notification", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private CommunityNotificationDao communityNotification;
 
-    @Column(name = "respond_reason", nullable = false)
-    private String respondReason;
+    @OneToOne(mappedBy = "notification", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private SocialNotificationDao socialNotification;
+
+    @OneToOne(mappedBy = "notification", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private FeedNotificationDao feedNotification;
+
+    @OneToOne(mappedBy = "notification", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private ProfileNotificationDao profileNotification;
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -54,11 +68,29 @@ public class NotificationDao {
 
         dto.setNotificationId(this.getNotificationId());
         
-        dto.setCreatorProfileId(this.getCreatorProfileId());
-        dto.setResponderProfileId(this.getResponderProfileId());
-        dto.setPostId(this.getPostId());
-        dto.setPostType(this.getPostType());
-        dto.setRespondReason(this.getRespondReason());
+        dto.setNotificationType(this.getNotificationType());
+        dto.setNotifierProfileId(this.getNotifierProfileId());
+        dto.setIsRead(this.getIsRead());
+
+        if (this.getCommunityNotification() != null) {
+            dto.setCommunityNotification(this.getCommunityNotification().toDto());
+        }
+
+
+        if (this.getSocialNotification() != null) {
+            dto.setSocialNotification(this.getSocialNotification().toDto());
+        }
+
+
+        if (this.getFeedNotification() != null) {
+            dto.setFeedNotification(this.getFeedNotification().toDto());
+        }
+
+
+        if (this.getProfileNotification() != null) {
+            dto.setProfileNotification(this.getProfileNotification().toDto());
+        }
+
 
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
@@ -72,11 +104,33 @@ public class NotificationDao {
 
         notification.setNotificationId(dto.getNotificationId());
         
-        notification.setCreatorProfileId(dto.getCreatorProfileId());
-        notification.setResponderProfileId(dto.getResponderProfileId());
-        notification.setPostId(dto.getPostId());
-        notification.setPostType(dto.getPostType());
-        notification.setRespondReason(dto.getRespondReason());
+        notification.setNotificationType(dto.getNotificationType());
+        notification.setNotifierProfileId(dto.getNotifierProfileId());
+        notification.setIsRead(dto.getIsRead());
+
+        if (dto.getCommunityNotification() != null) {
+            notification.setCommunityNotification(CommunityNotificationDao.fromDto(dto.getCommunityNotification()));
+            notification.getCommunityNotification().setNotification(notification);
+        }
+
+
+        if (dto.getSocialNotification() != null) {
+            notification.setSocialNotification(SocialNotificationDao.fromDto(dto.getSocialNotification()));
+            notification.getSocialNotification().setNotification(notification);
+        }
+
+
+        if (dto.getFeedNotification() != null) {
+            notification.setFeedNotification(FeedNotificationDao.fromDto(dto.getFeedNotification()));
+            notification.getFeedNotification().setNotification(notification);
+        }
+
+
+        if (dto.getProfileNotification() != null) {
+            notification.setProfileNotification(ProfileNotificationDao.fromDto(dto.getProfileNotification()));
+            notification.getProfileNotification().setNotification(notification);
+        }
+
 
         return notification;
     }

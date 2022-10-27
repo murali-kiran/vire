@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +95,8 @@ public class ExperienceRepository {
     var optionalSocial = retrieveById(experienceId);
 
     if (optionalSocial.isPresent()) {
-      experienceRepositoryJpa.deleteById(experienceId);
+      //experienceRepositoryJpa.deleteById(experienceId);
+      experienceRepositoryJpa.updateDeletedTime(Instant.now().toEpochMilli(), experienceId);
     } else {
       throw new RuntimeException("Object not exists in DB to delete");
     }

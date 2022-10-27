@@ -19,6 +19,7 @@ public class ExperienceDto {
     private String locationCity;
     private List<ExperienceFileDto> experienceFileList;
     private Long viewCount;
-    public Long createdTime;
-    public Long updatedTime;
+    private Long createdTime;
+    private Long updatedTime;
+    private Long deletedTime;
 }

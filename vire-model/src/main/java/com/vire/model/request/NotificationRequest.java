@@ -2,6 +2,7 @@ package com.vire.model.request;
 
 import com.vire.utils.Snowflake;
 import com.vire.dto.NotificationDto;
+import com.vire.dto.NotificationType;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import java.util.List;
@@ -12,11 +13,13 @@ public class NotificationRequest {
 
     private String notificationId;
     
-    private Long creatorProfileId;
-    private Long responderProfileId;
-    private Long postId;
-    private String postType;
-    private String respondReason;
+    private NotificationType notificationType;
+    private String notifierProfileId;
+    private Boolean isRead;
+    private CommunityNotificationRequest communityNotification;
+    private SocialNotificationRequest socialNotification;
+    private FeedNotificationRequest feedNotification;
+    private ProfileNotificationRequest profileNotification;
 
     public NotificationDto toDto(Snowflake snowflake) {
 
@@ -28,11 +31,33 @@ public class NotificationRequest {
             dto.setNotificationId(snowflake.nextId());
         }
         
-        dto.setCreatorProfileId(this.getCreatorProfileId());
-        dto.setResponderProfileId(this.getResponderProfileId());
-        dto.setPostId(this.getPostId());
-        dto.setPostType(this.getPostType());
-        dto.setRespondReason(this.getRespondReason());
+        dto.setNotificationType(this.getNotificationType());
+        dto.setNotifierProfileId(this.getNotifierProfileId() == null ? null : Long.valueOf(this.getNotifierProfileId()));
+        dto.setIsRead(this.getIsRead());
+
+        if (this.getCommunityNotification() != null) {
+            dto.setCommunityNotification(this.getCommunityNotification().toDto());
+            dto.getCommunityNotification().setCommunityNotificationId(dto.getNotificationId());
+        }
+
+
+        if (this.getSocialNotification() != null) {
+            dto.setSocialNotification(this.getSocialNotification().toDto());
+            dto.getSocialNotification().setSocialNotificationId(dto.getNotificationId());
+        }
+
+
+        if (this.getFeedNotification() != null) {
+            dto.setFeedNotification(this.getFeedNotification().toDto());
+            dto.getFeedNotification().setFeedNotificationId(dto.getNotificationId());
+        }
+
+
+        if (this.getProfileNotification() != null) {
+            dto.setProfileNotification(this.getProfileNotification().toDto());
+            dto.getProfileNotification().setProfileNotificationId(dto.getNotificationId());
+        }
+
 
         return dto;
     }

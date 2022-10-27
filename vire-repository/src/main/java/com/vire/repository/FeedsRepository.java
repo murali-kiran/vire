@@ -14,6 +14,7 @@ import com.vire.repository.view.FeedsViewRepositoryJpa;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,7 +36,6 @@ public class FeedsRepository {
     private EntityManager entityManager;
     public FeedsDto createFeeds(final FeedsDto feedsDto) {
         var feedsDao = FeedsDao.fromDto(feedsDto);
-
         if (!CollectionUtils.isEmpty(feedsDao.getFeedsSendTo())) {
             for (var sendToDto : feedsDao.getFeedsSendTo()) {
                 sendToDto.setFeed(feedsDao);
@@ -44,7 +44,7 @@ public class FeedsRepository {
         }
         feedsDao.onPrePersist();
         //feedsDao.getSendTo().get(0).getFeeds().setFeedsId(feedsDao.getFeedsId());
-        System.out.println("sa:::" + feedsDao);
+        //System.out.println("sa:::" + feedsDao);
         return feedsRepositoryJpa.save(feedsDao).toDto();
     }
 
@@ -88,7 +88,7 @@ public class FeedsRepository {
     public Optional<FeedsDto> deleteFeedsPost(final Long feedId) {
 
         var optionalFeeds = retrieveById(feedId);
-        List<FeedsDto> childFeeds = search("parentFeedId:"+feedId);
+        /*List<FeedsDto> childFeeds = search("parentFeedId:"+feedId);
         if (optionalFeeds.isPresent()) {
             feedsRepositoryJpa.deleteById(feedId);
         } else {
@@ -96,6 +96,12 @@ public class FeedsRepository {
         }
         for(FeedsDto feedsDto : childFeeds){
             feedsRepositoryJpa.deleteById(feedsDto.getFeedId());
+        }*/
+        if (optionalFeeds.isPresent()) {
+            //feedsRepositoryJpa.deleteById(feedId);
+            feedsRepositoryJpa.updateDeletedTime(Instant.now().toEpochMilli(), feedId);
+        } else {
+            throw new RuntimeException("Feeds Post Object not exists in DB");
         }
         return optionalFeeds;
     }

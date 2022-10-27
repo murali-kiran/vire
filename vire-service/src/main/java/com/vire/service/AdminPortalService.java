@@ -72,7 +72,7 @@ public class AdminPortalService {
 
     public AdminHomeResponse getHomePageDetails() {
         AdminHomeResponse adminHomeResponse = new AdminHomeResponse();
-        adminHomeResponse.setTotalUsers(profileRepositoryJpa.count());
+        adminHomeResponse.setTotalUsers(profileRepositoryJpa.countByProfileStatus("active"));
         adminHomeResponse.setNewUsersToday(profileRepositoryJpa.getTodayCreatedProfiles());
 
         adminHomeResponse.setTotalFirmAccounts(firmProfileRepositoryJpa.count());

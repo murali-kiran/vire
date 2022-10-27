@@ -1,6 +1,8 @@
 package com.vire.service;
 
+import com.vire.dto.FeedNotificationType;
 import com.vire.dto.FeedsSendToDto;
+import com.vire.dto.NotificationType;
 import com.vire.model.request.FeedFilterRequest;
 import com.vire.model.request.FeedsRequest;
 import com.vire.model.response.*;
@@ -56,7 +58,8 @@ public class FeedsService {
     FeedPostRetrievalRepository feedPostRetrievalRepository;
     @Autowired
     FeedPostFilterRetrievalRepository feedPostFilterRetrievalRepository;
-
+    @Autowired
+    NotificationService notificationService;
     public FeedsResponse createFeeds(final FeedsRequest request) {
         /*if(request.getParentFeedId() != null ){
             FeedsResponse parentFeed = retrieveById(Long.valueOf(request.getParentFeedId()));
@@ -95,6 +98,14 @@ public class FeedsService {
             feedsSendToDto.setType("channel");
             dto.getFeedsSendTo().add(feedsSendToDto);
 
+        }
+        if(request.getParentFeedId() != null){
+            try {
+                notificationService.createFeedNotification(NotificationType.FEED, retrieveById(Long.valueOf(request.getParentFeedId())).getProfileId(), Long.valueOf(request.getProfileId()), FeedNotificationType.SHARE, Long.valueOf(request.getParentFeedId()));
+            }
+            catch (Exception e){
+                throw new RuntimeException("Feed not found with id:"+request.getFeedId());
+            }
         }
         return FeedsResponse.fromDto(feedsRepo.createFeeds(dto));
     }

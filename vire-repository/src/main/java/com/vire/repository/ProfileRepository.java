@@ -3,7 +3,10 @@ package com.vire.repository;
 import com.vire.dao.AddressDao;
 import com.vire.dao.ProfileDao;
 import com.vire.dao.ProfileSettingDao;
+import com.vire.dto.ExperienceDto;
+import com.vire.dto.FeedsDto;
 import com.vire.dto.ProfileDto;
+import com.vire.dto.SocialDto;
 import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.*;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +35,12 @@ public class ProfileRepository {
     FirmProfileRepositoryJpa firmProfileRepositoryJpa;
     @Autowired
     PersonalProfileRepositoryJpa personalProfileRepositoryJpa;
-
+    @Autowired
+    SocialRepository socialRepository;
+    @Autowired
+    FeedsRepository feedsRepository;
+    @Autowired
+    ExperienceRepository experienceRepository;
 
     @Transactional
     public ProfileDto createProfile(final ProfileDto profileDto) {
@@ -141,11 +149,25 @@ public class ProfileRepository {
         }
     }
 
+    @Transactional
     public Optional<ProfileDto> deleteProfile(final Long profileId) {
 
         var optionalProfile = retrieveProfileById(profileId);
         if (optionalProfile.isPresent()) {
-            profileRepositoryJpa.deleteById(profileId);
+            //profileRepositoryJpa.deleteById(profileId);
+            List<SocialDto> socialDtos = socialRepository.search("profileId:"+profileId);
+            for (SocialDto socialDto : socialDtos) {
+                socialRepository.deleteSocialPost(socialDto.getSocialId());
+            }
+            List<FeedsDto> feedsDtos = feedsRepository.search("profileId:"+profileId);
+            for (FeedsDto feedDto : feedsDtos) {
+                feedsRepository.deleteFeedsPost(feedDto.getFeedId());
+            }
+            List<ExperienceDto> experienceDtos = experienceRepository.search("profileId:"+profileId);
+            for (ExperienceDto experienceDto : experienceDtos) {
+                experienceRepository.delete(experienceDto.getExperienceId());
+            }
+            profileRepositoryJpa.updateProfileStatus(profileId, "deleted");
         } else {
             return Optional.empty();
         }
@@ -225,23 +247,23 @@ public class ProfileRepository {
     }
 
     public  Optional<ProfileDao> loginWithEmail(final String email, final String password){
-        return profileRepositoryJpa.findByEmailIdAndPassword(email,password);
+        return profileRepositoryJpa.findByEmailIdAndPasswordAndProfileStatus(email,password,"active");
     }
 
     public  Optional<ProfileDao> loginWithPhoneNumber(final String mobileNumber, final String password){
-        return profileRepositoryJpa.findByMobileNumberAndPassword(mobileNumber,password);
+        return profileRepositoryJpa.findByMobileNumberAndPasswordAndProfileStatus(mobileNumber,password,"active");
     }
 
     public  Optional<ProfileDao> findByEmailId(final String email){
-        return profileRepositoryJpa.findByEmailId(email);
+        return profileRepositoryJpa.findByEmailIdAndProfileStatus(email, "active");
     }
 
     public  Optional<ProfileDao> findByMobileNumber(final String mobileNumber){
-        return profileRepositoryJpa.findByMobileNumber(mobileNumber);
+        return profileRepositoryJpa.findByMobileNumberAndProfileStatus(mobileNumber, "active");
     }
 
     public  List<ProfileDao> findByEmailIdOrMobileNumber(final String email, final String mobileNumber){
-        return profileRepositoryJpa.findByEmailIdOrMobileNumber(email, mobileNumber);
+        return profileRepositoryJpa.findByEmailIdOrMobileNumberAndProfileStatus(email, mobileNumber, "active");
     }
 
     public List<ProfileDto> retrieveProfilesNotInGivenIds(List<Long> profileIDs) {
@@ -251,8 +273,6 @@ public class ProfileRepository {
                 .map(dao -> dao.toDto())
                 .collect(Collectors.toList());
         return profileDtos;
-
-
     }
 
     public void updatePasswordViaEmailAndProfileId(Long profileId,String emailOrPassword, String password) {
@@ -272,6 +292,6 @@ public class ProfileRepository {
     }
 
     public void blockProfile(Long profileId,Boolean isBlock) {
-        profileRepositoryJpa.blockProfile(profileId,isBlock);
+        profileRepositoryJpa.updateProfileStatus(profileId, isBlock?"blocked":"active");
     }
 }

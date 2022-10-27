@@ -77,6 +77,9 @@ public class ProfileDao {
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
 
+    @Column(name = "profile_status", nullable = false)
+    public String profileStatus;
+
     @PrePersist
     public void onPrePersist() {
         this.setCreatedTime(Instant.now().toEpochMilli());
@@ -106,7 +109,7 @@ public class ProfileDao {
         profileDao.setFirstLogin(dto.getFirstLogin());
         profileDao.setProfileWeightage(dto.getProfileWeightage());
         profileDao.setProfileType(dto.getProfileType());
-
+        profileDao.setProfileStatus(dto.getProfileStatus());
         if (dto.getProfileSettings()!=null && !dto.getProfileSettings().isEmpty()) {
             var profileSettings = new ArrayList<ProfileSettingDao>();
             for (var profileSettingDto : dto.getProfileSettings()) {

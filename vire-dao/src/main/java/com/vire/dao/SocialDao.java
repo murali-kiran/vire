@@ -48,7 +48,8 @@ public class SocialDao {
 
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
-
+    @Column(name = "deleted_time")
+    public Long deletedTime;
     /*@OneToMany(mappedBy = "social", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialCallRequestDao> socialCallRequestList;*/
 

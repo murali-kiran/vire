@@ -103,7 +103,7 @@ public class SocialPostRetrievalRepository {
                         query.append("\nSELECT business.* FROM (" + businessCode(profileDao, communityIdFilters) + " ) AS business");
                     }
                 }
-                query.append(") AS social ORDER BY social.updated_time DESC");
+                query.append(") AS social WHERE social.deleted_time is NULL ORDER BY social.updated_time DESC");
             } else {
 
                 query.append("SELECT social.* FROM (");
@@ -127,7 +127,7 @@ public class SocialPostRetrievalRepository {
                         query.append("\nSELECT business.* FROM (" + businessCode(profileDao, communityIdFilters) + " ) AS business");
                     }
                 }
-                query.append(") AS social ORDER BY social.updated_time DESC");
+                query.append(") AS social WHERE social.deleted_time is NULL ORDER BY social.updated_time DESC");
             }
         } else {
             return new ArrayList<>();

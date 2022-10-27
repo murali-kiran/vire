@@ -4,7 +4,9 @@ import com.vire.dao.ExperienceDao;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,5 +23,7 @@ public interface ExperienceRepositoryJpa
 
     /*@Query(value="SELECT distinct s.feed_id FROM t_feeds s JOIN t_feeds_send_to st ON st.feed_id = s.feed_id WHERE st.type='Community' and st.value = :communityId ORDER BY s.updated_time DESC", nativeQuery = true)
     List<Long> findByCommunity(Long communityId);*/
-
+    @Modifying
+    @Query("update ExperienceDao e set e.deletedTime = :deletedTime where e.experienceId = :experienceId")
+    void updateDeletedTime(@Param(value = "deletedTime") long deletedTime, @Param(value = "experienceId") long experienceId);
 }

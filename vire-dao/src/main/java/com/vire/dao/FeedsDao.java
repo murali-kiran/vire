@@ -43,6 +43,8 @@ public class FeedsDao {
 
     @Column(name = "updated_time", nullable = false)
     private Long updatedTime;
+    @Column(name = "deleted_time")
+    private Long deletedTime;
 
     @PrePersist
     public void onPrePersist() {
@@ -67,6 +69,7 @@ public class FeedsDao {
                 ", sendToFollowers=" + sendToFollowers +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
+                ", deletedTime=" + deletedTime +
                 '}';
     }
 

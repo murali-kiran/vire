@@ -3,7 +3,9 @@ package com.vire.repository;
 import com.vire.dao.FeedsDao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
@@ -24,4 +26,9 @@ public interface FeedsRepositoryJpa extends JpaRepository<FeedsDao, Long> , JpaS
 
     @Query(value = "select count(*) from t_feeds where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
     int getTodayCreatedFeedPosts();
+
+    @Modifying
+    @Query("update FeedsDao f set f.deletedTime = :deletedTime where f.feedId = :feedId")
+    void updateDeletedTime(@Param(value = "deletedTime") long deletedTime, @Param(value = "feedId") long feedId);
+
 }

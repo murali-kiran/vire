@@ -9,11 +9,13 @@ import java.util.stream.Collectors;
 @Data
 public class NotificationDto {
     private Long notificationId;
-    private Long creatorProfileId;
-    private Long responderProfileId;
-    private Long postId;
-    private String postType;
-    private String respondReason;
+    private NotificationType notificationType;
+    private Long notifierProfileId;
+    private Boolean isRead;
+    private CommunityNotificationDto communityNotification;
+    private SocialNotificationDto socialNotification;
+    private FeedNotificationDto feedNotification;
+    private ProfileNotificationDto profileNotification;
     public Long createdTime;
     public Long updatedTime;
 }

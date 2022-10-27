@@ -17,6 +17,7 @@ public class SocialDto{
     //private  Long fileId;
     private  Long createdTime;
     private  Long updatedTime;
+    private  Long deletedTime;
     private  List<SocialSendToDto> sendTo;
     private  List<SocialCallRequestDto> socialCallRequestList;
     private List<SocialFileDto> socialFileList;

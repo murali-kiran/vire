@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -125,13 +126,14 @@ public class SocialRepository {
         var optionalSocial = retrieveById(socialId);
         log.info("Delete Social ID#########:"+socialId);
         if (optionalSocial.isPresent()) {
-            likesRepositoryJpa.deleteBySocialId(socialId);
+            /*likesRepositoryJpa.deleteBySocialId(socialId);
             commentReplyReposJpa.deleteBySocialId(socialId);
             commentRepositoryJpa.deleteBySocialId(socialId);
             socialChatRepositoryJpa.deleteBySocialId(socialId);
             socialCallRequestRepositoryJpa.deleteBySocialId(socialId);
             socialReportRepositoryJpa.deleteBySocialId(socialId);
-            socialRepositoryJpa.deleteById(socialId);
+            socialRepositoryJpa.deleteById(socialId);*/
+            socialRepositoryJpa.updateDeletedTime(Instant.now().toEpochMilli(), socialId);
         } else {
             throw new RuntimeException("Social Post Object not exists in DB");
         }

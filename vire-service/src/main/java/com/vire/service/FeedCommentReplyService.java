@@ -1,8 +1,11 @@
 package com.vire.service;
 
+import com.vire.dto.FeedNotificationType;
+import com.vire.dto.NotificationType;
 import com.vire.model.request.FeedCommentReplyRequest;
 import com.vire.model.response.FeedCommentReplyResponse;
 import com.vire.repository.FeedCommentReplyRepository;
+import com.vire.repository.FeedsRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +18,22 @@ public class FeedCommentReplyService {
 
   @Autowired
   Snowflake snowflake;
-
   @Autowired
   FeedCommentReplyRepository feedCommentReplyRepository;
+  @Autowired
+  NotificationService notificationService;
+  @Autowired
+  FeedsRepository feedsRepository;
 
   public FeedCommentReplyResponse create(final FeedCommentReplyRequest request) {
 
     var dto = request.toDto(snowflake);
-
+    try {
+      notificationService.createFeedNotification(NotificationType.FEED, feedsRepository.retrieveById(Long.valueOf(request.getFeedId())).get().getProfileId()+"", Long.valueOf(request.getReplierProfileId()), FeedNotificationType.COMMENT_REPLY, Long.valueOf(request.getFeedId()));
+    }
+    catch (Exception e){
+      throw new RuntimeException("Feed not found with id:"+request.getFeedId());
+    }
     return FeedCommentReplyResponse.fromDto(feedCommentReplyRepository.create(dto));
   }
 

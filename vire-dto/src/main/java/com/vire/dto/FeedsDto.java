@@ -17,4 +17,5 @@ public class FeedsDto {
     private Boolean sendToFollowers;
     private  Long createdTime;
     private  Long updatedTime;
+    private  Long deletedTime;
 }

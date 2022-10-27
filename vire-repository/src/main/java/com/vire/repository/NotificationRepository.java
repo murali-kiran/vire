@@ -2,10 +2,10 @@ package com.vire.repository;
 
 import com.vire.dao.NotificationDao;
 import com.vire.dto.NotificationDto;
+
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,63 +13,62 @@ import java.util.stream.Collectors;
 @Service
 public class NotificationRepository {
 
-    @Autowired
-    NotificationRepositoryJpa notificationRepositoryJpa;
+  @Autowired
+  NotificationRepositoryJpa notificationRepositoryJpa;
 
-    public NotificationDto create(final NotificationDto notificationDto) {
+  public NotificationDto create(final NotificationDto notificationDto) {
 
-        var notificationDao = NotificationDao.fromDto(notificationDto);
-        notificationDao.onPrePersist();
+    var notificationDao = NotificationDao.fromDto(notificationDto);
+    notificationDao.onPrePersist();
 
-        return notificationRepositoryJpa.save(notificationDao).toDto();
+    return notificationRepositoryJpa.save(notificationDao).toDto();
+  }
+
+  public NotificationDto update(final NotificationDto notificationDto) {
+
+    var existingObject = notificationRepositoryJpa.findById(notificationDto.getNotificationId());
+
+    if(existingObject.isEmpty()) {
+      throw new RuntimeException("Object not exists in db to update");
     }
 
-    public NotificationDto update(final NotificationDto notificationDto) {
+    /*var notificationDao = NotificationDao.fromDto(notificationDto);
+    notificationDao.onPreUpdate();*/
 
-        var existingObject = notificationRepositoryJpa.findById(notificationDto.getNotificationId());
+    existingObject.get().setIsRead(true);
+    return notificationRepositoryJpa.save(existingObject.get()).toDto();
+  }
 
-        if (existingObject.isEmpty()) {
-            throw new RuntimeException("Object not exists in db to update");
-        }
+  public Optional<NotificationDto> delete(final Long notificationId) {
 
-        var notificationDao = NotificationDao.fromDto(notificationDto);
-        notificationDao.onPreUpdate();
+    var optionalSocial = retrieveById(notificationId);
 
-        return notificationRepositoryJpa.save(notificationDao).toDto();
+    if (optionalSocial.isPresent()) {
+      notificationRepositoryJpa.deleteById(notificationId);
+    } else {
+      throw new RuntimeException("Object not exists in DB to delete");
     }
 
-    public Optional<NotificationDto> delete(final Long notificationId) {
+    return optionalSocial;
+  }
+  public List<NotificationDto> getAll() {
 
-        var optionalSocial = retrieveById(notificationId);
+    return notificationRepositoryJpa.findAll()
+            .stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
+  public Optional<NotificationDto> retrieveById(Long notificationId) {
 
-        if (optionalSocial.isPresent()) {
-            notificationRepositoryJpa.deleteById(notificationId);
-        } else {
-            throw new RuntimeException("Object not exists in DB to delete");
-        }
+    return notificationRepositoryJpa.findById(notificationId).map(dao -> dao.toDto());
+  }
 
-        return optionalSocial;
-    }
+  public List<NotificationDto> search(final String searchString) {
 
-    public List<NotificationDto> getAll() {
+    var spec = new CustomSpecificationResolver<NotificationDao>(searchString).resolve();
 
-        return notificationRepositoryJpa.findAll()
-                .stream()
-                .map(dao -> dao.toDto())
-                .collect(Collectors.toList());
-    }
-
-    public Optional<NotificationDto> retrieveById(Long notificationId) {
-
-        return notificationRepositoryJpa.findById(notificationId).map(dao -> dao.toDto());
-    }
-
-    public List<NotificationDto> search(final String searchString) {
-
-        var spec = new CustomSpecificationResolver<NotificationDao>(searchString).resolve();
-
-        return notificationRepositoryJpa.findAll(spec).stream()
-                .map(dao -> dao.toDto())
-                .collect(Collectors.toList());
-    }
+    return notificationRepositoryJpa.findAll(spec).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
 }

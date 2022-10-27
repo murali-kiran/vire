@@ -25,4 +25,5 @@ public class ProfileDto {
     private List<ProfileSettingDto> profileSettings;
     private PersonalProfileDto personalProfile;
     private FirmProfileDto firmProfile;
+    public String profileStatus;
 }

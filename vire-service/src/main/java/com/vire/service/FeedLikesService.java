@@ -1,9 +1,14 @@
 package com.vire.service;
 
+import com.vire.dto.FeedNotificationType;
+import com.vire.dto.NotificationType;
 import com.vire.model.request.FeedLikesRequest;
+import com.vire.model.request.FeedNotificationRequest;
+import com.vire.model.request.NotificationRequest;
 import com.vire.model.response.ExperienceLikesResponse;
 import com.vire.model.response.FeedLikesResponse;
 import com.vire.repository.FeedLikesRepository;
+import com.vire.repository.FeedsRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +27,20 @@ public class FeedLikesService {
 
   @Autowired
   ProfileService profileService;
+  @Autowired
+  NotificationService notificationService;
+  @Autowired
+  FeedsRepository feedsRepository;
 
   public FeedLikesResponse create(final FeedLikesRequest request) {
 
     var dto = request.toDto(snowflake);
-
+    try {
+      notificationService.createFeedNotification(NotificationType.FEED, feedsRepository.retrieveById(Long.valueOf(request.getFeedId())).get().getProfileId()+"", Long.valueOf(request.getLikerProfileId()), FeedNotificationType.LIKE, Long.valueOf(request.getFeedId()));
+    }
+    catch (Exception e){
+      throw new RuntimeException("Feed not found with id:"+request.getFeedId());
+    }
     return FeedLikesResponse.fromDto(feedLikesRepository.create(dto));
   }
 

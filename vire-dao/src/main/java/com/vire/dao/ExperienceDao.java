@@ -51,6 +51,9 @@ public class ExperienceDao {
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
 
+    @Column(name = "deleted_time")
+    public Long deletedTime;
+
     @PrePersist
     public void onPrePersist() {
         this.setCreatedTime(Instant.now().toEpochMilli());

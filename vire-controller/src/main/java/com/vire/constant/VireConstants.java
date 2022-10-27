@@ -1,7 +1,5 @@
 package com.vire.constant;
 
-import java.util.function.BooleanSupplier;
-
 public class VireConstants {
     public final static String PERSONAL_PROFILE_REQUEST_PATH_API = "/api/v1/personalProfile";
     public final static String FIRM_PROFILE_REQUEST_PATH_API = "/api/v1/firmProfile";
@@ -50,4 +48,8 @@ public class VireConstants {
     public final static String ADMIN_PORTAL_API = "/admin";
 
     public final static String NOTIFICATION_REQUEST_PATH_API = "/api/notification";
+    public final static String COMMUNITYNOTIFICATION_REQUEST_PATH_API = "/api/communitynotification";
+    public final static String SOCIALNOTIFICATION_REQUEST_PATH_API = "/api/socialnotification";
+    public final static String FEEDNOTIFICATION_REQUEST_PATH_API = "/api/feednotification";
+    public final static String PROFILENOTIFICATION_REQUEST_PATH_API = "/api/profilenotification";
 }
