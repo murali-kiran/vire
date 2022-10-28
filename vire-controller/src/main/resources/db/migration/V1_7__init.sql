@@ -61,3 +61,6 @@ ALTER TABLE profile ADD COLUMN profile_status VARCHAR(45) NOT NULL DEFAULT 'acti
 ALTER TABLE t_social ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTER updated_time;
 ALTER TABLE t_feeds ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTER updated_time;
 ALTER TABLE experience ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTER updated_time;
+
+ALTER TABLE t_notification ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTER updated_time, ADD COLUMN message VARCHAR(191) NULL AFTER is_read;
+

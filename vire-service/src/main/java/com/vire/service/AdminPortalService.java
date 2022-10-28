@@ -124,6 +124,22 @@ public class AdminPortalService {
         return response;
     }
 
+    public PageWiseSearchResponse<ProfileResponse> getAllBlockedUsers(Integer pageNumber, Integer pageSize) {
+
+        PageWiseSearchResponse<ProfileDto> searchResponse = profileRepository.retrieveAllBlockedProfileViewsPaged(pageNumber,pageSize);
+        List<ProfileDto> profileDtos = searchResponse.getList();
+
+        List<ProfileResponse> profileResponses = profileDtos.stream()
+                .map(dto -> ProfileResponse.fromDto(dto))
+                .collect(Collectors.toList());
+
+        PageWiseSearchResponse<ProfileResponse> response = new PageWiseSearchResponse<ProfileResponse>();
+        response.setPageCount(searchResponse.getPageCount());
+        response.setList(profileResponses);
+
+        return response;
+    }
+
     @Transactional
     public Optional<ProfileResponse> deleteProfile(final Long profileId) {
         if (profileRepository.isPersonalProfileExists(profileId) || profileRepository.isFirmProfileExists(profileId)) {

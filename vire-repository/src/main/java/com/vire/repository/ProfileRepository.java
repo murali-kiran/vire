@@ -5,10 +5,12 @@ import com.vire.dao.ProfileDao;
 import com.vire.dao.ProfileSettingDao;
 import com.vire.dto.ExperienceDto;
 import com.vire.dto.FeedsDto;
+import com.vire.dao.view.ProfileViewDao;
 import com.vire.dto.ProfileDto;
 import com.vire.dto.SocialDto;
 import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.*;
+import com.vire.repository.view.ProfileViewRepositoryJpa;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -29,6 +31,10 @@ public class ProfileRepository {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
+
+    @Autowired
+    ProfileViewRepositoryJpa profileViewRepositoryJpa;
+
     @Autowired
     AddressRepositoryJpa addressRepositoryJpa;
     @Autowired
@@ -188,6 +194,23 @@ public class ProfileRepository {
 
 
         Page<ProfileDao> page = profileRepositoryJpa.findAll(request);
+        searchResponse.setPageCount(page.getTotalPages());
+        List<ProfileDto> profileDtos =  page.stream()
+                .map(dao -> dao.toDto())
+                .collect(Collectors.toList());
+
+        searchResponse.setList(profileDtos);
+
+        return searchResponse;
+    }
+
+    public PageWiseSearchResponse<ProfileDto> retrieveAllBlockedProfileViewsPaged(Integer pageNumber, Integer pageSize) {
+
+        PageWiseSearchResponse searchResponse = new PageWiseSearchResponse<ProfileDto>();
+        PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
+
+
+        Page<ProfileViewDao> page = profileViewRepositoryJpa.findByIsBlocked(true,request);
         searchResponse.setPageCount(page.getTotalPages());
         List<ProfileDto> profileDtos =  page.stream()
                 .map(dao -> dao.toDto())

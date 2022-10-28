@@ -1,17 +1,22 @@
 package com.vire.service;
 
+import com.vire.dao.FeedsDao;
 import com.vire.dto.FeedNotificationType;
+import com.vire.dto.FeedsDto;
 import com.vire.dto.NotificationType;
 import com.vire.model.request.FeedNotificationRequest;
 import com.vire.model.request.NotificationRequest;
 import com.vire.model.response.ExperienceDetailResponse;
 import com.vire.model.response.NotificationResponse;
+import com.vire.repository.FeedsRepositoryJpa;
 import com.vire.repository.NotificationRepository;
 import com.vire.utils.Snowflake;
+import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +29,8 @@ public class NotificationService {
   NotificationRepository notificationRepository;
   @Autowired
   ProfileService profileService;
+  @Autowired
+  FeedsRepositoryJpa feedsRepositoryJpa;
 
   public NotificationResponse create(final NotificationRequest request) {
 
@@ -88,7 +95,10 @@ public class NotificationService {
     feedNotification.setFeedNotificationType(feedNotificationType);
     feedNotification.setProfileId(responderProfileId);
     feedNotification.setFeedId(feedId);
+    Optional<FeedsDao> feed = feedsRepositoryJpa.findById(feedId);
+    notificationRequest.setMessage(feed.get().getDescription() == null ? "\"photo\"" : Utility.subStringOfSentence(feed.get().getDescription(), 5));
     notificationRequest.setFeedNotification(feedNotification);
     create(notificationRequest);
   }
+
 }

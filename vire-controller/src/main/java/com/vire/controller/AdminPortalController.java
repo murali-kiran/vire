@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.MasterRequest;
 import com.vire.model.response.*;
 import com.vire.model.response.view.FeedsViewResponse;
 import com.vire.model.response.view.SocialViewResponse;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = VireConstants.ADMIN_PORTAL_API)
@@ -37,6 +40,9 @@ public class AdminPortalController {
   @Autowired
   ChannelService channelService;
 
+  @Autowired
+  MasterService masterService;
+
 
   @GetMapping(value = "/homepage")
   public AdminHomeResponse getHomePage() {
@@ -49,6 +55,15 @@ public class AdminPortalController {
           @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize
   ) {
     return adminPortalService.getAllUsers(pageNumber, pageSize);
+  }
+
+
+  @GetMapping(value = "/blockerUsers")
+  public PageWiseSearchResponse<ProfileResponse> getBlockedUsers(
+          @RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+          @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize
+  ) {
+    return adminPortalService.getAllBlockedUsers(pageNumber, pageSize);
   }
 
   @GetMapping(value = "/deleteProfile/{profileId}")
@@ -168,5 +183,54 @@ public class AdminPortalController {
     return new ResponseEntity<>(channelService.delete(channelId), HttpStatus.OK);
   }
 
+  @Operation(summary = "Retrieve All Paged Master Grouby Title")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Retrieve All Paged Master Successful",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = PagedResponse.class))}),
+          @ApiResponse(responseCode = "500", description = "Retrieve All Paged Master Failed",
+                  content = @Content)})
+  @GetMapping("/master/all")
+  public ResponseEntity<Map<String,List<MasterResponse>>> retrieveMasterGroupByTitle() {
+    return new ResponseEntity<>(masterService.getAllGroupByTitle(), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Create Master ")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "201", description = "Create Master Successful",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MasterResponse.class))}),
+          @ApiResponse(responseCode = "500", description = "Create Master Failed",
+                  content = @Content)})
+  @PostMapping("/master/create")
+  public ResponseEntity<MasterResponse> create(@Valid @RequestBody MasterRequest request) {
+    return new ResponseEntity<>(masterService.create(request), HttpStatus.CREATED);
+  }
+
+
+  @Operation(summary = "Update Master ")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "201", description = "Update Master Successful",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MasterResponse.class))}),
+          @ApiResponse(responseCode = "500", description = "Update Master Failed",
+                  content = @Content)})
+  @PutMapping("/master/update")
+  public ResponseEntity<MasterResponse> update(@Valid @RequestBody MasterRequest request) {
+    return new ResponseEntity<>(masterService.update(request), HttpStatus.CREATED);
+  }
+
+  @Operation(summary = "Delete Master ")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Delete Master Successful",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MasterResponse.class))}),
+          @ApiResponse(responseCode = "500", description = "Delete Master Failed",
+                  content = @Content)})
+  @DeleteMapping("/master/delete/{masterId}")
+  public ResponseEntity<MasterResponse> delete(
+          @PathVariable(value = "masterId") Long masterId) {
+    return new ResponseEntity<>(masterService.delete(masterId), HttpStatus.OK);
+  }
 
 }

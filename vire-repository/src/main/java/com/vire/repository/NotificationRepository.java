@@ -67,7 +67,7 @@ public class NotificationRepository {
 
     var spec = new CustomSpecificationResolver<NotificationDao>(searchString).resolve();
 
-    return notificationRepositoryJpa.findAll(spec).stream()
+    return notificationRepositoryJpa.findAllByDeletedTimeIsNull(spec).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

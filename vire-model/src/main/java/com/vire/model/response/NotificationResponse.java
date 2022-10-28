@@ -20,6 +20,7 @@ public class NotificationResponse {
     private FeedNotificationResponse feedNotification;
     private ProfileNotificationResponse profileNotification;
     private String createdTimeStr;
+    private String message;
     private Long createdTime;
     private Long updatedTime;
 
@@ -31,6 +32,7 @@ public class NotificationResponse {
         notification.setNotificationType(dto.getNotificationType());
         notification.setNotifierProfileId(String.valueOf(dto.getNotifierProfileId()));
         notification.setIsRead(dto.getIsRead());
+        notification.setMessage(dto.getMessage());
         notification.setCreatedTimeStr(Utility.customTimeFormat(dto.getCreatedTime()));
         if (dto.getCommunityNotification() != null) {
             notification.setCommunityNotification(CommunityNotificationResponse.fromDto(dto.getCommunityNotification()));

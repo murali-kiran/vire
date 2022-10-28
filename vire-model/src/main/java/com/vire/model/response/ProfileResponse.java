@@ -56,12 +56,15 @@ public class ProfileResponse {
         profileResponse.setProfileWeightage(dto.getProfileWeightage());
         profileResponse.setProfileType(dto.getProfileType());
         profileResponse.setIsBlocked(dto.getIsBlocked());
-        var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
-        profileResponse.setProfileSettingTypes(profileSettingResponse);
+
+        if(dto.getProfileSettings()!=null){
+            var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
+            profileResponse.setProfileSettingTypes(profileSettingResponse);
+        }
 
         if(dto.getPersonalProfile()!=null){
             profileResponse.setPersonalProfile(PersonalProfileResponse.fromDto(dto.getPersonalProfile()));
-        }else {
+        }else if( dto.getFirmProfile()!=null ){
             profileResponse.setFirmProfile(FirmProfileResponse.fromDto(dto.getFirmProfile()));
         }
 

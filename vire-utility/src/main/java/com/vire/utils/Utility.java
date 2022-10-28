@@ -157,4 +157,14 @@ public class Utility {
                 return diffYears + " years";
         }
     }
+    public static String subStringOfSentence(String sentence, int numberOfWords) {
+        int end = 0;
+        for (int i=0; i<numberOfWords; i++) {
+            end = sentence.indexOf(' ', end) + 1;
+        }
+        if(end <= numberOfWords){
+            return sentence;
+        }
+        return "\""+sentence.substring(0, end - 1)+"...\"";
+    }
 }

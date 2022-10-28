@@ -45,11 +45,17 @@ public class NotificationDao {
     @PrimaryKeyJoinColumn
     private ProfileNotificationDao profileNotification;
 
+    @Column(name = "message")
+    private String message;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
+
+    @Column(name = "deleted_time")
+    public Long deletedTime;
 
     @PrePersist
     public void onPrePersist() {
@@ -71,7 +77,7 @@ public class NotificationDao {
         dto.setNotificationType(this.getNotificationType());
         dto.setNotifierProfileId(this.getNotifierProfileId());
         dto.setIsRead(this.getIsRead());
-
+        dto.setMessage(this.getMessage());
         if (this.getCommunityNotification() != null) {
             dto.setCommunityNotification(this.getCommunityNotification().toDto());
         }
@@ -107,7 +113,7 @@ public class NotificationDao {
         notification.setNotificationType(dto.getNotificationType());
         notification.setNotifierProfileId(dto.getNotifierProfileId());
         notification.setIsRead(dto.getIsRead());
-
+        notification.setMessage(dto.getMessage());
         if (dto.getCommunityNotification() != null) {
             notification.setCommunityNotification(CommunityNotificationDao.fromDto(dto.getCommunityNotification()));
             notification.getCommunityNotification().setNotification(notification);

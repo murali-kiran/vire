@@ -20,6 +20,7 @@ public class NotificationRequest {
     private SocialNotificationRequest socialNotification;
     private FeedNotificationRequest feedNotification;
     private ProfileNotificationRequest profileNotification;
+    private String message;
 
     public NotificationDto toDto(Snowflake snowflake) {
 
@@ -30,7 +31,7 @@ public class NotificationRequest {
         }else {
             dto.setNotificationId(snowflake.nextId());
         }
-        
+        dto.setMessage(this.getMessage());
         dto.setNotificationType(this.getNotificationType());
         dto.setNotifierProfileId(this.getNotifierProfileId() == null ? null : Long.valueOf(this.getNotifierProfileId()));
         dto.setIsRead(this.getIsRead());

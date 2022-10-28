@@ -16,6 +16,8 @@ public class NotificationDto {
     private SocialNotificationDto socialNotification;
     private FeedNotificationDto feedNotification;
     private ProfileNotificationDto profileNotification;
+    private String message;
     public Long createdTime;
     public Long updatedTime;
+    public Long deletedTime;
 }
