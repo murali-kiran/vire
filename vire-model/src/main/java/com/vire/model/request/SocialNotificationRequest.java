@@ -15,6 +15,7 @@ public class SocialNotificationRequest {
     
     private SocialNotificationType socialNotificationType;
     private Long profileId;
+    private Long socialId;
 
     public SocialNotificationDto toDto(Snowflake snowflake) {
 
@@ -25,7 +26,7 @@ public class SocialNotificationRequest {
         }else {
             dto.setSocialNotificationId(snowflake.nextId());
         }
-        
+        dto.setSocialId(this.getSocialId());
         dto.setSocialNotificationType(this.getSocialNotificationType());
         dto.setProfileId(this.getProfileId());
 

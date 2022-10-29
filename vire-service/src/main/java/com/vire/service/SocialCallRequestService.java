@@ -1,5 +1,8 @@
 package com.vire.service;
 
+import com.vire.dto.FeedNotificationType;
+import com.vire.dto.NotificationType;
+import com.vire.dto.SocialNotificationType;
 import com.vire.model.request.SocialCallRequestRequest;
 import com.vire.model.response.SocialCallRequestResponse;
 import com.vire.repository.SocialCallRequestRepository;
@@ -18,11 +21,19 @@ public class SocialCallRequestService {
 
   @Autowired
   SocialCallRequestRepository socialCallRequestRepository;
+  @Autowired
+  NotificationService notificationService;
 
   public SocialCallRequestResponse create(final SocialCallRequestRequest request) {
 
     var dto = request.toDto(snowflake);
-
+    try {
+      notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getRequesterProfileId()),
+              request.getStatus().equalsIgnoreCase("requested")?SocialNotificationType.CALL_REQUESTED:SocialNotificationType.CALL_ACCEPTED, Long.valueOf(request.getSocialId()));
+    }
+    catch (Exception e){
+      throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialId()+" due to "+e.getMessage() );
+    }
     return SocialCallRequestResponse.fromDto(socialCallRequestRepository.create(dto));
   }
 

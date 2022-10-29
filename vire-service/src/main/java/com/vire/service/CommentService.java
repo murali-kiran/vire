@@ -1,5 +1,7 @@
 package com.vire.service;
 
+import com.vire.dto.NotificationType;
+import com.vire.dto.SocialNotificationType;
 import com.vire.model.request.CommentRequest;
 import com.vire.model.response.CommentResponse;
 import com.vire.repository.CommentReplyReposJpa;
@@ -23,11 +25,19 @@ public class CommentService {
     CommentReplyReposJpa commentReplyReposJpa;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    NotificationService notificationService;
     public CommentResponse createComment(final CommentRequest request) {
 
         var dto = request.toDto();
         dto.setSocialPostCommentId(snowflake.nextId());
-
+        try {
+            notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getCommenterProfileId()),
+                    SocialNotificationType.COMMENT, Long.valueOf(request.getSocialPostId()));
+        }
+        catch (Exception e){
+            throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialPostId()+" due to "+e.getMessage() );
+        }
         return CommentResponse.fromDto(commentRepository.createComment(dto));
     }
 

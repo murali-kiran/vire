@@ -28,6 +28,9 @@ public class SocialNotificationDao {
     @Column(name = "profile_id", nullable = false)
     private Long profileId;
 
+    @Column(name = "social_id", nullable = false)
+    private Long socialId;
+
     @OneToOne
     @MapsId
     @JoinColumn(name = "social_notification_id")
@@ -62,7 +65,7 @@ public class SocialNotificationDao {
         
         dto.setSocialNotificationType(this.getSocialNotificationType());
         dto.setProfileId(this.getProfileId());
-
+        dto.setSocialId(this.getSocialId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -74,7 +77,7 @@ public class SocialNotificationDao {
         var socialNotification = new SocialNotificationDao();
 
         socialNotification.setSocialNotificationId(dto.getSocialNotificationId());
-        
+        socialNotification.setSocialId(dto.getSocialId());
         socialNotification.setSocialNotificationType(dto.getSocialNotificationType());
         socialNotification.setProfileId(dto.getProfileId());
 

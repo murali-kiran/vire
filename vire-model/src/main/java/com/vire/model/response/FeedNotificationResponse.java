@@ -12,9 +12,9 @@ public class FeedNotificationResponse {
     private String feedNotificationId;
     
     private FeedNotificationType feedNotificationType;
-    private MinimalProfileResponse responderProfile;
-    private Long profileId;
-    private Long feedId;
+   // private MinimalProfileResponse responderProfile;
+    private String profileId;
+    private String feedId;
     private Long createdTime;
     private Long updatedTime;
 
@@ -24,8 +24,8 @@ public class FeedNotificationResponse {
 
         feedNotification.setFeedNotificationId(String.valueOf(dto.getFeedNotificationId()));
         feedNotification.setFeedNotificationType(dto.getFeedNotificationType());
-        feedNotification.setProfileId(dto.getProfileId());
-        feedNotification.setFeedId(dto.getFeedId());
+        feedNotification.setProfileId(String.valueOf(dto.getProfileId()));
+        feedNotification.setFeedId(String.valueOf(dto.getFeedId()));
         feedNotification.setCreatedTime(dto.getCreatedTime());
         feedNotification.setUpdatedTime(dto.getUpdatedTime());
 

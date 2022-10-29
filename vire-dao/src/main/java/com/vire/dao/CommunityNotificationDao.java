@@ -28,6 +28,9 @@ public class CommunityNotificationDao {
     @Column(name = "profile_id", nullable = false)
     private Long profileId;
 
+    @Column(name = "community_id", nullable = false)
+    private Long communityId;
+
     @OneToOne
     @MapsId
     @JoinColumn(name = "community_notification_id")
@@ -62,7 +65,7 @@ public class CommunityNotificationDao {
         
         dto.setCommunityNotificationType(this.getCommunityNotificationType());
         dto.setProfileId(this.getProfileId());
-
+        dto.setCommunityId(this.getCommunityId());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -77,7 +80,7 @@ public class CommunityNotificationDao {
         
         communityNotification.setCommunityNotificationType(dto.getCommunityNotificationType());
         communityNotification.setProfileId(dto.getProfileId());
-
+        communityNotification.setCommunityId(dto.getCommunityId());
         return communityNotification;
     }
 }

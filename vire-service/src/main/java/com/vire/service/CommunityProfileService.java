@@ -1,5 +1,8 @@
 package com.vire.service;
 
+import com.vire.dto.CommunityNotificationType;
+import com.vire.dto.NotificationType;
+import com.vire.dto.SocialNotificationType;
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.response.CommunityProfileResponse;
 import com.vire.repository.CommunityProfileRepository;
@@ -21,13 +24,29 @@ public class CommunityProfileService {
   CommunityProfileRepository communityProfileRepository;
   @Autowired
   ProfileService profileService;
-
+  @Autowired
+  NotificationService notificationService;
   public CommunityProfileResponse create(final CommunityProfileRequest request) {
     log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
     checkAdminStatusCount(request);
     var existingCommunityProfile = communityProfileRepository.retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
     if(existingCommunityProfile.isEmpty()) {
       var dto = request.toDto(snowflake);
+      try {
+        CommunityNotificationType communityNotificationType = null;
+        if(request.getStatus().equalsIgnoreCase("requested")){
+          communityNotificationType = CommunityNotificationType.JOIN_REQUEST;
+        }else if(request.getStatus().equalsIgnoreCase("accepted")){
+          communityNotificationType = CommunityNotificationType.USER_ADDED;
+        }else if(request.getStatus().equalsIgnoreCase("admin")){
+          communityNotificationType = CommunityNotificationType.ADMIN_ADDED;
+        }
+        notificationService.createCommunityNotification(NotificationType.COMMUNITY, Long.valueOf(request.getProfileId()),
+                communityNotificationType, Long.valueOf(request.getCommunityId()));
+      }
+      catch (Exception e){
+        throw new RuntimeException("Community Notification failed to create for community id:"+request.getCommunityId()+" due to "+e.getMessage() );
+      }
       return CommunityProfileResponse.fromDto(communityProfileRepository.create(dto));
     }else{
       throw new RuntimeException("Record already exists please update");
@@ -42,7 +61,7 @@ public class CommunityProfileService {
   }
   public CommunityProfileResponse updateCommunityProfileStatus(final CommunityProfileRequest request) {
     log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
-    checkAdminStatusCount(request);
+    int adminCount = checkAdminStatusCount(request);
     var communityProfile = communityProfileRepository
             .retrieveByCommunityIdAndProfileId(Long.valueOf(request.getCommunityId()), Long.valueOf(request.getProfileId()));
     if(communityProfile != null && !communityProfile.isEmpty()) {
@@ -53,6 +72,22 @@ public class CommunityProfileService {
                   .stream()
                   .map(child -> child.toDto(snowflake))
                   .collect(Collectors.toList()));
+        }
+      }
+      CommunityNotificationType communityNotificationType = null;
+      if(request.getStatus().equalsIgnoreCase("requested")){
+        communityNotificationType = CommunityNotificationType.JOIN_REQUEST;
+      }else if(request.getStatus().equalsIgnoreCase("accepted")){
+        communityNotificationType = CommunityNotificationType.JOINED;
+      }else if(request.getStatus().equalsIgnoreCase("admin")){
+        communityNotificationType = CommunityNotificationType.ADMIN_ADDED;
+      }
+      if(communityNotificationType != null) {
+        try {
+          notificationService.createCommunityNotification(NotificationType.COMMUNITY, Long.valueOf(request.getProfileId()),
+                  communityNotificationType, Long.valueOf(request.getCommunityId()));
+        }catch (Exception e){
+          throw new RuntimeException("Community Notification failed to create for community id:"+request.getCommunityId()+" due to "+e.getMessage() );
         }
       }
       return CommunityProfileResponse.fromDto(communityProfileRepository.update(communityProfile.get()));
@@ -117,7 +152,7 @@ public class CommunityProfileService {
     return this.search("( profileId:"+profileId+ " ) AND ( ( status:Accepted ) OR ( status:Admin ) )");
   }
 
-  private void checkAdminStatusCount(CommunityProfileRequest request){
+  private int checkAdminStatusCount(CommunityProfileRequest request){
     var communityProfiles = communityProfileRepository
             .search("( communityId:"+request.getCommunityId()+" ) AND ( status:Admin )");
     if(communityProfiles.size() == 3 && request.getStatus().equals("Admin"))
@@ -125,5 +160,6 @@ public class CommunityProfileService {
     else if(communityProfiles.size() == 1 && request.getStatus().equals("Exit") &&
             communityProfiles.get(0).getProfileId().toString().equals(request.getProfileId()))
       throw new RuntimeException("Make someone as community admin before you leave current community");
+    return communityProfiles.size();
   }
 }

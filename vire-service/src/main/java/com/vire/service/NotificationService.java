@@ -1,15 +1,19 @@
 package com.vire.service;
 
 import com.vire.dao.FeedsDao;
-import com.vire.dto.FeedNotificationType;
-import com.vire.dto.FeedsDto;
-import com.vire.dto.NotificationType;
+import com.vire.dto.*;
+import com.vire.model.request.CommunityNotificationRequest;
 import com.vire.model.request.FeedNotificationRequest;
 import com.vire.model.request.NotificationRequest;
+import com.vire.model.request.SocialNotificationRequest;
 import com.vire.model.response.ExperienceDetailResponse;
+import com.vire.model.response.FeedsResponse;
+import com.vire.model.response.NotificationCountResponse;
 import com.vire.model.response.NotificationResponse;
+import com.vire.repository.CommunityRepositoryJpa;
 import com.vire.repository.FeedsRepositoryJpa;
 import com.vire.repository.NotificationRepository;
+import com.vire.repository.SocialRepositoryJpa;
 import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,10 @@ public class NotificationService {
   ProfileService profileService;
   @Autowired
   FeedsRepositoryJpa feedsRepositoryJpa;
+  @Autowired
+  SocialRepositoryJpa socialRepositoryJpa;
+  @Autowired
+  CommunityRepositoryJpa communityRepositoryJpa;
 
   public NotificationResponse create(final NotificationRequest request) {
 
@@ -71,7 +79,7 @@ public class NotificationService {
   }
 
   public List<NotificationResponse> search(final String searchString) {
-
+    Long responderProfileId = null;
     List<NotificationResponse> notificationResponseList = notificationRepository
             .search(searchString)
             .stream()
@@ -79,26 +87,103 @@ public class NotificationService {
             .collect(Collectors.toList());
     for (NotificationResponse notificationResponse : notificationResponseList) {
       if(notificationResponse.getFeedNotification() != null) {
-        notificationResponse.getFeedNotification().setResponderProfile(profileService.retrieveProfileDtoById(Long.valueOf(notificationResponse.getFeedNotification().getProfileId())));
+        responderProfileId = Long.valueOf(notificationResponse.getFeedNotification().getProfileId());
+      }else if(notificationResponse.getSocialNotification() != null) {
+        responderProfileId = Long.valueOf(notificationResponse.getSocialNotification().getProfileId());
+      }else if(notificationResponse.getCommunityNotification() != null) {
+        responderProfileId = Long.valueOf(notificationResponse.getCommunityNotification().getProfileId());
       }
+      notificationResponse.setResponderProfile(profileService.retrieveProfileDtoById(responderProfileId));
     }
     return notificationResponseList;
   }
 
-  public void createFeedNotification(NotificationType notificationType, String notifierProfileId, Long responderProfileId,FeedNotificationType feedNotificationType, Long feedId){
+  public void createFeedNotification(NotificationType notificationType, Long responderProfileId,FeedNotificationType feedNotificationType, Long feedId){
 
     var notificationRequest = new NotificationRequest();
     notificationRequest.setNotificationType(notificationType);
-    notificationRequest.setNotifierProfileId(notifierProfileId);
     notificationRequest.setIsRead(false);
     var feedNotification = new FeedNotificationRequest();
     feedNotification.setFeedNotificationType(feedNotificationType);
     feedNotification.setProfileId(responderProfileId);
     feedNotification.setFeedId(feedId);
-    Optional<FeedsDao> feed = feedsRepositoryJpa.findById(feedId);
+    var feed = feedsRepositoryJpa.findById(feedId);
+    notificationRequest.setNotifierProfileId(feed.get().getProfileId()+"");
     notificationRequest.setMessage(feed.get().getDescription() == null ? "\"photo\"" : Utility.subStringOfSentence(feed.get().getDescription(), 5));
     notificationRequest.setFeedNotification(feedNotification);
     create(notificationRequest);
   }
+  public void createSocialNotification(NotificationType notificationType, Long responderProfileId, SocialNotificationType socialNotificationType, Long socialId){
 
+    var notificationRequest = new NotificationRequest();
+    notificationRequest.setNotificationType(notificationType);
+    notificationRequest.setIsRead(false);
+    var socialNotification = new SocialNotificationRequest();
+    socialNotification.setSocialNotificationType(socialNotificationType);
+    socialNotification.setProfileId(responderProfileId);
+    socialNotification.setSocialId(socialId);
+    var social = socialRepositoryJpa.findById(socialId);
+    if(socialNotificationType.name().contains("CALL_ACCEPTED") || socialNotificationType.name().contains("REPLY_CHAT")) {
+      notificationRequest.setNotifierProfileId(responderProfileId + "");
+    }else{
+      notificationRequest.setNotifierProfileId(social.get().getProfileId()+"");
+    }
+    notificationRequest.setMessage(social.get().getDescription() == null ? "\"photo\"" : Utility.subStringOfSentence(social.get().getDescription(), 5));
+    notificationRequest.setSocialNotification(socialNotification);
+    create(notificationRequest);
+  }
+
+  public void createCommunityNotification(NotificationType notificationType, Long responderProfileId, CommunityNotificationType communityNotificationType, Long communityId){
+
+    var notificationRequest = new NotificationRequest();
+    notificationRequest.setNotificationType(notificationType);
+    notificationRequest.setIsRead(false);
+    var communityNotification = new CommunityNotificationRequest();
+    communityNotification.setCommunityNotificationType(communityNotificationType);
+    communityNotification.setProfileId(responderProfileId);
+    communityNotification.setCommunityId(communityId);
+    var community = communityRepositoryJpa.findById(communityId);
+    notificationRequest.setNotifierProfileId(communityNotificationType.name().equals("JOIN_REQUEST") ? community.get().getCreatorProfileId()+"": responderProfileId+"");
+    notificationRequest.setMessage(community.get().getDescription() == null ? "\"photo\"" : Utility.subStringOfSentence(community.get().getDescription(), 5));
+    notificationRequest.setCommunityNotification(communityNotification);
+    create(notificationRequest);
+  }
+
+  public List<NotificationResponse> retrieveNotificationsByTypeProfile(String notificationType, String profileId){
+
+    if(notificationType.equals("app_notifications")){
+      List<NotificationResponse> notificationResponses = notificationRepository.retrieveNotificationsByTypeAndProfile(NotificationType.SOCIAL, Long.valueOf(profileId)).stream()
+              .map(dto -> NotificationResponse.fromDto(dto))
+              .collect(Collectors.toList());
+      notificationResponses.addAll(notificationRepository.retrieveNotificationsByTypeAndProfile(NotificationType.FEED, Long.valueOf(profileId)).stream()
+              .map(dto -> NotificationResponse.fromDto(dto))
+              .collect(Collectors.toList()));
+      notificationResponses.addAll(notificationRepository.retrieveNotificationsByTypeAndProfile(NotificationType.PROFILE, Long.valueOf(profileId)).stream()
+              .map(dto -> NotificationResponse.fromDto(dto))
+              .collect(Collectors.toList()));
+      return notificationResponses;
+    }else
+      return notificationRepository.retrieveNotificationsByTypeAndProfile(NotificationType.valueOf(notificationType), Long.valueOf(profileId)).stream()
+              .map(dto -> NotificationResponse.fromDto(dto))
+              .collect(Collectors.toList());
+
+  }
+  public NotificationCountResponse retrieveCountByProfileId(Long profileId){
+    NotificationCountResponse notificationCountResponse = new NotificationCountResponse();
+    // OR ( notificationType:PROFILE )
+    var appCount = notificationRepository
+            .countByNotificationTypeAndNotifierProfileIdAndIsRead(NotificationType.SOCIAL, profileId, false) +
+            notificationRepository
+                    .countByNotificationTypeAndNotifierProfileIdAndIsRead(NotificationType.FEED, profileId, false);
+
+    var chatCount = notificationRepository
+            .countByNotificationTypeAndNotifierProfileIdAndIsRead(NotificationType.SOCIAL_CHAT, profileId, false);
+    var communityCount = notificationRepository
+            .countByNotificationTypeAndNotifierProfileIdAndIsRead(NotificationType.COMMUNITY, profileId, false);
+
+    notificationCountResponse.setAppCount(appCount);
+    notificationCountResponse.setSocialChatCount(chatCount);
+    notificationCountResponse.setCommunityCount(communityCount);
+    return notificationCountResponse;
+  }
 }

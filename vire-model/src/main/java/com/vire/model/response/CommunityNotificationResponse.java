@@ -12,7 +12,8 @@ public class CommunityNotificationResponse {
     private String communityNotificationId;
     
     private CommunityNotificationType communityNotificationType;
-    private Long profileId;
+    private String profileId;
+    private String communityId;
     private Long createdTime;
     private Long updatedTime;
 
@@ -22,7 +23,8 @@ public class CommunityNotificationResponse {
 
         communityNotification.setCommunityNotificationId(String.valueOf(dto.getCommunityNotificationId()));
         communityNotification.setCommunityNotificationType(dto.getCommunityNotificationType());
-        communityNotification.setProfileId(dto.getProfileId());
+        communityNotification.setProfileId(String.valueOf(dto.getProfileId()));
+        communityNotification.setCommunityId(String.valueOf(dto.getCommunityId()));
         communityNotification.setCreatedTime(dto.getCreatedTime());
         communityNotification.setUpdatedTime(dto.getUpdatedTime());
 

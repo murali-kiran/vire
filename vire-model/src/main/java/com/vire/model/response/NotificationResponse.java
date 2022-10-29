@@ -21,6 +21,7 @@ public class NotificationResponse {
     private ProfileNotificationResponse profileNotification;
     private String createdTimeStr;
     private String message;
+    private MinimalProfileResponse responderProfile;
     private Long createdTime;
     private Long updatedTime;
 

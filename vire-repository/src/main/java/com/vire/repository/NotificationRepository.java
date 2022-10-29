@@ -3,8 +3,10 @@ package com.vire.repository;
 import com.vire.dao.NotificationDao;
 import com.vire.dto.NotificationDto;
 
+import com.vire.dto.NotificationType;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +69,18 @@ public class NotificationRepository {
 
     var spec = new CustomSpecificationResolver<NotificationDao>(searchString).resolve();
 
-    return notificationRepositoryJpa.findAllByDeletedTimeIsNull(spec).stream()
+    return notificationRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
+
+  public Long countByNotificationTypeAndNotifierProfileIdAndIsRead(NotificationType notificationType, Long notifierProfileId, Boolean isRead){
+    return notificationRepositoryJpa.countByNotificationTypeAndNotifierProfileIdAndIsReadAndDeletedTimeIsNull(notificationType, notifierProfileId, isRead);
+  }
+
+  public List<NotificationDto> retrieveNotificationsByTypeAndProfile(NotificationType notificationType, Long notifierProfileId){
+    return notificationRepositoryJpa
+            .findByNotificationTypeAndNotifierProfileIdAndIsReadAndDeletedTimeIsNullOrderByUpdatedTimeDesc(notificationType,notifierProfileId,false).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

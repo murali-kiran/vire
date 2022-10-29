@@ -29,7 +29,7 @@ public class FeedCommentReplyService {
 
     var dto = request.toDto(snowflake);
     try {
-      notificationService.createFeedNotification(NotificationType.FEED, feedsRepository.retrieveById(Long.valueOf(request.getFeedId())).get().getProfileId()+"", Long.valueOf(request.getReplierProfileId()), FeedNotificationType.COMMENT_REPLY, Long.valueOf(request.getFeedId()));
+      notificationService.createFeedNotification(NotificationType.FEED, Long.valueOf(request.getReplierProfileId()), FeedNotificationType.COMMENT_REPLY, Long.valueOf(request.getFeedId()));
     }
     catch (Exception e){
       throw new RuntimeException("Feed not found with id:"+request.getFeedId());

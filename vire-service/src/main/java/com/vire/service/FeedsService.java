@@ -101,7 +101,7 @@ public class FeedsService {
         }
         if(request.getParentFeedId() != null){
             try {
-                notificationService.createFeedNotification(NotificationType.FEED, retrieveById(Long.valueOf(request.getParentFeedId())).getProfileId(), Long.valueOf(request.getProfileId()), FeedNotificationType.SHARE, Long.valueOf(request.getParentFeedId()));
+                notificationService.createFeedNotification(NotificationType.FEED, Long.valueOf(request.getProfileId()), FeedNotificationType.SHARE, Long.valueOf(request.getParentFeedId()));
             }
             catch (Exception e){
                 throw new RuntimeException("Feed not found with id:"+request.getFeedId());

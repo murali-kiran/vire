@@ -1,5 +1,7 @@
 package com.vire.service;
 
+import com.vire.dto.NotificationType;
+import com.vire.dto.SocialNotificationType;
 import com.vire.model.request.SocialChatRequest;
 import com.vire.model.response.FeedCommentResponse;
 import com.vire.model.response.SocialChatResponse;
@@ -24,12 +26,22 @@ public class SocialChatService {
 
     @Autowired
     ProfileService profileService;
+    @Autowired
+    NotificationService notificationService;
 
     public SocialChatResponse create(final SocialChatRequest request) {
 
         var dto = request.toDto();
         dto.setId(snowflake.nextId());
-
+        var checkNewChat = search("( senderProfileId:"+request.getSenderProfileId()+" ) AND ( socialPostId:"+request.getSocialPostId()+" )" );
+        if(checkNewChat.isEmpty()) {
+            try {
+                notificationService.createSocialNotification(NotificationType.SOCIAL_CHAT, Long.valueOf(request.getSenderProfileId()),
+                        SocialNotificationType.NEW_CHAT, Long.valueOf(request.getSocialPostId()));
+            } catch (Exception e) {
+                throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialPostId()+" due to "+e.getMessage() );
+            }
+        }
         return SocialChatResponse.fromDto(socialPostChatRepo.create(dto));
     }
 

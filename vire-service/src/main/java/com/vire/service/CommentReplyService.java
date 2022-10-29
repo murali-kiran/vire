@@ -1,5 +1,7 @@
 package com.vire.service;
 
+import com.vire.dto.NotificationType;
+import com.vire.dto.SocialNotificationType;
 import com.vire.model.request.CommentReplyRequest;
 import com.vire.model.response.CommentReplyResponse;
 import com.vire.model.response.CommentResponse;
@@ -18,6 +20,8 @@ public class CommentReplyService {
 
     @Autowired
     CommentReplyRepository commentReplyRepository;
+    @Autowired
+    NotificationService notificationService;
 
     @Autowired
     ProfileService profileService;
@@ -25,7 +29,13 @@ public class CommentReplyService {
 
         var dto = request.toDto();
         dto.setSocialPostCommentReplyId(snowflake.nextId());
-
+        try {
+            notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getCommentReplierProfileId()),
+                    SocialNotificationType.COMMENT, Long.valueOf(request.getSocialId()));
+        }
+        catch (Exception e){
+            throw new RuntimeException("Social Notification not created:"+e.getMessage());
+        }
         return CommentReplyResponse.fromDto(commentReplyRepository.createReply(dto));
     }
 

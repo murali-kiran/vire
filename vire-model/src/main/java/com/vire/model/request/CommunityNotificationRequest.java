@@ -15,7 +15,7 @@ public class CommunityNotificationRequest {
     
     private CommunityNotificationType communityNotificationType;
     private Long profileId;
-
+    private Long communityId;
     public CommunityNotificationDto toDto(Snowflake snowflake) {
 
         var dto = new CommunityNotificationDto();
@@ -25,7 +25,7 @@ public class CommunityNotificationRequest {
         }else {
             dto.setCommunityNotificationId(snowflake.nextId());
         }
-        
+        dto.setCommunityId(this.getCommunityId());
         dto.setCommunityNotificationType(this.getCommunityNotificationType());
         dto.setProfileId(this.getProfileId());
 

@@ -13,4 +13,5 @@ public class CommunityNotificationDto {
     private Long profileId;
     public Long createdTime;
     public Long updatedTime;
+    private Long communityId;
 }
