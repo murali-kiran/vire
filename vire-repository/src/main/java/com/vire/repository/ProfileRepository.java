@@ -193,7 +193,7 @@ public class ProfileRepository {
         PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
 
 
-        Page<ProfileDao> page = profileViewRepositoryJpa.findAll(request);
+        Page<ProfileViewDao> page = profileViewRepositoryJpa.findAll(request);
         searchResponse.setPageCount(page.getTotalPages());
         List<ProfileDto> profileDtos =  page.stream()
                 .map(dao -> dao.toDto())
@@ -256,9 +256,9 @@ public class ProfileRepository {
         PageWiseSearchResponse searchResponse = new PageWiseSearchResponse<ProfileDto>();
         PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
 
-        var spec = new CustomSpecificationResolver<ProfileDao>(searchString).resolve();
+        var spec = new CustomSpecificationResolver<ProfileViewDao>(searchString).resolve();
 
-        Page<ProfileDao> page = profileRepositoryJpa.findAll(spec,request);
+        Page<ProfileViewDao> page = profileViewRepositoryJpa.findAll(spec,request);
         searchResponse.setPageCount(page.getTotalPages());
         List<ProfileDto> profileDtos =  page.stream()
                 .map(dao -> dao.toDto())
