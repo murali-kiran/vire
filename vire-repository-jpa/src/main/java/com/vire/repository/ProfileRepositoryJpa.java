@@ -32,6 +32,9 @@ public interface ProfileRepositoryJpa
     @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE() and profile_status='active'",nativeQuery = true)
     int getTodayCreatedProfiles();
 
+    @Query(value = "select count(*) from profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE() and profile_status = 'active' and profile_type = :profileType",nativeQuery = true)
+    int getTodayCreatedSpecificProfiles(@Param(value = "profileType") String profileType);
+
     @Modifying
     @Query("update ProfileDao p set p.isBlocked = :isBlocked where p.profileId = :profileId")
     void blockProfile(@Param(value = "profileId") long profileId, @Param(value = "isBlocked") Boolean isBlocked);
@@ -57,4 +60,6 @@ public interface ProfileRepositoryJpa
     void updateEmailViaMobileNumberAndProfileId(@Param(value = "profileId") Long profileId,@Param(value = "phonenumber") String phonenumber, @Param(value = "newEmail") String newEmail);
 
     Long countByProfileStatus(String profileStatus);
+
+    Long countByProfileTypeAndProfileStatus(String profileType, String profileStatus);
 }
