@@ -1,7 +1,6 @@
 package com.vire.service;
 
 import com.vire.model.response.*;
-import com.vire.model.response.view.SocialViewResponse;
 import com.vire.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.vire.dto.ProfileDto;
 import com.vire.model.response.view.FeedsViewResponse;
-import com.vire.repository.view.FeedsViewRepositoryJpa;
 
 @Service
 public class AdminPortalService {
@@ -20,13 +18,7 @@ public class AdminPortalService {
     ProfileRepositoryJpa profileRepositoryJpa;
 
     @Autowired
-    FeedsViewRepositoryJpa feedsViewRepositoryJpa;
-
-    @Autowired
     ProfileRepository profileRepository;
-
-    @Autowired
-    FirmProfileRepositoryJpa firmProfileRepositoryJpa;
 
     @Autowired
     ProfileThumbsUpService profileThumbsUpService;
@@ -75,8 +67,9 @@ public class AdminPortalService {
         adminHomeResponse.setTotalUsers(profileRepositoryJpa.countByProfileStatus("active"));
         adminHomeResponse.setNewUsersToday(profileRepositoryJpa.getTodayCreatedProfiles());
 
-        adminHomeResponse.setTotalFirmAccounts(firmProfileRepositoryJpa.count());
-        adminHomeResponse.setNewFirmAccountsToday(firmProfileRepositoryJpa.getTodayCreatedFirmAccounts());
+        adminHomeResponse.setTotalFirmAccounts(profileRepositoryJpa.countByProfileTypeAndProfileStatus("firm","active"));
+        adminHomeResponse.setNewFirmAccountsToday(profileRepositoryJpa.getTodayCreatedSpecificProfiles("firm"));
+
 
         adminHomeResponse.setTotalCommunities(communityRepositoryJpa.count());
         adminHomeResponse.setNewCommunitiesToday(communityRepositoryJpa.getTodayCreatedCommunityPosts());
@@ -107,14 +100,13 @@ public class AdminPortalService {
         PageWiseSearchResponse<ProfileDto> searchResponse = profileRepository.retrieveAllProfilesPaged(pageNumber,pageSize);
         List<ProfileDto> profileDtos = searchResponse.getList();
 
-        List<ProfileResponse> profileResponses = profileDtos.stream()
+        List<ProfileResponse> profileResponses = profileDtos.parallelStream()
                 .map(dto -> ProfileResponse.fromDto(dto))
                 .collect(Collectors.toList());
 
-
-        profileResponses.forEach(profile -> {
-            profile.setThumbsUpCount(Long.valueOf(profileThumbsUpService.search("profileId:"+profile.getProfileId()).size()));
-            profile.setThumbsDownCount(Long.valueOf(profileThumbsDownService.search("profileId:"+profile.getProfileId()).size()));
+        profileResponses.parallelStream().forEach(profile -> {
+            profile.setThumbsUpCount(Long.valueOf(profileThumbsUpService.getThumbsUpCountOfProfile(Long.valueOf(profile.getProfileId()))));
+            profile.setThumbsDownCount(Long.valueOf(profileThumbsDownService.getThumbsDownCountOfProfile(Long.valueOf(profile.getProfileId()))));
         });
 
         PageWiseSearchResponse<ProfileResponse> response = new PageWiseSearchResponse<ProfileResponse>();
