@@ -193,7 +193,7 @@ public class ProfileRepository {
         PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
 
 
-        Page<ProfileDao> page = profileRepositoryJpa.findAll(request);
+        Page<ProfileDao> page = profileViewRepositoryJpa.findAll(request);
         searchResponse.setPageCount(page.getTotalPages());
         List<ProfileDto> profileDtos =  page.stream()
                 .map(dao -> dao.toDto())
