@@ -77,8 +77,8 @@ public class ChannelService {
   public PageWiseSearchResponse<ChannelResponse> getAllPaged(Integer pageNumber, Integer pageSize) {
 
     PageWiseSearchResponse<ChannelDto> searchResponse = channelRepository.getAllPaged(pageNumber,pageSize);
-    List<ChannelResponse> channelResponses = searchResponse.getList().stream()
-            .map(dto -> profileLoader(ChannelResponse.fromDto(dto)))
+    List<ChannelResponse> channelResponses = searchResponse.getList().parallelStream()
+            .map(dto -> ChannelResponse.fromDto(dto))
             .collect(Collectors.toList());
 
     PageWiseSearchResponse<ChannelResponse> response = new PageWiseSearchResponse<ChannelResponse>();
