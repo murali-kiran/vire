@@ -26,8 +26,8 @@ public class ProfileViewDao {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "is_blocked", columnDefinition="BOOLEAN DEFAULT false")
-    private Boolean isBlocked = false;
+//    @Column(name = "is_blocked", columnDefinition="BOOLEAN DEFAULT false")
+//    private Boolean isBlocked = false;
 
     @Column(name="profile_type", nullable = true)
     private String profileType;
@@ -38,12 +38,15 @@ public class ProfileViewDao {
     @Column(name = "updated_time", nullable = false)
     public Long updatedTime;
 
+    @Column(name = "profile_status", nullable = false)
+    public String profileStatus;
+
     public ProfileDto toDto() {
 
         ProfileDto profileDto = new ProfileDto();
         profileDto.setProfileId(this.profileId);
         profileDto.setName(this.name);
-        profileDto.setIsBlocked(this.isBlocked);
+        profileDto.setProfileStatus(this.profileStatus);
         profileDto.setProfileType(this.profileType);
         return profileDto;
 
