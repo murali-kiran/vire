@@ -210,7 +210,7 @@ public class ProfileRepository {
         PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
 
 
-        Page<ProfileViewDao> page = profileViewRepositoryJpa.findByIsBlocked(true,request);
+        Page<ProfileViewDao> page = profileViewRepositoryJpa.findByProfileStatus("blocked",request);
         searchResponse.setPageCount(page.getTotalPages());
         List<ProfileDto> profileDtos =  page.stream()
                 .map(dao -> dao.toDto())
@@ -231,7 +231,7 @@ public class ProfileRepository {
 
     @Cacheable(value="profileDto", key="#profileId")
     public ProfileDto retrieveProfileDtoById(final Long profileId) {
-        log.info("Sravan in cache");
+
         if(retrieveProfileById(profileId) !=  null) {
             return retrieveProfileById(profileId).get();
         }
