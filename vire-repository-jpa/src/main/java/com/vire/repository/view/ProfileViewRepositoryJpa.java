@@ -18,7 +18,9 @@ import java.util.Optional;
 public interface ProfileViewRepositoryJpa
         extends JpaRepository<ProfileViewDao, Long>, JpaSpecificationExecutor<ProfileViewDao> {
 
-    Page<ProfileViewDao> findByIsBlocked(final Boolean isBlocked, Pageable pageable);
+    Page<ProfileViewDao> findByProfileStatus(final String profileStatus, Pageable pageable);
+
+    Optional<ProfileViewDao> findByProfileId(Long profileId);
 
 }
 
