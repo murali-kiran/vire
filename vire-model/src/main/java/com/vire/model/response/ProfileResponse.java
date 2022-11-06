@@ -55,7 +55,7 @@ public class ProfileResponse {
         profileResponse.setFirstLogin(dto.getFirstLogin());
         profileResponse.setProfileWeightage(dto.getProfileWeightage());
         profileResponse.setProfileType(dto.getProfileType());
-        profileResponse.setIsBlocked(dto.getIsBlocked());
+        profileResponse.setIsBlocked(dto.getProfileStatus().equalsIgnoreCase("blocked")?true:false);
 
         if(dto.getProfileSettings()!=null){
             var profileSettingResponse = dto.getProfileSettings().stream().map(profileSettingDto->ProfileSettingResponse.fromDto(profileSettingDto)).collect(Collectors.toList());
