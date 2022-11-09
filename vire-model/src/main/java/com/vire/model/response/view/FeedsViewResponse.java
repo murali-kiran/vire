@@ -13,32 +13,26 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include. NON_NULL)
 public class FeedsViewResponse {
-    private Long feedId;
+    private String feedId;
     private Long profileId;
     private String description;
     private Integer commentsCount;
     private Integer likesCount;
-    private Integer reportsCount;
-    private Long createdTime;
     private Long updatedTime;
     private List<FeedCommentViewDto> feedComments;
     private MinimalProfileResponse minimalProfileResponse;
-    //private List<FeedLikesViewDto> feedLikes;
-    //private List<FeedReportViewDto> feedReports;
 
     public static FeedsViewResponse fromDto(FeedsViewDto dto){
 
         var response = new FeedsViewResponse();
-        response.setFeedId(dto.getFeedId());
+        response.setFeedId(dto.getFeedId()+"");
         response.setDescription(dto.getDescription());
         response.setProfileId(dto.getProfileId());
 
         response.setCommentsCount(dto.getFeedComments().size());
         response.setLikesCount(dto.getFeedLikes().size());
-        response.setReportsCount(dto.getFeedReports().size());
         response.setFeedComments(dto.getFeedComments());
 
-        response.setCreatedTime(dto.getCreatedTime());
         response.setUpdatedTime(dto.getUpdatedTime());
 
         return response;

@@ -82,7 +82,7 @@ public class CommunityService {
 
         PageWiseSearchResponse<CommunityDto> searchResponse = communityRepository.getAllPaged(pageNumber,pageSize);
         List<CommunityResponse> communityResponses = searchResponse.getList().stream()
-                .map(dto -> profileLoader(CommunityResponse.fromDto(dto)))
+                .map(dto -> CommunityResponse.fromDto(dto))
                 .collect(Collectors.toList());
 
         PageWiseSearchResponse<CommunityResponse> response = new PageWiseSearchResponse<CommunityResponse>();

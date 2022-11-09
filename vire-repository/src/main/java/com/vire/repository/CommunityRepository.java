@@ -1,9 +1,11 @@
 package com.vire.repository;
 
 import com.vire.dao.CommunityDao;
+import com.vire.dao.view.CommunityViewDao;
 import com.vire.dto.CommunityDto;
 import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.CustomSpecificationResolver;
+import com.vire.repository.view.CommunityViewRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,10 @@ public class CommunityRepository {
 
   @Autowired
   CommunityRepositoryJpa communityRepositoryJpa;
+
+  @Autowired
+  CommunityViewRepositoryJpa communityViewRepositoryJpa;
+
   @Autowired
   CommunityProfileRepositoryJpa communityProfileRepositoryJpa;
   public CommunityDto create(final CommunityDto communityDto) {
@@ -70,7 +76,7 @@ public class CommunityRepository {
     PageWiseSearchResponse<CommunityDto> response = new PageWiseSearchResponse<>();
     PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
 
-    Page<CommunityDao> page = communityRepositoryJpa.findAll(request);
+    Page<CommunityViewDao> page = communityViewRepositoryJpa.findAll(request);
     List<CommunityDto> communityDtos = page.stream().map(dao -> dao.toDto())
             .collect(Collectors.toList());
 
