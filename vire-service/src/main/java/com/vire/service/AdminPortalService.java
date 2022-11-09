@@ -1,7 +1,9 @@
 package com.vire.service;
 
+import com.vire.dao.view.ProfileViewDao;
 import com.vire.model.response.*;
 import com.vire.repository.*;
+import com.vire.repository.view.ProfileViewRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,9 @@ public class AdminPortalService {
 
     @Autowired
     ProfileRepositoryJpa profileRepositoryJpa;
+
+    @Autowired
+    ProfileViewRepositoryJpa profileViewRepositoryJpa;
 
     @Autowired
     ProfileRepository profileRepository;
@@ -153,11 +158,16 @@ public class AdminPortalService {
     }
     
     public List<FeedsViewResponse> getAllFeeds() {
-        var feedsViewResponseList = feedsRepository.getAllFeedsViewDtos().stream().map(dto->FeedsViewResponse.fromDto(dto)).collect(Collectors.toList());
+        var feedsViewResponseList = feedsRepository.getAllFeedsViewDtos().parallelStream().map(dto->FeedsViewResponse.fromDto(dto)).collect(Collectors.toList());
 
-        for(FeedsViewResponse feedsViewResponse : feedsViewResponseList){
-            feedsViewResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(feedsViewResponse.getProfileId())));
-        }
+
+
+        feedsViewResponseList.parallelStream().forEach(feedsViewResponse->{
+            Optional<ProfileViewDao> profileViewDao = profileViewRepositoryJpa.findByProfileId(Long.valueOf(feedsViewResponse.getProfileId()));
+            if(profileViewDao.isPresent()){
+                feedsViewResponse.setMinimalProfileResponse(MinimalProfileResponse.fromDto(profileViewDao.get().toDto()));
+            }
+        });
 
         return feedsViewResponseList;
     }
