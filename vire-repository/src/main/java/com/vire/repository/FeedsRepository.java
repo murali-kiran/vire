@@ -5,6 +5,7 @@ import com.vire.dao.FeedFileDao;
 import com.vire.dto.FeedsDto;
 import com.vire.dto.view.FeedsViewDto;
 import com.vire.repository.search.CustomSpecificationResolver;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class FeedsRepository {
     FeedFileRepositoryJpa feedsFileRepositoryJpa;
     @Autowired
     FeedsViewRepositoryJpa feedsViewRepositoryJpa;
+    @Autowired
+    NotificationRepository notificationRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -100,10 +103,22 @@ public class FeedsRepository {
         if (optionalFeeds.isPresent()) {
             //feedsRepositoryJpa.deleteById(feedId);
             feedsRepositoryJpa.updateDeletedTime(Instant.now().toEpochMilli(), feedId);
+            updateNotifications(feedId);
         } else {
             throw new RuntimeException("Feeds Post Object not exists in DB");
         }
         return optionalFeeds;
+    }
+
+    private void updateNotifications(Long feedId) {
+        try {
+            var notificationsIdList = notificationRepository.retrieveByFeed(feedId);
+            for (Long notificationId : notificationsIdList) {
+                notificationRepository.updateDeletedTime(notificationId);
+            }
+        }catch(Exception e){
+            throw new RuntimeException("Deleting-- updating delete time cause issues: "+e.getMessage());
+        }
     }
 
     public List<FeedsDto> getAllFeeds() {

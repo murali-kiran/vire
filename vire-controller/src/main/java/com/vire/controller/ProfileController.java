@@ -71,7 +71,19 @@ public class ProfileController {
                 .findFirst()
                 .orElse(new ResponseEntity(HttpStatus.UNAUTHORIZED));
     }
-
+    @Operation(summary = "Update profile setting by profile ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update profile setting by profile ID Successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProfileResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Update profile setting by profile ID Failed",
+                    content = @Content)})
+    @PutMapping("/{profileid}/{isprivate}/{showfriends}")
+    public ResponseEntity<?> updateProfileSettingByProfileId(@PathVariable(name = "profileid") Long profileId,
+                                                 @PathVariable(name = "isprivate") Boolean isPrivate,
+                                                 @PathVariable(name = "showfriends") Boolean showFriends) {
+        return new ResponseEntity<>(profileService.updateProfileSettingByProfileId(profileId, isPrivate, showFriends), HttpStatus.CREATED);
+    }
     /*@Operation(summary = "Retrieve friends of specific profileID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieve Profile by ID Successful",

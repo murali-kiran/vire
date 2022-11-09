@@ -1,6 +1,7 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.dto.NotificationType;
 import com.vire.model.request.NotificationRequest;
 import com.vire.model.response.NotificationCountResponse;
 import com.vire.model.response.NotificationResponse;
@@ -57,7 +58,7 @@ public class NotificationController {
   }
 
   @GetMapping("/getnotifications/{notificationtype}/{profileid}")
-  public ResponseEntity<List<NotificationResponse>> retrieveByNotificationTypeProfile(@PathVariable(name = "notificationtype") String notificationType, @PathVariable(name = "profileid") String profileId) {
+  public ResponseEntity<List<NotificationResponse>> retrieveByNotificationTypeProfile(@PathVariable(name = "notificationtype") NotificationType notificationType, @PathVariable(name = "profileid") String profileId) {
     return new ResponseEntity<>(notificationService.retrieveNotificationsByTypeProfile(notificationType, profileId), HttpStatus.OK);
   }
 }

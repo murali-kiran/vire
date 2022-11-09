@@ -12,6 +12,8 @@ public class SocialNotificationDto {
     private SocialNotificationType socialNotificationType;
     private Long profileId;
     private Long socialId;
+    private Long socialMiscInfoId;
+    private String miscType;
     public Long createdTime;
     public Long updatedTime;
 }

@@ -1,5 +1,7 @@
 package com.vire.service;
 
+import com.vire.dto.NotificationType;
+import com.vire.dto.ProfileNotificationType;
 import com.vire.model.request.ProfileThumbsDownRequest;
 import com.vire.model.response.ProfileThumbsDownResponse;
 import com.vire.model.response.ProfileThumbsUpResponse;
@@ -20,12 +22,17 @@ public class ProfileThumbsDownService {
   ProfileThumbsDownRepository profileThumbsDownRepository;
   @Autowired
   ProfileService profileService;
-
+  @Autowired
+  NotificationService notificationService;
   public ProfileThumbsDownResponse create(final ProfileThumbsDownRequest request) {
 
     var dto = request.toDto(snowflake);
-
-    return ProfileThumbsDownResponse.fromDto(profileThumbsDownRepository.create(dto));
+    try {
+      notificationService.createProfileNotification(NotificationType.PROFILE, request.getThumbsDownBy(), ProfileNotificationType.THUMBS_DOWN, request.getProfileId());
+      return ProfileThumbsDownResponse.fromDto(profileThumbsDownRepository.create(dto));
+    }catch(Exception e){
+      throw new RuntimeException("Thumbs down record not created for profile:"+request.getProfileId()+" by "+request.getThumbsDownBy());
+    }
   }
 
   public ProfileThumbsDownResponse update(final ProfileThumbsDownRequest request) {

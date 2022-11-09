@@ -16,6 +16,8 @@ public class SocialNotificationRequest {
     private SocialNotificationType socialNotificationType;
     private Long profileId;
     private Long socialId;
+    private Long socialMiscInfoId;
+    private String miscType;
 
     public SocialNotificationDto toDto(Snowflake snowflake) {
 
@@ -29,6 +31,8 @@ public class SocialNotificationRequest {
         dto.setSocialId(this.getSocialId());
         dto.setSocialNotificationType(this.getSocialNotificationType());
         dto.setProfileId(this.getProfileId());
+        dto.setSocialMiscInfoId(this.getSocialMiscInfoId());
+        dto.setMiscType(this.getMiscType());
 
         return dto;
     }

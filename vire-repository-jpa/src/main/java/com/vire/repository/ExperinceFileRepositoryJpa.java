@@ -13,4 +13,5 @@ public interface ExperinceFileRepositoryJpa extends JpaRepository<ExperienceFile
         JpaSpecificationExecutor<ExperienceFileViewDao> {
 
     List<ExperienceFileViewDao> findByExperienceId(Long feedId);
+
 }

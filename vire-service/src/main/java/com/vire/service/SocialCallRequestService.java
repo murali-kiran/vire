@@ -9,6 +9,7 @@ import com.vire.repository.SocialCallRequestRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,23 +25,33 @@ public class SocialCallRequestService {
   @Autowired
   NotificationService notificationService;
 
+  @Transactional
   public SocialCallRequestResponse create(final SocialCallRequestRequest request) {
 
     var dto = request.toDto(snowflake);
+    SocialCallRequestResponse socialCallResponse = null;
     try {
-      notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getRequesterProfileId()),
-              request.getStatus().equalsIgnoreCase("requested")?SocialNotificationType.CALL_REQUESTED:SocialNotificationType.CALL_ACCEPTED, Long.valueOf(request.getSocialId()));
+      socialCallResponse = SocialCallRequestResponse.fromDto(socialCallRequestRepository.create(dto));
+      notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getRequesterProfileId()),SocialNotificationType.CALL_REQUESTED, Long.valueOf(request.getSocialId()), "SOCIAL_CALL_REQUEST_ID" ,socialCallResponse.getSocialCallRequestId(), null);
     }
     catch (Exception e){
       throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialId()+" due to "+e.getMessage() );
     }
-    return SocialCallRequestResponse.fromDto(socialCallRequestRepository.create(dto));
+    return socialCallResponse;
   }
 
+  @Transactional
   public SocialCallRequestResponse update(final SocialCallRequestRequest request) {
 
     var dto = request.toDto();
+    if(request.getStatus().equalsIgnoreCase("accepted")) {
+      /*notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getRequesterProfileId()),
+              request.getStatus().equalsIgnoreCase("accepted") ? SocialNotificationType.CALL_ACCEPTED : SocialNotificationType.CALL_REJECTED, Long.valueOf(request.getSocialId()), "SOCIAL_CALL_REQUEST_ID", request.getSocialCallRequestId(), null);
+      */
+      notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getRequesterProfileId()),
+              SocialNotificationType.CALL_ACCEPTED, Long.valueOf(request.getSocialId()), "SOCIAL_CALL_REQUEST_ID", request.getSocialCallRequestId(), null);
 
+    }
     return SocialCallRequestResponse.fromDto(socialCallRequestRepository.update(dto));
   }
 

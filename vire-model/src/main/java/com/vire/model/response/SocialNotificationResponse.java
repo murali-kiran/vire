@@ -14,6 +14,8 @@ public class SocialNotificationResponse {
     private SocialNotificationType socialNotificationType;
     private String profileId;
     private String socialId;
+    private String socialMiscInfoId;
+    private String miscType;
     private Long createdTime;
     private Long updatedTime;
 
@@ -25,6 +27,8 @@ public class SocialNotificationResponse {
         socialNotification.setSocialNotificationType(dto.getSocialNotificationType());
         socialNotification.setProfileId(String.valueOf(dto.getProfileId()));
         socialNotification.setSocialId(String.valueOf(dto.getSocialId()));
+        socialNotification.setSocialMiscInfoId(String.valueOf(dto.getSocialMiscInfoId()));
+        socialNotification.setMiscType(dto.getMiscType());
         socialNotification.setCreatedTime(dto.getCreatedTime());
         socialNotification.setUpdatedTime(dto.getUpdatedTime());
 

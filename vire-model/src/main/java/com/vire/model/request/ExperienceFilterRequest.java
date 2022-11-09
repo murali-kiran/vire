@@ -9,5 +9,7 @@ public class ExperienceFilterRequest {
 
     private String profileId;
     private List<Long> categoryList;
+    private Integer pageNumber;
+    private Integer pageSize;
 
 }

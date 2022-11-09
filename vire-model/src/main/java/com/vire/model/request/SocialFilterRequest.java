@@ -10,5 +10,7 @@ public class SocialFilterRequest {
     private String profileId;
     private List<String> categoryList;
     private List<String> communityList;
+    private Integer pageNumber;
+    private Integer pageSize;
     //private String location;
 }

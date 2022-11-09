@@ -132,9 +132,11 @@ public class SocialController {
                             schema = @Schema(implementation = SocialPostResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Find Social by profile by ID Failed",
                     content = @Content)})
-    @GetMapping("socialposts/{profileid}")
-    public ResponseEntity<List<SocialPostResponse>> findByIdProfileId(@PathVariable(name = "profileid") String profileId) {
-        return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsByProfileId(profileId), HttpStatus.OK);
+    @GetMapping("socialposts/{profileid}/{pagenumber}/{pagesize}")
+    public ResponseEntity<List<SocialPostResponse>> findByIdProfileId(@PathVariable(name = "profileid") String profileId,
+                                                                      @PathVariable(name = "pagenumber") Integer pageNumber,
+                                                                      @PathVariable(name = "pagesize") Integer pageSize) {
+        return new ResponseEntity<List<SocialPostResponse>>(socialService.retrievePostsByProfileId(profileId, pageNumber, pageSize), HttpStatus.OK);
     }
     @Operation(summary = "Find Social posts created by profile")
     @ApiResponses(value = {

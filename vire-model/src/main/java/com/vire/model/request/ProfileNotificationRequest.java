@@ -14,7 +14,7 @@ public class ProfileNotificationRequest {
     private String profileNotificationId;
     
     private ProfileNotificationType profileNotificationType;
-    private Long profileId;
+    private String profileId;
 
     public ProfileNotificationDto toDto(Snowflake snowflake) {
 
@@ -27,7 +27,7 @@ public class ProfileNotificationRequest {
         }
         
         dto.setProfileNotificationType(this.getProfileNotificationType());
-        dto.setProfileId(this.getProfileId());
+        dto.setProfileId(this.getProfileId() == null ? null : Long.valueOf(this.getProfileId()));
 
         return dto;
     }

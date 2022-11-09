@@ -31,14 +31,17 @@ public class SocialNotificationDao {
     @Column(name = "social_id", nullable = false)
     private Long socialId;
 
+    @Column(name = "social_misc_info_id")
+    private Long socialMiscInfoId;
+
+    @Column(name = "misc_type")
+    private String miscType;
     @OneToOne
     @MapsId
     @JoinColumn(name = "social_notification_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private NotificationDao notification;
-
-
 
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
@@ -66,6 +69,8 @@ public class SocialNotificationDao {
         dto.setSocialNotificationType(this.getSocialNotificationType());
         dto.setProfileId(this.getProfileId());
         dto.setSocialId(this.getSocialId());
+        dto.setSocialMiscInfoId(this.getSocialMiscInfoId());
+        dto.setMiscType(this.getMiscType());
         dto.setCreatedTime(this.getCreatedTime());
         dto.setUpdatedTime(this.getUpdatedTime());
 
@@ -80,6 +85,8 @@ public class SocialNotificationDao {
         socialNotification.setSocialId(dto.getSocialId());
         socialNotification.setSocialNotificationType(dto.getSocialNotificationType());
         socialNotification.setProfileId(dto.getProfileId());
+        socialNotification.setSocialMiscInfoId(dto.getSocialMiscInfoId());
+        socialNotification.setMiscType(dto.getMiscType());
 
         return socialNotification;
     }

@@ -100,16 +100,14 @@ public class ProfileRepository {
     @Transactional
     @CachePut(value="profileDto", key="#result.profileId")
     public ProfileDto updateProfile(final ProfileDto profileDto) {
-
         var optionalProfile = retrieveProfileById(profileDto.getProfileId());
-
         if (optionalProfile.isPresent()) {
             ProfileDao profileDao = ProfileDao.fromDto(profileDto);
             profileDao.setPassword(optionalProfile.get().getPassword());
             profileDao.setFirstLogin(optionalProfile.get().getFirstLogin());
             profileDao.setProfileType(optionalProfile.get().getProfileType());
+            profileDao.setProfileStatus(optionalProfile.get().getProfileStatus());
             profileDao.onPreUpdate();
-
             if (!CollectionUtils.isEmpty(profileDto.getProfileSettings())) {
                 profileDao.setProfileSettings(profileDto.getProfileSettings()
                         .stream()
@@ -120,9 +118,6 @@ public class ProfileRepository {
                             return profileSettingDao;
                         }).collect(Collectors.toList()));
             }
-
-
-
             if (profileDto.getPersonalProfile() != null) {
                 profileDao.getPersonalProfile().onPreUpdate();
 
@@ -152,6 +147,25 @@ public class ProfileRepository {
             return profileRepositoryJpa.save(profileDao).toDto();
         } else {
             throw new RuntimeException("Profile Object not exists in DB");
+        }
+    }
+
+    @Transactional
+    public ProfileDto updateProfileSetting(final Long profileId, Boolean isPrivateAccount, Boolean showFriends) {
+        var optionalProfile = profileRepositoryJpa.findById(profileId);
+        if(!optionalProfile.isEmpty()){
+            List<ProfileSettingDao> profileSettings = optionalProfile.get().getProfileSettings();
+            for (ProfileSettingDao profileSettingDao:profileSettings) {
+                if(profileSettingDao.getSettingType().equals("isPrivate")){
+                    profileSettingDao.setIsEnable(isPrivateAccount);
+                }else if(profileSettingDao.getSettingType().equals("showFriends")){
+                    profileSettingDao.setIsEnable(showFriends);
+                }
+            }
+            optionalProfile.get().setProfileSettings(profileSettings);
+            return profileRepositoryJpa.save(optionalProfile.get()).toDto();
+        }else{
+            throw new RuntimeException("Profile Not found with ID:"+profileId);
         }
     }
 

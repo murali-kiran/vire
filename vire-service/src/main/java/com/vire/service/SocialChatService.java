@@ -33,14 +33,16 @@ public class SocialChatService {
 
         var dto = request.toDto();
         dto.setId(snowflake.nextId());
-        var checkNewChat = search("( senderProfileId:"+request.getSenderProfileId()+" ) AND ( socialPostId:"+request.getSocialPostId()+" )" );
+        var checkNewChat = search("( senderProfileId:"+request.getSenderProfileId()+" ) AND ( socialId:"+request.getSocialPostId()+" )" );
+        SocialNotificationType socialNotificationType = SocialNotificationType.REPLY_CHAT;
         if(checkNewChat.isEmpty()) {
-            try {
-                notificationService.createSocialNotification(NotificationType.SOCIAL_CHAT, Long.valueOf(request.getSenderProfileId()),
-                        SocialNotificationType.NEW_CHAT, Long.valueOf(request.getSocialPostId()));
-            } catch (Exception e) {
-                throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialPostId()+" due to "+e.getMessage() );
-            }
+            socialNotificationType = SocialNotificationType.NEW_CHAT;
+        }
+        try {
+            notificationService.createSocialNotification(NotificationType.SOCIAL_CHAT, Long.valueOf(request.getSenderProfileId()),
+                    socialNotificationType, Long.valueOf(request.getSocialPostId()), null, null, request.getIsCreatorMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialPostId()+" due to "+e.getMessage() );
         }
         return SocialChatResponse.fromDto(socialPostChatRepo.create(dto));
     }

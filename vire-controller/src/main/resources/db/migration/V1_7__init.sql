@@ -64,3 +64,5 @@ ALTER TABLE experience ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTER up
 
 ALTER TABLE t_notification ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTER updated_time, ADD COLUMN message VARCHAR(191) NULL AFTER is_read;
 
+ALTER TABLE social_notification ADD COLUMN social_misc_info_id BIGINT NULL AFTER social_id,ADD COLUMN misc_type VARCHAR(191) NULL AFTER social_misc_info_id;
+

@@ -26,6 +26,7 @@ public class CommunityProfileService {
   ProfileService profileService;
   @Autowired
   NotificationService notificationService;
+
   public CommunityProfileResponse create(final CommunityProfileRequest request) {
     log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
     checkAdminStatusCount(request);

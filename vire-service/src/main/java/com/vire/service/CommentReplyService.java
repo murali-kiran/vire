@@ -31,7 +31,7 @@ public class CommentReplyService {
         dto.setSocialPostCommentReplyId(snowflake.nextId());
         try {
             notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getCommentReplierProfileId()),
-                    SocialNotificationType.COMMENT, Long.valueOf(request.getSocialId()));
+                    SocialNotificationType.COMMENT_REPLY, Long.valueOf(request.getSocialId()), null, null, null);
         }
         catch (Exception e){
             throw new RuntimeException("Social Notification not created:"+e.getMessage());

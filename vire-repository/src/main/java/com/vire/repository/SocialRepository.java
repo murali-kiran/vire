@@ -29,17 +29,9 @@ public class SocialRepository {
     @Autowired
     SocialRepositoryJpa socialRepositoryJpa;
     @Autowired
-    SocialReportRepositoryJpa socialReportRepositoryJpa;
-    @Autowired
-    LikesRepositoryJpa likesRepositoryJpa;
-    @Autowired
-    CommentRepositoryJpa commentRepositoryJpa;
-    @Autowired
-    CommentReplyReposJpa commentReplyReposJpa;
-    @Autowired
-    SocialChatRepositoryJpa socialChatRepositoryJpa;
-    @Autowired
-    SocialCallRequestRepositoryJpa socialCallRequestRepositoryJpa;
+    NotificationRepository notificationRepository;
+
+
 
     @Autowired
     SocialFileRepositoryJpa socialFileRepositoryJpa;
@@ -134,11 +126,23 @@ public class SocialRepository {
             socialReportRepositoryJpa.deleteBySocialId(socialId);
             socialRepositoryJpa.deleteById(socialId);*/
             socialRepositoryJpa.updateDeletedTime(Instant.now().toEpochMilli(), socialId);
+            updateNotifications(socialId);
         } else {
             throw new RuntimeException("Social Post Object not exists in DB");
         }
 
         return optionalSocial;
+    }
+
+    private void updateNotifications(Long socialId) {
+        try{
+        var notificationsIdList = notificationRepository.retrieveBySocial(socialId);
+        for (Long notificationId:notificationsIdList) {
+            notificationRepository.updateDeletedTime(notificationId);
+        }
+        }catch(Exception e){
+            throw new RuntimeException("Deleting-- updating delete time cause issues: "+e.getMessage());
+        }
     }
 
     public List<SocialDto> getAllSocials() {

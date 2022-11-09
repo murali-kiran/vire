@@ -161,7 +161,7 @@ public class FeedsService {
         }
         return feedsFullResponseList;
     }
-    public List<FeedsFullResponse> retrieveFeedPostsByProfileId(String profileId) {
+    public List<FeedsFullResponse> retrieveFeedPostsByProfileId(String profileId, Integer pageNumber, Integer pageSize) {
         /*List<String> feedsIdList = getAll().stream().map(FeedsResponse::getFeedId).collect(Collectors.toList());
         List<FeedsFullResponse> feedsFullResponseList = new ArrayList<>();
         for (String feedId : feedsIdList) {
@@ -178,7 +178,7 @@ public class FeedsService {
         }
         return feedsFullResponseList;*/
         var feedsFullResponseList = feedPostRetrievalRepository
-                .getFeedListBySearch(Long.valueOf(profileId), 1, 50)
+                .getFeedListBySearch(Long.valueOf(profileId), pageNumber, pageSize)
                 .stream()
                 .map(dao -> dao.toDto())
                 .map(dto -> FeedsFullResponse.fromDto(dto))
@@ -192,7 +192,7 @@ public class FeedsService {
     public List<FeedsFullResponse> retrieveFeedsByFilter(FeedFilterRequest request) {
 
         var feedsFullResponseList = feedPostFilterRetrievalRepository
-                .getFeedListBySearch(Long.valueOf(request.getProfileId()), request.getCommunityList(), request.getSendToFollowers(), 1, 50)
+                .getFeedListBySearch(Long.valueOf(request.getProfileId()), request.getCommunityList(), request.getSendToFollowers(), request.getPageNumber(), request.getPageSize())
                 .stream()
                 .map(dao -> dao.toDto())
                 .map(dto -> FeedsFullResponse.fromDto(dto))

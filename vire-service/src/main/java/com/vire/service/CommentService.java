@@ -33,7 +33,7 @@ public class CommentService {
         dto.setSocialPostCommentId(snowflake.nextId());
         try {
             notificationService.createSocialNotification(NotificationType.SOCIAL, Long.valueOf(request.getCommenterProfileId()),
-                    SocialNotificationType.COMMENT, Long.valueOf(request.getSocialPostId()));
+                    SocialNotificationType.COMMENT, Long.valueOf(request.getSocialPostId()), null, null, null);
         }
         catch (Exception e){
             throw new RuntimeException("Social Notification failed to create for social id:"+request.getSocialPostId()+" due to "+e.getMessage() );

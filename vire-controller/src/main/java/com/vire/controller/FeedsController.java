@@ -144,10 +144,12 @@ public class FeedsController {
                             schema = @Schema(implementation = FeedsFullResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Find Feeds By ProfileId Failed",
                     content = @Content) })
-    @GetMapping("feedsposts/{profileid}")
+    @GetMapping("feedsposts/{profileid}/{pagenumber}/{pagesize}")
     public ResponseEntity<List<FeedsFullResponse>>
-    findByIdProfileId(@PathVariable(name = "profileid") String profileId) {
-        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByProfileId(profileId), HttpStatus.OK);
+    findByIdProfileId(@PathVariable(name = "profileid") String profileId,
+                      @PathVariable(name = "pagenumber") Integer pageNumber,
+                      @PathVariable(name = "pagesize") Integer pageSize) {
+        return new ResponseEntity<List<FeedsFullResponse>>(feedsService.retrieveFeedPostsByProfileId(profileId, pageNumber, pageSize), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Feeds By Feeds Filter")

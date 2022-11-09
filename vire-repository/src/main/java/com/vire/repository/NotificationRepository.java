@@ -8,8 +8,11 @@ import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,22 +39,39 @@ public class NotificationRepository {
 
     /*var notificationDao = NotificationDao.fromDto(notificationDto);
     notificationDao.onPreUpdate();*/
-
-    existingObject.get().setIsRead(true);
+    if(notificationDto.getIsRead()) {
+      existingObject.get().setIsRead(true);
+    }
     return notificationRepositoryJpa.save(existingObject.get()).toDto();
   }
 
   public Optional<NotificationDto> delete(final Long notificationId) {
 
-    var optionalSocial = retrieveById(notificationId);
+    var existingObject = retrieveById(notificationId);
 
-    if (optionalSocial.isPresent()) {
+    if (existingObject.isPresent()) {
       notificationRepositoryJpa.deleteById(notificationId);
     } else {
       throw new RuntimeException("Object not exists in DB to delete");
     }
+    return existingObject;
+  }
+  public Set<Long> retrieveBySocial(Long socialId){
+    return notificationRepositoryJpa.findBySocial(socialId);
+  }
+  public Set<Long> retrieveByFeed(Long feedId){
+    return notificationRepositoryJpa.findByFeed(feedId);
+  }
+  public NotificationDto updateDeletedTime(final Long notificationId) {
 
-    return optionalSocial;
+    var existingObject = notificationRepositoryJpa.findById(notificationId);
+
+    if (existingObject.isPresent()) {
+      existingObject.get().setDeletedTime(Instant.now().toEpochMilli());
+      return notificationRepositoryJpa.save(existingObject.get()).toDto();
+    } else {
+      throw new RuntimeException("Object not exists in DB to delete");
+    }
   }
   public List<NotificationDto> getAll() {
 
@@ -78,9 +98,15 @@ public class NotificationRepository {
     return notificationRepositoryJpa.countByNotificationTypeAndNotifierProfileIdAndIsReadAndDeletedTimeIsNull(notificationType, notifierProfileId, isRead);
   }
 
-  public List<NotificationDto> retrieveNotificationsByTypeAndProfile(NotificationType notificationType, Long notifierProfileId){
+  public List<NotificationDto> retrieveNotificationsByTypeAndProfileAndIsRead(List<NotificationType> notificationType, Long notifierProfileId){
     return notificationRepositoryJpa
-            .findByNotificationTypeAndNotifierProfileIdAndIsReadAndDeletedTimeIsNullOrderByUpdatedTimeDesc(notificationType,notifierProfileId,false).stream()
+            .findByNotificationTypeInAndNotifierProfileIdAndIsReadAndDeletedTimeIsNullOrderByUpdatedTimeDesc(notificationType,notifierProfileId,false).stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
+  public List<NotificationDto> retrieveNotificationsByTypeAndProfile(List<NotificationType> notificationType, Long notifierProfileId){
+    return notificationRepositoryJpa
+            .findByNotificationTypeInAndNotifierProfileIdAndDeletedTimeIsNullOrderByUpdatedTimeDesc(notificationType,notifierProfileId).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

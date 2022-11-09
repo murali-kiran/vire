@@ -158,7 +158,7 @@ public class SocialService {
                 .get();
         return setSocialDetails(socialPostResponse, null);
     }
-    public List<SocialPostResponse> retrievePostsByProfileId(String profileId) {
+    public List<SocialPostResponse> retrievePostsByProfileId(String profileId, Integer pageNumber, Integer pageSize) {
         long startTime = System.nanoTime();
         List<String> categoryFiltersToBeApplied = new ArrayList<>();
         //categoryFiltersToBeApplied.add("Emergency");
@@ -168,7 +168,7 @@ public class SocialService {
         //commulityIdFilters.add("1234567890");
         //commulityIdFilters.add("1234567891");
         var socialPostResponses = socialPostRetrievalRepository
-                .getSocialListBySearch(Long.valueOf(profileId), 1, 50, categoryFiltersToBeApplied, commulityIdFilters)
+                .getSocialListBySearch(Long.valueOf(profileId), pageNumber, pageSize, categoryFiltersToBeApplied, commulityIdFilters)
                 .stream()
                 .map(dao -> dao.toDto())
                 .map(dto -> SocialPostResponse.fromDto(dto))
@@ -251,8 +251,10 @@ public class SocialService {
         List<LikesResponse> likesList = likesService.searchLikes("socialId:" + socialPostResponse.getSocialId());
         if(profileId != null ) {
             List<CommentReplyResponse> replyList = commentReplyService.searchReplies("socialId:" + socialPostResponse.getSocialId());
-            if (socialPostResponse.getSocialCallRequestResponses() != null) {
-                SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialPostResponse.getSocialCallRequestResponses(), profileId);
+            List<SocialCallRequestResponse> socialCallRequestResponseList = socialCallRequestService.search("socialId:"+socialPostResponse.getSocialId());
+            if (socialCallRequestResponseList != null) {
+                socialPostResponse.setSocialCallRequestResponses(socialCallRequestResponseList);
+                SocialCallRequestResponse socialCallRequestResponse = findCallRequestByProfileId(socialCallRequestResponseList, profileId);
                 if (socialCallRequestResponse != null)
                     socialPostResponse.setCallRequestStatusOfLoginUser(socialCallRequestResponse.getStatus());
             }
@@ -344,7 +346,7 @@ public class SocialService {
             throw new RuntimeException("Filter Request Object is null");
         }
         var socialPostResponses = socialPostFilterRetrievalRepository
-                    .getSocialListBySearchFilter(Long.valueOf(request.getProfileId()), 1, 50, request.getCategoryList(), request.getCommunityList())
+                    .getSocialListBySearchFilter(Long.valueOf(request.getProfileId()), request.getPageNumber(), request.getPageSize(), request.getCategoryList(), request.getCommunityList())
                     .stream()
                     .map(dao -> dao.toDto())
                     .map(dto -> SocialPostResponse.fromDto(dto))

@@ -15,6 +15,7 @@ import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -58,6 +59,7 @@ public class ProfileService {
     dto.setFirstLogin("true");
     dto.setProfileWeightage(calculateFirmProfileWeightage(request));
     dto.setProfileType("firm");
+    dto.setProfileStatus("active");
     setProfileSettingTypes(dto, false);
 
     var firmProfile = dto.getFirmProfile();
@@ -91,7 +93,7 @@ public class ProfileService {
     dto.setFirstLogin("true");
     dto.setProfileWeightage(calculatePersonalProfileWeightage(request));
     dto.setProfileType("personal");
-
+    dto.setProfileStatus("active");
     setProfileSettingTypes(dto,true);
 
     var personalProfileDto = dto.getPersonalProfile();
@@ -397,5 +399,9 @@ public class ProfileService {
             return Optional.of(updateEmailResponse);
         }
 
+    }
+
+    public ProfileResponse updateProfileSettingByProfileId(Long profileId, Boolean isPrivate, Boolean showFriends) {
+      return ProfileResponse.fromDto(profileRepository.updateProfileSetting(profileId, isPrivate, showFriends));
     }
 }

@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +104,13 @@ public class ExperienceRepository {
 
     return optionalSocial;
   }
+  /*public List<ExperienceDto> getAll(Pageable pageable) {
+
+    return experienceRepositoryJpa.findAllPaged(Sort.by(Sort.Direction.DESC, "updatedTime"), pageable)
+            .stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }*/
   public List<ExperienceDto> getAll() {
 
     return experienceRepositoryJpa.findAll(Sort.by(Sort.Direction.DESC, "updatedTime"))

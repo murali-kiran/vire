@@ -23,10 +23,10 @@ public class SocialCallRequestController {
     return new ResponseEntity<>(socialCallRequestService.create(request), HttpStatus.CREATED);
   }
 
-  /*@PutMapping("/update")
+  @PutMapping("/update")
   public ResponseEntity<SocialCallRequestResponse> update(@RequestBody SocialCallRequestRequest request) {
     return new ResponseEntity<>(socialCallRequestService.update(request), HttpStatus.CREATED);
-  }*/
+  }
 
   @DeleteMapping("/{socialCallRequestId}")
   public ResponseEntity<SocialCallRequestResponse> delete(
