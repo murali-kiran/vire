@@ -1,5 +1,6 @@
 package com.vire.service;
 
+import com.vire.dao.view.ProfileViewDao;
 import com.vire.dto.CommunityDto;
 import com.vire.dto.SocialDto;
 import com.vire.model.request.SocialFilterRequest;
@@ -9,6 +10,7 @@ import com.vire.repository.FileRepository;
 import com.vire.repository.SocialPostFilterRetrievalRepository;
 import com.vire.repository.SocialPostRetrievalRepository;
 import com.vire.repository.SocialRepository;
+import com.vire.repository.view.ProfileViewRepositoryJpa;
 import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,9 @@ public class SocialService {
     LikesService likesService;
     @Autowired
     ProfileService profileService;
+
+    @Autowired
+    ProfileViewRepositoryJpa profileViewRepositoryJpa;
     @Autowired
     SocialSendToService socialSendToService;
     @Autowired
@@ -110,7 +115,7 @@ public class SocialService {
 
         var socialPostResponses = socialPostResponse
                                                         .getList()
-                                                        .stream()
+                                                        .parallelStream()
                                                         .map(dto -> SocialPostResponse.fromDto(dto))
                                                         .collect(Collectors.toList());
 
@@ -119,10 +124,10 @@ public class SocialService {
             socialPost.setCategoryName(categoryMasterResponse.getCategory());
             socialPost.setCategoryColorCode(categoryMasterResponse.getColorCode());
 
-            socialPost.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(socialPost.getProfileId())));
-            var sendToList = socialPost.getSendTo().stream().
-                    filter(p -> p.getType().contains("location_")).collect(Collectors.toList());
-            socialPost.setLocation(getLocation(sendToList));
+            Optional<ProfileViewDao> profileViewDao = profileViewRepositoryJpa.findByProfileId(Long.valueOf(socialPost.getProfileId()));
+            if(profileViewDao.isPresent()){
+                socialPost.setMinimalProfileResponse(MinimalProfileResponse.fromDto(profileViewDao.get().toDto()));
+            }
         }
 
         PageWiseSearchResponse<SocialPostResponse> response = new PageWiseSearchResponse<SocialPostResponse>();
