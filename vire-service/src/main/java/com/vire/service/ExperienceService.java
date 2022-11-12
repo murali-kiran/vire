@@ -1,11 +1,13 @@
 package com.vire.service;
 
+import com.vire.dao.view.ProfileViewDao;
 import com.vire.dto.ExperienceViewsCountDto;
 import com.vire.model.request.ExperienceFilterRequest;
 import com.vire.model.request.ExperienceRequest;
 import com.vire.model.response.*;
 import com.vire.repository.ExperienceRepository;
 import com.vire.repository.ExperienceViewsCountRepository;
+import com.vire.repository.view.ProfileViewRepositoryJpa;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class ExperienceService {
   ExperienceRepository experienceRepository;
   @Autowired
   ProfileService profileService;
+  @Autowired
+  ProfileViewRepositoryJpa profileViewRepositoryJpa;
   @Autowired
   MasterService masterService;
   @Autowired
@@ -208,13 +212,27 @@ public class ExperienceService {
     var pageWiseExperienceResponse = experienceRepository.getAllPaged(pageNumber,pageSize);
 
     List<ExperienceDetailResponse> experienceDetailResponses = pageWiseExperienceResponse.getList()
-            .stream()
+            .parallelStream()
             .map(dto -> ExperienceDetailResponse.fromDto(dto))
             .collect(Collectors.toList());
 
     for (ExperienceDetailResponse experienceDetailResponse : experienceDetailResponses) {
-      setExperienceDetails(experienceDetailResponse, false, Long.valueOf(experienceDetailResponse.getProfileId()));
-      experienceDetailResponse.setMinimalProfileResponse(profileService.retrieveProfileDtoById(Long.valueOf(experienceDetailResponse.getProfileId())));
+
+      Long viewsCount = experienceViewsCountRepository.countByExperienceId(Long.valueOf(experienceDetailResponse.getExperienceId()));
+      List<ExperienceCommentResponse> experienceCommentsList = experienceCommentService.search("experienceId:" + experienceDetailResponse.getExperienceId());
+      List<ExperienceLikesResponse> likesList = experienceLikesService.search("experienceId:" + experienceDetailResponse.getExperienceId());
+      List<ExperienceCommentReplyResponse> replyList = experienceCommentReplyService.search("experienceId:" + experienceDetailResponse.getExperienceId());
+      experienceDetailResponse.setCommentsCount(( experienceCommentsList != null ? experienceCommentsList.size() : 0 ) + (replyList != null ? replyList.size() : 0));
+      experienceDetailResponse.setViewsCount(viewsCount);
+      experienceDetailResponse.setLikesCount( likesList == null ? 0 : likesList.size() );
+
+
+
+      Optional<ProfileViewDao> profileViewDao = profileViewRepositoryJpa.findByProfileId(Long.valueOf(experienceDetailResponse.getProfileId()));
+      if(profileViewDao.isPresent()){
+        experienceDetailResponse.setMinimalProfileResponse(MinimalProfileResponse.fromDto(profileViewDao.get().toDto()));
+      }
+
       experienceDetailResponse.setCategoryResponse(masterService.retrieveById(Long.valueOf(experienceDetailResponse.getCategoryId())));
     }
 
