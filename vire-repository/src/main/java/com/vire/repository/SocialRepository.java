@@ -1,10 +1,12 @@
 package com.vire.repository;
 
 import com.vire.dao.*;
+import com.vire.dao.view.SocialViewDao;
 import com.vire.dto.SocialDto;
 import com.vire.dto.SocialSendToDto;
 import com.vire.model.response.PageWiseSearchResponse;
 import com.vire.repository.search.CustomSpecificationResolver;
+import com.vire.repository.view.SocialViewRepositoryJpa;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,10 @@ public class SocialRepository {
 
     @Autowired
     SocialRepositoryJpa socialRepositoryJpa;
+
+    @Autowired
+    SocialViewRepositoryJpa socialViewRepositoryJpa;
+
     @Autowired
     NotificationRepository notificationRepository;
 
@@ -194,8 +200,8 @@ public class SocialRepository {
         PageWiseSearchResponse<SocialDto> response = new PageWiseSearchResponse<>();
         PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
 
-        Page<SocialDao> page = socialRepositoryJpa.findAll(request);
-        List<SocialDto> socialDtos = page.stream().map(dao -> dao.toDto())
+        Page<SocialViewDao> page = socialViewRepositoryJpa.findByDeletedTimeIsNull(request);
+        List<SocialDto> socialDtos = page.stream().parallel().map(dao -> dao.toDto())
                 .collect(Collectors.toList());
 
         response.setPageCount(page.getTotalPages());
