@@ -27,7 +27,12 @@ public class MinimalProfileResponse {
         profileResponse.setProfileType(dto.getProfileType());
         profileResponse.setProfileWeightage(dto.getProfileWeightage());
         profileResponse.setFileId(dto.getFileId() == null ? null : String.valueOf(dto.getFileId()));
-        profileResponse.setLocation(dto.getPersonalProfile() != null ? dto.getPersonalProfile().getPresentAddress().getCityTownVillage():dto.getFirmProfile().getAddress().getCityTownVillage());
+        if(dto.getPersonalProfile() == null && dto.getFirmProfile() == null){
+            profileResponse.setLocation(null);
+        }else{
+            profileResponse.setLocation(dto.getPersonalProfile() != null ? dto.getPersonalProfile().getPresentAddress().getCityTownVillage():dto.getFirmProfile().getAddress().getCityTownVillage());
+        }
+
         return profileResponse;
     }
 

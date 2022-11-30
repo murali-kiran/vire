@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
+import com.vire.dao.view.ExperienceViewDao;
+import com.vire.repository.view.ExperienceViewRepositoryJpa;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.Instant;
@@ -40,6 +41,8 @@ public class ExperienceRepository {
   ProfileRepositoryJpa profileRepositoryJpa;
   @Autowired
   ExperinceFileRepositoryJpa experienceFileRepositoryJpa;
+  @Autowired
+  ExperienceViewRepositoryJpa experienceViewRepositoryJpa;
 
 
   private static final String BASIC_QUERY = "SELECT e.* FROM experience e "+
@@ -225,13 +228,14 @@ public class ExperienceRepository {
   }
   
   
+  
   public PageWiseSearchResponse<ExperienceDto> getAllPaged(Integer pageNumber, Integer pageSize) {
 
       PageWiseSearchResponse<ExperienceDto> response = new PageWiseSearchResponse<>();
       PageRequest request = PageRequest.of(pageNumber-1 , pageSize);
-      Page<ExperienceDao> page = experienceRepositoryJpa.findAll(request);
+      Page<ExperienceViewDao> page = experienceViewRepositoryJpa.findByDeletedTimeIsNull(request);
 
-      List<ExperienceDto> experienceDtos = page.stream().map(dao -> dao.toDto())
+      List<ExperienceDto> experienceDtos = page.stream().parallel().map(dao -> dao.toDto())
               .collect(Collectors.toList());
       response.setPageCount(page.getTotalPages());
       response.setList(experienceDtos);
