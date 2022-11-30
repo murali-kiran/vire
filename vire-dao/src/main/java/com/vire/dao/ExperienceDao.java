@@ -33,7 +33,7 @@ public class ExperienceDao {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "location_state", nullable = false)
+    @Column(name = "location_state")
     private String locationState;
 
     @Column(name = "location_district")

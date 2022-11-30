@@ -38,6 +38,17 @@ public class ProfileFollowersRepository {
     return profileFollowersRepositoryJpa.save(profileFollowersDao).toDto();
   }
 
+  public ProfileFollowersDto updateFollowStatus(final ProfileFollowersDto profileFollowersDto) {
+
+    var existingObject = profileFollowersRepositoryJpa.findByProfileIdAndFollowerId(profileFollowersDto.getProfileId(), profileFollowersDto.getFollowerId());
+
+    if(existingObject == null) {
+      throw new RuntimeException("Object not exists in db to update follow status ");
+    }
+    existingObject.onPreUpdate();
+    existingObject.setStatus(profileFollowersDto.getStatus());
+    return profileFollowersRepositoryJpa.save(existingObject).toDto();
+  }
   public Optional<ProfileFollowersDto> delete(final Long profileFollowersId) {
 
     var optionalSocial = retrieveById(profileFollowersId);

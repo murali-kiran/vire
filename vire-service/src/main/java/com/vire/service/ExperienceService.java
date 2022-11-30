@@ -59,13 +59,18 @@ public class ExperienceService {
     return ExperienceResponse.fromDto(experienceRepository.update(dto));
   }
 
-  public ExperienceResponse delete(final Long experienceId) {
+  /*public ExperienceResponse delete(final Long experienceId) {
+
+    return experienceRepository.delete(experienceId)
+            .map(dto -> ExperienceResponse.fromDto(dto))
+            .get();
+  }*/
+  public ExperienceResponse updateDeletedTime(final Long experienceId) {
 
     return experienceRepository.delete(experienceId)
             .map(dto -> ExperienceResponse.fromDto(dto))
             .get();
   }
-
   public List<ExperienceResponse> getAll() {
 
     return experienceRepository
@@ -74,7 +79,14 @@ public class ExperienceService {
             .map(dto -> ExperienceResponse.fromDto(dto))
             .collect(Collectors.toList());
   }
+  public List<ExperienceResponse> getAllExceptDelete() {
 
+    return experienceRepository
+            .getAllExceptDelete()
+            .stream()
+            .map(dto -> ExperienceResponse.fromDto(dto))
+            .collect(Collectors.toList());
+  }
   public ExperienceResponse retrieveById(Long experienceId) {
 
     return experienceRepository
@@ -95,7 +107,7 @@ public class ExperienceService {
     public List<ExperienceDetailResponse> retrieveAllByProfile(Long profileId) {
       //Pageable paging = PageRequest.of();
       List<ExperienceDetailResponse> experienceDetailResponseList = experienceRepository
-              .getAll()
+              .getAllExceptDelete()
               .stream()
               .map(dto -> ExperienceDetailResponse.fromDto(dto))
               .collect(Collectors.toList());

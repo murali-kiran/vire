@@ -62,7 +62,7 @@ public class ExperienceController {
   @DeleteMapping("/{experienceId}")
   public ResponseEntity<ExperienceResponse> delete(
           @PathVariable(value = "experienceId") Long experienceId) {
-    return new ResponseEntity<>(experienceService.delete(experienceId), HttpStatus.OK);
+    return new ResponseEntity<>(experienceService.updateDeletedTime(experienceId), HttpStatus.OK);
   }
 
   @Operation(summary = "Retrieve All Experience")

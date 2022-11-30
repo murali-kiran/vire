@@ -1,13 +1,16 @@
 package com.vire.service;
 
 import com.vire.dao.ExperienceFileDao;
+import com.vire.dto.NotificationType;
 import com.vire.dto.ProfileFollowersDto;
+import com.vire.dto.ProfileNotificationType;
 import com.vire.model.request.ProfileFollowersRequest;
 import com.vire.model.response.ProfileFollowersResponse;
 import com.vire.repository.ProfileFollowersRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,21 +26,42 @@ public class ProfileFollowersService {
 
   @Autowired
   ProfileService profileService;
+  @Autowired
+  NotificationService notificationService;
 
+  @Transactional
   public ProfileFollowersResponse create(final ProfileFollowersRequest request) {
-
-    var dto = request.toDto(snowflake);
-
-    return ProfileFollowersResponse.fromDto(profileFollowersRepository.create(dto));
+      var dto = request.toDto(snowflake);
+      ProfileNotificationType profileNotificationType = ProfileNotificationType.FOLLOW_REQUEST;
+      if(request.getStatus().equalsIgnoreCase("accepted")){
+        profileNotificationType = ProfileNotificationType.FOLLOW_JOINED;
+      }
+      notificationService.createProfileNotification(NotificationType.PROFILE, request.getFollowerId(), profileNotificationType, request.getProfileId());
+      return ProfileFollowersResponse.fromDto(profileFollowersRepository.create(dto));
   }
 
+  @Transactional
   public ProfileFollowersResponse update(final ProfileFollowersRequest request) {
 
     var dto = request.toDto();
-
+    if(request.getStatus().equalsIgnoreCase("accepted")){
+      notificationService.createProfileNotification(NotificationType.PROFILE, request.getProfileId(), ProfileNotificationType.FOLLOW_ACCEPTED, request.getFollowerId());
+    }
     return ProfileFollowersResponse.fromDto(profileFollowersRepository.update(dto));
   }
 
+  @Transactional
+  public ProfileFollowersResponse updateFollowStatus(final ProfileFollowersRequest request) {
+    var dto = request.toDto();
+    if(request.getStatus().equalsIgnoreCase("requested")){
+      notificationService.createProfileNotification(NotificationType.PROFILE, request.getFollowerId(), ProfileNotificationType.FOLLOW_REQUEST, request.getProfileId());
+
+    }
+    if(!request.getStatus().equalsIgnoreCase("rejected")) {
+      notificationService.createProfileNotification(NotificationType.PROFILE, request.getProfileId(), ProfileNotificationType.FOLLOW_ACCEPTED, request.getFollowerId());
+    }
+    return ProfileFollowersResponse.fromDto(profileFollowersRepository.updateFollowStatus(dto));
+  }
   public ProfileFollowersResponse delete(final Long profileFollowersId) {
 
     return profileFollowersRepository.delete(profileFollowersId)

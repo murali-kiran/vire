@@ -31,6 +31,7 @@ public class PersonalResponse {
     private Boolean isPrivateAccount;
     private Boolean showFriends;
     private List<ProfileSettingResponse> profileSettingTypes;
+    private List<RequesterProfileSettingResponse> requesterProfileSettingTypes;
     private PersonalProfileResponse personalProfile;
     //private String followStatus;
     private ProfileFollowersResponse profileFollowersResponse;

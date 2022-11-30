@@ -95,7 +95,7 @@ public class FirmProfileController {
                     content = @Content) })
     @GetMapping(value = "get/{profileid}/{loginprofileid}")
     public ResponseEntity retrieveFirmProfileById(@PathVariable(value = "profileid") Long profileId, @PathVariable(value = "loginprofileid") Long loginProfileId) {
-        Optional<FirmResponse> firmResponse = profileService.retrieveFirmProfileById(profileId);
+        Optional<FirmResponse> firmResponse = profileService.retrieveFirmProfileByIdAndLoginId(profileId, loginProfileId);
         //return firmResponse.isPresent() ? new ResponseEntity<>(firmResponse.get(), HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
         return firmResponse
                 .stream()

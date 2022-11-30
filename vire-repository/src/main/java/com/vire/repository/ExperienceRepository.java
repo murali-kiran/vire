@@ -91,6 +91,7 @@ public class ExperienceRepository {
     return experienceRepositoryJpa.save(experienceDao).toDto();
   }
 
+  @Transactional
   public Optional<ExperienceDto> delete(final Long experienceId) {
 
     var optionalSocial = retrieveById(experienceId);
@@ -118,7 +119,13 @@ public class ExperienceRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+  public List<ExperienceDto> getAllExceptDelete() {
 
+    return experienceRepositoryJpa.findAllExceptDelete()
+            .stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
   public List<ExperienceDto> retreveByFilterList(List<Long> categoryList) {
 
     return experienceRepositoryJpa.findByCategoryList(categoryList)

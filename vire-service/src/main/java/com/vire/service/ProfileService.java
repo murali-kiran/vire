@@ -11,6 +11,7 @@ import com.vire.model.request.UpdatePasswordRequest;
 import com.vire.model.response.*;
 import com.vire.repository.MasterRepository;
 import com.vire.repository.ProfileRepository;
+import com.vire.repository.RequesterProfileSettingRepository;
 import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +47,8 @@ public class ProfileService {
 
   @Autowired
   AuthenticationManager authenticationManager;
-
+  @Autowired
+  RequesterProfileSettingRepository requesterProfileSettingRepository;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
 
@@ -164,6 +166,21 @@ public class ProfileService {
     }
   }
 
+    public Optional<PersonalResponse> retrievePersonalProfileByIdAndLoginId(final Long profileId, final Long loginProfileId) {
+        if (!profileRepository.isPersonalProfileExists(profileId)) {
+            return Optional.empty();
+        } else {
+
+            var profile = profileRepository.retrieveProfileById(profileId).map(dto -> PersonalResponse.fromDto(dto));
+            List<RequesterProfileSettingResponse> requesterProfileSettingResponses =
+                    requesterProfileSettingRepository.search("profileId:"+profileId+" AND requesterProfileId:"+loginProfileId)
+                            .stream()
+                            .map(dto -> RequesterProfileSettingResponse.fromDto(dto))
+                            .collect(Collectors.toList());
+            profile.get().setRequesterProfileSettingTypes(requesterProfileSettingResponses);
+            return profile;
+        }
+    }
   public Optional<FirmResponse> retrieveFirmProfileById(final Long profileId) {
     if (!profileRepository.isFirmProfileExists(profileId)) {
       return Optional.empty();
@@ -171,7 +188,19 @@ public class ProfileService {
       return profileRepository.retrieveProfileById(profileId).map(dto -> FirmResponse.fromDto(dto));
     }
   }
-
+    public Optional<FirmResponse> retrieveFirmProfileByIdAndLoginId(final Long profileId, final Long loginProfileId) {
+        if (!profileRepository.isFirmProfileExists(profileId)) {
+            return Optional.empty();
+        } else {
+            var profile = profileRepository.retrieveProfileById(profileId).map(dto -> FirmResponse.fromDto(dto));
+            List<RequesterProfileSettingResponse> requesterProfileSettingResponses = requesterProfileSettingRepository.search("profileId:"+profileId+" AND requesterProfileId:"+loginProfileId)
+                    .stream()
+                    .map(dto -> RequesterProfileSettingResponse.fromDto(dto))
+                    .collect(Collectors.toList());
+            profile.get().setRequesterProfileSettingTypes(requesterProfileSettingResponses);
+            return profile;
+        }
+    }
   public List<PersonalResponse> searchProfiles(final String searchString) {
     return profileRepository.searchProfiles(searchString).stream()
             .map(dto -> PersonalResponse.fromDto(dto))

@@ -52,4 +52,6 @@ public class VireConstants {
     public final static String SOCIALNOTIFICATION_REQUEST_PATH_API = "/api/socialnotification";
     public final static String FEEDNOTIFICATION_REQUEST_PATH_API = "/api/feednotification";
     public final static String PROFILENOTIFICATION_REQUEST_PATH_API = "/api/profilenotification";
+
+    public final static String REQUESTERPROFILESETTING_REQUEST_PATH_API = "/api/requesterprofilesetting";
 }

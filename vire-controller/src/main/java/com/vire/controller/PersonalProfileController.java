@@ -101,7 +101,7 @@ public class PersonalProfileController {
                     content = @Content) })
     @GetMapping(value = "get/{profileid}/{loginprofileid}")
     public ResponseEntity retrievePersonalProfileById(@PathVariable(value = "profileid") Long profileId, @PathVariable(value = "loginprofileid") Long loginProfileId) {
-        Optional<PersonalResponse> profileResponse = profileService.retrievePersonalProfileById(profileId);
+        Optional<PersonalResponse> profileResponse = profileService.retrievePersonalProfileByIdAndLoginId(profileId, loginProfileId);
         return profileResponse
                 .stream()
                 .map(profile -> {

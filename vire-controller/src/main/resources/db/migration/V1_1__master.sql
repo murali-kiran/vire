@@ -3458,9 +3458,15 @@ insert into master (master_id, master_type, master_value, created_time, updated_
 insert into master (master_id, master_type, master_value, created_time, updated_time) values (3457, 'Personal_Profile_Setting_Type', 'Educational Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
 insert into master (master_id, master_type, master_value, created_time, updated_time) values (3458, 'Personal_Profile_Setting_Type', 'Professional Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
 insert into master (master_id, master_type, master_value, created_time, updated_time) values (3459, 'Personal_Profile_Setting_Type', 'Blood Donation Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
+insert into master (master_id, master_type, master_value, created_time, updated_time) values (4063, 'Personal_Profile_Setting_Type', 'showFriends', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
+insert into master (master_id, master_type, master_value, created_time, updated_time) values (4064, 'Personal_Profile_Setting_Type', 'isPrivate', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
+
+
 insert into master (master_id, master_type, master_value, created_time, updated_time) values (3460, 'Firm_Profile_Setting_Type', 'Contact Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
 insert into master (master_id, master_type, master_value, created_time, updated_time) values (3461, 'Firm_Profile_Setting_Type', 'Address Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
 insert into master (master_id, master_type, master_value, created_time, updated_time) values (3462, 'Firm_Profile_Setting_Type', 'Work Details', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
+insert into master (master_id, master_type, master_value, created_time, updated_time) values (4065, 'Firm_Profile_Setting_Type', 'showFriends', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
+insert into master (master_id, master_type, master_value, created_time, updated_time) values (4066, 'Firm_Profile_Setting_Type', 'isPrivate', (SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)),(SELECT ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)));
 
 
 INSERT INTO social_category_master VALUES (52653680255107072,'Emergency','EB0000',0,1653548815695,1653548815736),(52654263112368128,'Employment','EDCE01',0,1653548954597,1653548954625),(52654576665952256,'Share','FB60FB',0,1653549029356,1653549029380),(52655082146693120,'Need','01A71C',0,1653549149873,1653549149900),(52655502134935552,'Business','0080FF',0,1653549250010,1653549250046),(52655942121619456,'Support','9B0101',0,1653549354910,1653549354941),(52656925904011264,'Deal','EB0000',0,1653549589466,1653549589499);

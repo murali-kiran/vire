@@ -16,4 +16,5 @@ public interface ProfileFollowersRepositoryJpa
             "UNION " +
             " select distinct follower_id from profile_followers where status='Accepted' and profile_id = :profileId", nativeQuery = true)
     Set<Long> findFollowersByProfileId(Long profileId);
+    ProfileFollowersDao findByProfileIdAndFollowerId(Long profileId, Long followerId);
 }

@@ -179,7 +179,7 @@ public class AdminPortalService {
     }
 
     public ExperienceResponse deleteExperience(String experienceId) {
-        return  experienceService.delete(Long.valueOf(experienceId));
+        return  experienceService.updateDeletedTime(Long.valueOf(experienceId));
     }
 
 

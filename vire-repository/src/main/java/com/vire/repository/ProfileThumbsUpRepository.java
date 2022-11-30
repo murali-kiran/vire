@@ -4,6 +4,7 @@ import com.vire.dao.ProfileThumbsUpDao;
 import com.vire.dto.ProfileThumbsUpDto;
 import com.vire.repository.search.CustomSpecificationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class ProfileThumbsUpRepository {
 
     var spec = new CustomSpecificationResolver<ProfileThumbsUpDao>(searchString).resolve();
 
-    return profileThumbsUpRepositoryJpa.findAll(spec).stream()
+    return profileThumbsUpRepositoryJpa.findAll(spec, Sort.by(Sort.Direction.DESC, "updatedTime")).stream()
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }

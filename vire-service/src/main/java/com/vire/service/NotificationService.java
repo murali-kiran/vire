@@ -102,7 +102,7 @@ public class NotificationService {
     profileNotification.setProfileNotificationType(profileNotificationType);
     profileNotification.setProfileId(responderProfileId);
     notificationRequest.setNotifierProfileId(notifierProfileId+"");
-    notificationRequest.setMessage("");
+    notificationRequest.setMessage(profileNotificationType.name());
     notificationRequest.setProfileNotification(profileNotification);
     create(notificationRequest);
   }

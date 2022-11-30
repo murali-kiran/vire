@@ -28,6 +28,7 @@ public class FirmResponse {
     private Boolean isPrivateAccount;
     private Boolean showFriends;
     private List<ProfileSettingResponse> profileSettingTypes;
+    private List<RequesterProfileSettingResponse> requesterProfileSettingTypes;
     private FirmProfileResponse firmProfile;
     private ProfileFollowersResponse profileFollowersResponse;
 

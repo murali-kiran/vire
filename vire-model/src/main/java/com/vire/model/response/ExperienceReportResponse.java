@@ -10,8 +10,8 @@ public class ExperienceReportResponse {
 
     private String experienceReportId;
     
-    private Long experienceId;
-    private Long reporterId;
+    private String experienceId;
+    private String reporterId;
     private String reportReason;
     private String reportDescription;
     private Long createdTime;
@@ -22,8 +22,8 @@ public class ExperienceReportResponse {
         var experienceReport = new ExperienceReportResponse();
 
         experienceReport.setExperienceReportId(String.valueOf(dto.getExperienceReportId()));
-        experienceReport.setExperienceId(dto.getExperienceId());
-        experienceReport.setReporterId(dto.getReporterId());
+        experienceReport.setExperienceId(String.valueOf(dto.getExperienceId()));
+        experienceReport.setReporterId(String.valueOf(dto.getReporterId()));
         experienceReport.setReportReason(dto.getReportReason());
         experienceReport.setReportDescription(dto.getReportDescription());
         experienceReport.setCreatedTime(dto.getCreatedTime());

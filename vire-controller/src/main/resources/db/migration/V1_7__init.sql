@@ -66,3 +66,20 @@ ALTER TABLE t_notification ADD COLUMN deleted_time BIGINT NULL DEFAULT NULL AFTE
 
 ALTER TABLE social_notification ADD COLUMN social_misc_info_id BIGINT NULL AFTER social_id,ADD COLUMN misc_type VARCHAR(191) NULL AFTER social_misc_info_id;
 
+ALTER TABLE profile_followers ADD UNIQUE profile_followers_unique_index(profile_id, follower_id);
+ALTER TABLE experience CHANGE COLUMN location_state location_state VARCHAR(45) NULL ;
+
+CREATE TABLE requester_profile_setting (
+    requester_profile_setting_id BIGINT NOT NULL,
+    setting_type VARCHAR(255) NOT NULL,
+    is_enabled TINYINT(1) NOT NULL,
+    profile_id BIGINT NOT NULL,
+    requester_profile_id BIGINT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (requester_profile_setting_id)
+);
+
+ALTER TABLE experience_report CHANGE COLUMN reportDescription report_description VARCHAR(191) NOT NULL ;
+ALTER TABLE requester_profile_setting ADD UNIQUE unique_index_requester_profile_setting(profile_id, requester_profile_id, setting_type);

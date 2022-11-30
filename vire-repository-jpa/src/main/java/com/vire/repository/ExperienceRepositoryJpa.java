@@ -1,6 +1,7 @@
 package com.vire.repository;
 
 import com.vire.dao.ExperienceDao;
+import com.vire.dao.SocialDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,4 +30,6 @@ public interface ExperienceRepositoryJpa
     @Query("update ExperienceDao e set e.deletedTime = :deletedTime where e.experienceId = :experienceId")
     void updateDeletedTime(@Param(value = "deletedTime") long deletedTime, @Param(value = "experienceId") long experienceId);
     //Page<ExperienceDao> findAllPaged(Sort sort, Pageable pageable);
+    @Query(value = "SELECT e.* FROM experience e WHERE e.deleted_time IS NULL ORDER BY e.updated_time DESC",nativeQuery = true)
+    List<ExperienceDao> findAllExceptDelete();
 }

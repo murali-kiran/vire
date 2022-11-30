@@ -12,8 +12,8 @@ public class ExperienceReportRequest {
 
     private String experienceReportId;
     
-    private Long experienceId;
-    private Long reporterId;
+    private String experienceId;
+    private String reporterId;
     private String reportReason;
     private String reportDescription;
 
@@ -27,8 +27,8 @@ public class ExperienceReportRequest {
             dto.setExperienceReportId(snowflake.nextId());
         }
         
-        dto.setExperienceId(this.getExperienceId());
-        dto.setReporterId(this.getReporterId());
+        dto.setExperienceId(this.getExperienceId() == null ? null : Long.valueOf(this.getExperienceId()));
+        dto.setReporterId(this.getReporterId() == null ? null : Long.valueOf(this.getReporterId()));
         dto.setReportReason(this.getReportReason());
         dto.setReportDescription(this.getReportDescription());
 

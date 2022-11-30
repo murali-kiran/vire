@@ -27,7 +27,10 @@ public class ProfileFollowersController {
   public ResponseEntity<ProfileFollowersResponse> update(@RequestBody ProfileFollowersRequest request) {
     return new ResponseEntity<>(profileFollowersService.update(request), HttpStatus.CREATED);
   }
-
+  @PutMapping("/updateFollowStatus")
+  public ResponseEntity<ProfileFollowersResponse> updateFollowStatus(@RequestBody ProfileFollowersRequest request) {
+    return new ResponseEntity<>(profileFollowersService.updateFollowStatus(request), HttpStatus.CREATED);
+  }
   @DeleteMapping("/{profileFollowersId}")
   public ResponseEntity<ProfileFollowersResponse> delete(
           @PathVariable(value = "profileFollowersId") Long profileFollowersId) {
