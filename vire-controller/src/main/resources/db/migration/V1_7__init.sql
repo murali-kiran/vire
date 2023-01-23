@@ -94,3 +94,19 @@ CREATE TABLE t_profile_report (
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (t_profile_report_id)
 );
+CREATE TABLE t_app_restriction (
+    t_app_restriction_id BIGINT NOT NULL,
+    interests_selection_limit BIGINT NOT NULL,
+    creating_communities_limit BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (t_app_restriction_id)
+);
+CREATE TABLE t_admin_message (
+    t_admin_message_id BIGINT NOT NULL,
+    message_type VARCHAR(100) NOT NULL,
+    message VARCHAR(500) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (t_admin_message_id)
+);
