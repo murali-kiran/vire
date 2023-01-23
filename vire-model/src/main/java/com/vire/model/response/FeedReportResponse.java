@@ -10,8 +10,8 @@ public class FeedReportResponse {
 
     private String feedReportId;
     
-    private Long feedId;
-    private Long reporterId;
+    private String feedId;
+    private String reporterId;
     private String reportReason;
     private String reportDescription;
     private Long createdTime;
@@ -22,8 +22,8 @@ public class FeedReportResponse {
         var feedReport = new FeedReportResponse();
 
         feedReport.setFeedReportId(String.valueOf(dto.getFeedReportId()));
-        feedReport.setFeedId(dto.getFeedId());
-        feedReport.setReporterId(dto.getReporterId());
+        feedReport.setFeedId(String.valueOf(dto.getFeedId()));
+        feedReport.setReporterId(String.valueOf(dto.getReporterId()));
         feedReport.setReportReason(dto.getReportReason());
         feedReport.setReportDescription(dto.getReportDescription());
         feedReport.setCreatedTime(dto.getCreatedTime());

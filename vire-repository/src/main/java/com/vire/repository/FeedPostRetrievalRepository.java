@@ -86,7 +86,7 @@ public class FeedPostRetrievalRepository {
         }
         var channelProfileList = channelIdFilters;
         if (CollectionUtils.isEmpty(channelProfileList)) {
-            var channelProfiles = channelProfileRepositoryJpa.findAllByProfileId(profileDao.getProfileId());
+            var channelProfiles = channelProfileRepositoryJpa.findAllByProfileIdAndStatus(profileDao.getProfileId(), "Accepted");
             channelProfileList = channelProfiles.stream().map(c -> c.getChannelId() + "").collect(Collectors.toList());
             channelProfileList.add("none");
         }

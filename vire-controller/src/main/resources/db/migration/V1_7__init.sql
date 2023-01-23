@@ -83,3 +83,14 @@ CREATE TABLE requester_profile_setting (
 
 ALTER TABLE experience_report CHANGE COLUMN reportDescription report_description VARCHAR(191) NOT NULL ;
 ALTER TABLE requester_profile_setting ADD UNIQUE unique_index_requester_profile_setting(profile_id, requester_profile_id, setting_type);
+
+CREATE TABLE t_profile_report (
+    t_profile_report_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    reporter_id BIGINT NOT NULL,
+    report_reason VARCHAR(191) NOT NULL,
+    report_description VARCHAR(500) NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (t_profile_report_id)
+);

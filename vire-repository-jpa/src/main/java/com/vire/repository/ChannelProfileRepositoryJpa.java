@@ -15,7 +15,7 @@ public interface ChannelProfileRepositoryJpa
     Optional<ChannelProfileDao> findByChannelIdAndProfileId(Long communityId, Long profileId);
     Optional<ChannelProfileDao> deleteByChannelId(Long channelId);
     List<ChannelProfileDao> findAllByProfileId(Long profileId);
-
+    List<ChannelProfileDao> findAllByProfileIdAndStatus(Long profileId, String status);
     @Query(value = "select count(*) from channel_profile where DATE(FROM_UNIXTIME(created_time/1000)) = CURDATE()",nativeQuery = true)
     int getTodayCreatedChannels();
 }

@@ -1,5 +1,6 @@
 package com.vire.service;
 
+import com.vire.dao.CommunityDao;
 import com.vire.dao.FeedsDao;
 import com.vire.dto.*;
 import com.vire.model.request.*;
@@ -7,10 +8,7 @@ import com.vire.model.response.ExperienceDetailResponse;
 import com.vire.model.response.FeedsResponse;
 import com.vire.model.response.NotificationCountResponse;
 import com.vire.model.response.NotificationResponse;
-import com.vire.repository.CommunityRepositoryJpa;
-import com.vire.repository.FeedsRepositoryJpa;
-import com.vire.repository.NotificationRepository;
-import com.vire.repository.SocialRepositoryJpa;
+import com.vire.repository.*;
 import com.vire.utils.Snowflake;
 import com.vire.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,8 @@ public class NotificationService {
   SocialRepositoryJpa socialRepositoryJpa;
   @Autowired
   CommunityRepositoryJpa communityRepositoryJpa;
+  @Autowired
+  CommunityProfileRepository communityProfileRepository;
 
   public NotificationResponse create(final NotificationRequest request) {
 
@@ -151,20 +151,26 @@ public class NotificationService {
 
     var notificationRequest = new NotificationRequest();
     var community = communityRepositoryJpa.findById(communityId);
-
+    Long notifierProfileId = community.get().getCreatorProfileId();
     notificationRequest.setNotificationType(notificationType);
     notificationRequest.setIsRead(false);
     var communityNotification = new CommunityNotificationRequest();
     communityNotification.setCommunityNotificationType(communityNotificationType);
-    communityNotification.setProfileId(communityNotificationType.name().equals("JOIN_REQUEST") ? responderProfileId : community.get().getCreatorProfileId());
+    communityNotification.setProfileId(communityNotificationType.name().equals("JOIN_REQUEST") ? responderProfileId : notifierProfileId);
     communityNotification.setCommunityId(communityId);
-    notificationRequest.setNotifierProfileId(communityNotificationType.name().equals("JOIN_REQUEST") ? community.get().getCreatorProfileId()+"": responderProfileId+"");
+    notificationRequest.setNotifierProfileId(communityNotificationType.name().equals("JOIN_REQUEST") ? notifierProfileId+"" : responderProfileId+"");
     //notificationRequest.setMessage(community.get().getDescription() == null ? "\"photo\"" : Utility.subStringOfSentence(community.get().getDescription(), 5));
     notificationRequest.setMessage(community.get().getName());
     notificationRequest.setCommunityNotification(communityNotification);
     create(notificationRequest);
   }
 
+  /*private Long retrieveCommunityCreator(CommunityDao communityDao){
+
+    var communityProfiles = communityProfileRepository.search("( communityId:"+communityDao.getCommunityId()+ " ) AND ( status:Exit ) AND ( profileId:"+communityDao.getCreatorProfileId()+" )");
+    if(communityProfiles.isEmpty())
+      return communityDao.getCreatorProfileId();
+  }*/
   public List<NotificationResponse> retrieveNotificationsByTypeProfile(NotificationType notificationType, String profileId){
 
     List<NotificationResponse> notificationResponseList;

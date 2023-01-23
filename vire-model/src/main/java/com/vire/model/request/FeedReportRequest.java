@@ -12,8 +12,8 @@ public class FeedReportRequest {
 
     private String feedReportId;
     
-    private Long feedId;
-    private Long reporterId;
+    private String feedId;
+    private String reporterId;
     private String reportReason;
     private String reportDescription;
 
@@ -27,8 +27,8 @@ public class FeedReportRequest {
             dto.setFeedReportId(snowflake.nextId());
         }
         
-        dto.setFeedId(this.getFeedId());
-        dto.setReporterId(this.getReporterId());
+        dto.setFeedId(this.getFeedId() == null ? null : Long.valueOf(this.getFeedId()));
+        dto.setReporterId(this.getReporterId() == null ? null : Long.valueOf(this.getReporterId()));
         dto.setReportReason(this.getReportReason());
         dto.setReportDescription(this.getReportDescription());
 

@@ -44,6 +44,7 @@ public class CommunityService {
             communityProfileRequest.setProfileId(communityDto.getCreatorProfileId().toString());
             communityProfileRequest.setIsAdmin(true);
             communityProfileRequest.setStatus("Admin");
+            communityProfileRequest.setIsCreator(true);
             communityProfileService.create(communityProfileRequest);
 
             return CommunityResponse.fromDto(communityDto);}

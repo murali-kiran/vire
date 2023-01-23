@@ -1,15 +1,18 @@
 package com.vire.service;
 
 import com.vire.dto.CommunityNotificationType;
+import com.vire.dto.CommunityProfileDto;
 import com.vire.dto.NotificationType;
 import com.vire.dto.SocialNotificationType;
 import com.vire.model.request.CommunityProfileRequest;
 import com.vire.model.response.CommunityProfileResponse;
 import com.vire.repository.CommunityProfileRepository;
+import com.vire.repository.CommunityRepository;
 import com.vire.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +29,8 @@ public class CommunityProfileService {
   ProfileService profileService;
   @Autowired
   NotificationService notificationService;
+  @Autowired
+  CommunityRepository communityRepository;
 
   public CommunityProfileResponse create(final CommunityProfileRequest request) {
     log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
@@ -42,11 +47,16 @@ public class CommunityProfileService {
         }else if(request.getStatus().equalsIgnoreCase("admin")){
           communityNotificationType = CommunityNotificationType.ADMIN_ADDED;
         }
-        notificationService.createCommunityNotification(NotificationType.COMMUNITY, Long.valueOf(request.getProfileId()),
-                communityNotificationType, Long.valueOf(request.getCommunityId()));
+        if(request.getIsCreator() == null) {
+          notificationService.createCommunityNotification(NotificationType.COMMUNITY, Long.valueOf(request.getProfileId()),
+                  communityNotificationType, Long.valueOf(request.getCommunityId()));
+        }
       }
       catch (Exception e){
         throw new RuntimeException("Community Notification failed to create for community id:"+request.getCommunityId()+" due to "+e.getMessage() );
+      }
+      if(request.getIsAdmin() == null){
+        dto.setIsAdmin(false);
       }
       return CommunityProfileResponse.fromDto(communityProfileRepository.create(dto));
     }else{
@@ -60,6 +70,7 @@ public class CommunityProfileService {
     var dto = request.toDto();
     return CommunityProfileResponse.fromDto(communityProfileRepository.update(dto));
   }
+  @Transactional
   public CommunityProfileResponse updateCommunityProfileStatus(final CommunityProfileRequest request) {
     log.info("Community id###############:"+request.getCommunityId()+"##Profile id ############:"+request.getProfileId()+"######status######"+request.getStatus());
     int adminCount = checkAdminStatusCount(request);
@@ -74,6 +85,10 @@ public class CommunityProfileService {
                   .map(child -> child.toDto(snowflake))
                   .collect(Collectors.toList()));
         }
+      }
+      if(request.getStatus().equalsIgnoreCase("exit") && communityProfile.get().getIsAdmin()){
+        updateCommunityCreator(communityProfile.get());
+        communityProfile.get().setIsAdmin(false);
       }
       CommunityNotificationType communityNotificationType = null;
       if(request.getStatus().equalsIgnoreCase("requested")){
@@ -146,7 +161,7 @@ public class CommunityProfileService {
   }
 
     public List<CommunityProfileResponse> retrieveByProfileId(String profileId) {
-      return this.search("( profileId:"+profileId+ " ) AND ( status:Accepted )");
+      return this.search("( profileId:"+profileId+ " ) AND ( ( status:Accepted ) OR ( status:Admin ) ) AND ( isAdmin:false )");
     }
 
   public List<CommunityProfileResponse> retrieveCommunitiesCreatedJoined(String profileId) {
@@ -163,4 +178,17 @@ public class CommunityProfileService {
       throw new RuntimeException("Make someone as community admin before you leave current community");
     return communityProfiles.size();
   }
+  private void updateCommunityCreator(CommunityProfileDto request){
+     var community = communityRepository.retrieveById(Long.valueOf(request.getCommunityId()));
+       if(community.isPresent()){
+         var newCommunityProfiles = communityProfileRepository
+                 .search("( communityId:"+request.getCommunityId()+" ) AND ( status:Admin )");
+         if(!newCommunityProfiles.isEmpty()) {
+           community.get().setCreatorProfileId(newCommunityProfiles.get(1).getProfileId());
+           communityRepository.update(community.get());
+           newCommunityProfiles.get(1).setIsAdmin(true);
+           communityProfileRepository.update(newCommunityProfiles.get(1));
+         }
+       }
+     }
 }

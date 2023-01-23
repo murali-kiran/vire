@@ -54,4 +54,5 @@ public class VireConstants {
     public final static String PROFILENOTIFICATION_REQUEST_PATH_API = "/api/profilenotification";
 
     public final static String REQUESTERPROFILESETTING_REQUEST_PATH_API = "/api/requesterprofilesetting";
+    public final static String PROFILEREPORT_REQUEST_PATH_API = "/api/profilereport";
 }

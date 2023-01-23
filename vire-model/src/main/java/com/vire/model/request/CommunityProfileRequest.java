@@ -22,6 +22,7 @@ public class CommunityProfileRequest {
     @NotBlank(message = "Status required")
     private String status;
     private Boolean isAdmin;
+    private Boolean isCreator;
     //private String fileId;
     private List<CommunityProfileFileRequest> communityFileList;
     public CommunityProfileDto toDto(Snowflake snowflake) {
