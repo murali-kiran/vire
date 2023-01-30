@@ -30,6 +30,9 @@ public class SocialPostRetrievalRepository {
     @Autowired
     CommunityProfileRepositoryJpa communityProfileRepositoryJpa;
 
+    @Autowired
+    MasterRepository masterRepository;
+
     private static final String BASIC_QUERY = "SELECT s.* FROM t_social s " +
             "JOIN t_social_post_send_to sst ON s.social_id = sst.social_id " +
             "AND s.category_id IN (select social_category_master_id from social_category_master where category in (%s))";
@@ -206,7 +209,13 @@ public class SocialPostRetrievalRepository {
         if (profileDao.getPersonalProfile() != null) {
             var designationQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_DESIGNATION, profileDao.getPersonalProfile().getDesignation());
             query.append(" JOIN ( ").append(designationQuery).append(" ) as designation on address.social_id = designation.social_id ");
-            var fieldProfessionBusinessQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_FIELD_PROFESSION_BUSINESS, profileDao.getPersonalProfile().getFieldProfessionBusiness());
+            var masterList = masterRepository.search("masterType:Field_Profession_Business AND masterValue:"+profileDao.getPersonalProfile().getFieldProfessionBusiness());
+            var parametersList= new ArrayList<String>();
+            parametersList.add(profileDao.getPersonalProfile().getFieldProfessionBusiness());
+            if(!CollectionUtils.isEmpty(masterList)) {
+                parametersList.add(masterList.get(0).getMasterId() + "");
+            }
+            var fieldProfessionBusinessQuery = frameQuery(emergencyCategoryId, SEND_TO_TYPE_FIELD_PROFESSION_BUSINESS, parametersList);
             query.append(" JOIN ( ").append(fieldProfessionBusinessQuery).append(" ) as fpb on address.social_id = fpb.social_id ");
 
             if (CollectionUtils.isEmpty(profileDao.getPersonalProfile().getInterests())) {

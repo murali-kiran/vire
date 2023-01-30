@@ -110,3 +110,13 @@ CREATE TABLE t_admin_message (
     updated_time BIGINT NOT NULL,
     PRIMARY KEY (t_admin_message_id)
 );
+
+CREATE TABLE t_profile_block (
+    t_profile_block_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    blocked_profile_id BIGINT NOT NULL,
+    created_time BIGINT NOT NULL,
+    updated_time BIGINT NOT NULL,
+    PRIMARY KEY (t_profile_block_id)
+);
+ALTER TABLE t_profile_block ADD UNIQUE t_profile_block_unique_index(profile_id, blocked_profile_id);
