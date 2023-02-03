@@ -57,7 +57,7 @@ public class ProfileFollowersService {
       notificationService.createProfileNotification(NotificationType.PROFILE, request.getFollowerId(), ProfileNotificationType.FOLLOW_REQUEST, request.getProfileId());
 
     }
-    if(!request.getStatus().equalsIgnoreCase("rejected")) {
+    if(request.getStatus().equalsIgnoreCase("accepted")) {
       notificationService.createProfileNotification(NotificationType.PROFILE, request.getProfileId(), ProfileNotificationType.FOLLOW_ACCEPTED, request.getFollowerId());
     }
     return ProfileFollowersResponse.fromDto(profileFollowersRepository.updateFollowStatus(dto));

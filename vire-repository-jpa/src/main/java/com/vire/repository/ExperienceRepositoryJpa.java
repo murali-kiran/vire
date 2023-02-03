@@ -32,4 +32,12 @@ public interface ExperienceRepositoryJpa
     //Page<ExperienceDao> findAllPaged(Sort sort, Pageable pageable);
     @Query(value = "SELECT e.* FROM experience e WHERE e.deleted_time IS NULL ORDER BY e.updated_time DESC",nativeQuery = true)
     List<ExperienceDao> findAllExceptDelete();
+
+    @Query(value = "SELECT e.* FROM experience e WHERE e.deleted_time IS NULL " +
+            "AND e.profile_id not in (select tb.profile_id FROM ( select blocked_profile_id as profile_id from t_profile_block " +
+            " where profile_id=:profileId " +
+            "UNION \n" +
+            " select profile_id as profile_id from t_profile_block where blocked_profile_id=:profileId  ) as tb)\n" +
+            " ORDER BY e.updated_time DESC",nativeQuery = true)
+    List<ExperienceDao> findAllExceptDeleteByProfile(Long profileId);
 }

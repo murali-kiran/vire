@@ -129,6 +129,13 @@ public class ExperienceRepository {
             .map(dao -> dao.toDto())
             .collect(Collectors.toList());
   }
+  public List<ExperienceDto> getAllExceptDeleteByProfile(Long profileId) {
+
+    return experienceRepositoryJpa.findAllExceptDeleteByProfile(profileId)
+            .stream()
+            .map(dao -> dao.toDto())
+            .collect(Collectors.toList());
+  }
   public List<ExperienceDto> retreveByFilterList(List<Long> categoryList) {
 
     return experienceRepositoryJpa.findByCategoryList(categoryList)

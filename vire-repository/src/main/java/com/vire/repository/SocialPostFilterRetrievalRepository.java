@@ -35,8 +35,12 @@ public class SocialPostFilterRetrievalRepository {
 
     private static final String BASIC_QUERY = "SELECT s.* FROM t_social s " +
             "JOIN t_social_post_send_to sst ON s.social_id = sst.social_id " +
-            "AND s.category_id IN (select social_category_master_id from social_category_master where category in (%s))" ;
+            "AND s.category_id IN (select social_category_master_id from social_category_master where category in (%s)) __BLOCKED_PROFILE_QUERY_CONDITION__" ;
 
+    private static final String BLOCKED_PROFILE_QUERY_CONDITION = " AND s.profile_id not in (select tb.profile_id FROM " +
+            "( select blocked_profile_id as profile_id from t_profile_block  where profile_id=__profile_id__\n" +
+            "UNION\n" +
+            "select profile_id as profile_id from t_profile_block where blocked_profile_id=__profile_id__ ) as tb)";
     private static final String COMMON_WHERE = " ( sst.`type` ='%s' AND sst.value='%s' )";
 
     private static final String SEND_TO_TYPE_LOCATION_CITY = "location_city";
@@ -54,6 +58,7 @@ public class SocialPostFilterRetrievalRepository {
                                                  List<String> categoryFilters, List<String> communityIdFilters) {
         ProfileDao profileDao = profileRepositoryJpa.findById(profileId).get();
 
+        String blocked_profile_condition_value = "";
         List<String> categoryFiltersToBeApplied = new ArrayList<>();
         if (!CollectionUtils.isEmpty(categoryFilters)) {
             categoryFiltersToBeApplied.addAll(categoryFilters);
@@ -78,6 +83,7 @@ public class SocialPostFilterRetrievalRepository {
         StringBuilder query = new StringBuilder();
         if (Objects.nonNull(profileDao)) {
             if (profileDao.getPersonalProfile() != null) {
+                blocked_profile_condition_value = BLOCKED_PROFILE_QUERY_CONDITION.replaceAll("__profile_id__", profileDao.getProfileId()+"");
                 query.append("SELECT social.* FROM (");
                 if(categoryFiltersToBeApplied != null) {
 
@@ -153,8 +159,9 @@ public class SocialPostFilterRetrievalRepository {
         } else {
             return new ArrayList<>();
         }
-        log.info("Generated Query: {}", query);
-        var queryObject = entityManager.createNativeQuery(query.toString(), SocialDao.class);
+        String finalQuery = query.toString().replaceAll("__BLOCKED_PROFILE_QUERY_CONDITION__", blocked_profile_condition_value);
+        log.info("Generated Query: {}", finalQuery);
+        var queryObject = entityManager.createNativeQuery(finalQuery, SocialDao.class);
         queryObject.setFirstResult((pageNumber - 1) * pageSize);
         queryObject.setMaxResults(pageSize);
         return queryObject.getResultList();

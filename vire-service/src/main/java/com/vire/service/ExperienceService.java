@@ -111,7 +111,7 @@ public class ExperienceService {
     public List<ExperienceDetailResponse> retrieveAllByProfile(Long profileId) {
       //Pageable paging = PageRequest.of();
       List<ExperienceDetailResponse> experienceDetailResponseList = experienceRepository
-              .getAllExceptDelete()
+              .getAllExceptDeleteByProfile(profileId)
               .stream()
               .map(dto -> ExperienceDetailResponse.fromDto(dto))
               .collect(Collectors.toList());
