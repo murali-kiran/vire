@@ -1,6 +1,9 @@
 package com.vire.controller;
 
 import com.vire.constant.VireConstants;
+import com.vire.model.request.AdminMessageRequest;
+import com.vire.model.request.AppRestrictionRequest;
+import com.vire.model.request.LoginRequest;
 import com.vire.model.request.MasterRequest;
 import com.vire.model.response.*;
 import com.vire.model.response.view.FeedsViewResponse;
@@ -14,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +47,12 @@ public class AdminPortalController {
 
   @Autowired
   MasterService masterService;
+
+  @Autowired
+  AppRestrictionService appRestrictionService;
+
+  @Autowired
+  AdminMessageService adminMessageService;
 
 
   @GetMapping(value = "/homepage")
@@ -74,10 +85,10 @@ public class AdminPortalController {
 
   @GetMapping(value = "/blockProfile/{profileId}")
   public ResponseEntity<Boolean>  blockProfile(@PathVariable("profileId") String profileId,@RequestParam("isBlocked") Boolean isBlocked) {
-     var blockedStatus = adminPortalService.blockProfile(Long.valueOf(profileId),isBlocked);
-     return new ResponseEntity<>(blockedStatus, HttpStatus.OK);
+    var blockedStatus = adminPortalService.blockProfile(Long.valueOf(profileId),isBlocked);
+    return new ResponseEntity<>(blockedStatus, HttpStatus.OK);
   }
-  
+
   @GetMapping(value = "/feeds")
   public List<FeedsViewResponse> getFeeds() {
     return adminPortalService.getAllFeeds();
@@ -101,7 +112,7 @@ public class AdminPortalController {
 
   @GetMapping(value = "/experiences")
   public ResponseEntity<PageWiseSearchResponse<ExperienceDetailResponse>>  getExperiences(@RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
-                                                                                @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
+                                                                                          @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
     return new ResponseEntity<>(adminPortalService.getAllExperiencesPaged(pageNumber,pageSize), HttpStatus.OK);
   }
 
@@ -133,7 +144,7 @@ public class AdminPortalController {
                   content = @Content) })
   @GetMapping("community/allPageWise")
   public ResponseEntity<PageWiseSearchResponse<CommunityResponse>> retrieveAllCommunityPageWise(@RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
-                                                                                       @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
+                                                                                                @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
 
     return new ResponseEntity<>(communityService.getAllPaged(pageNumber,pageSize), HttpStatus.OK);
   }
@@ -166,7 +177,7 @@ public class AdminPortalController {
                   content = @Content) })
   @GetMapping("channel/allPageWise")
   public ResponseEntity<PageWiseSearchResponse<ChannelResponse>> retrieveAllChannelPageWise(@RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
-                                                                                     @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
+                                                                                            @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
 
     return new ResponseEntity<>(channelService.getAllPaged(pageNumber,pageSize), HttpStatus.OK);
   }
@@ -232,5 +243,92 @@ public class AdminPortalController {
           @PathVariable(value = "masterId") Long masterId) {
     return new ResponseEntity<>(masterService.delete(masterId), HttpStatus.OK);
   }
+
+
+  @Operation(summary = " Update App Restrictions limit ")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = " Update App Restrictions limit Success",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MasterResponse.class))}),
+          @ApiResponse(responseCode = "500", description = " Update App Restrictions limit  Failed",
+                  content = @Content)})
+  @PutMapping("/appRestriction/update")
+  public ResponseEntity<AppRestrictionResponse> updateRestrictionResponse(@RequestBody AppRestrictionRequest request) {
+    return new ResponseEntity<>(appRestrictionService.update(request), HttpStatus.CREATED);
+  }
+
+
+  @Operation(summary = " Get App Restrictions limit ")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = " Update App Restrictions limit Success",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MasterResponse.class))}),
+          @ApiResponse(responseCode = "500", description = " Update App Restrictions limit  Failed",
+                  content = @Content)})
+  @GetMapping("/appRestriction/get")
+  public ResponseEntity<AppRestrictionResponse> getAppRestriction() {
+    return new ResponseEntity<>(appRestrictionService.getAll().get(0), HttpStatus.OK);
+  }
+
+  @Operation(summary = " Admin portal login ")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = " Admin portal login Success",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = MasterResponse.class))}),
+          @ApiResponse(responseCode = "500", description = " Admin portal login  Failed",
+                  content = @Content)})
+  @PostMapping("/adminPortalLogin")
+  public ResponseEntity<AdminPortalLoginResponse> AdminPortalLogin(@Valid @RequestBody LoginRequest request) {
+
+    var adminLoginResponse =  new AdminPortalLoginResponse();
+    final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+
+    if("vireadmin@vire.com".equals(request.getEmailOrphonenumber()) && "virepassword".equals(new String(Base64Utils.decode(request.getPassword().getBytes())))){
+      adminLoginResponse.setEmail(request.getEmailOrphonenumber());
+      adminLoginResponse.setExpiresIn(new Date().getTime()+MILLISECONDS_PER_DAY);
+      adminLoginResponse.setStatus("success");
+      return new ResponseEntity<>(adminLoginResponse, HttpStatus.OK);
+    }else{
+      adminLoginResponse.setStatus("failure");
+      return new ResponseEntity<>(adminLoginResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+  }
+
+  @PostMapping("/adminMessage/create")
+  public ResponseEntity<AdminMessageResponse> createAdminMessage(@RequestBody AdminMessageRequest request) {
+    return new ResponseEntity<>(adminMessageService.create(request), HttpStatus.CREATED);
+  }
+
+  @PutMapping("/adminMessage/update")
+  public ResponseEntity<AdminMessageResponse> updateAdminMessage(@RequestBody AdminMessageRequest request) {
+    return new ResponseEntity<>(adminMessageService.update(request), HttpStatus.CREATED);
+  }
+
+  @DeleteMapping("/adminMessage/delete/{adminMessageId}")
+  public ResponseEntity<AdminMessageResponse> deleteAdminMessage(
+          @PathVariable(value = "adminMessageId") Long adminMessageId) {
+    return new ResponseEntity<>(adminMessageService.delete(adminMessageId), HttpStatus.OK);
+  }
+
+  @GetMapping("/adminMessage/all")
+  public ResponseEntity<List<AdminMessageResponse>> retrieveAllAdminMessage() {
+    return new ResponseEntity<>(adminMessageService.getAll(), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Get all adminMessages PageWise")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Successfully got all adminMessages",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = ChannelResponse.class)) }),
+          @ApiResponse(responseCode = "500", description = "adminMessages retrieval failed",
+                  content = @Content) })
+  @GetMapping("/adminMessage/allPageWise")
+  public ResponseEntity<PageWiseSearchResponse<AdminMessageResponse>> retrieveAllAdminMessagePageWise(@RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNumber,
+                                                                                            @RequestParam(value = "size", defaultValue = "10", required = false) Integer pageSize) {
+
+    return new ResponseEntity<>(adminMessageService.getAllPaged(pageNumber,pageSize), HttpStatus.OK);
+  }
+
 
 }
