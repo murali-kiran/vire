@@ -81,8 +81,9 @@ public class SocialPostRetrievalRepository {
         }
         StringBuilder query = new StringBuilder();
         if (Objects.nonNull(profileDao)) {
+
+            blocked_profile_condition_value = BLOCKED_PROFILE_QUERY_CONDITION.replaceAll("__profile_id__", profileDao.getProfileId()+"");
             if (profileDao.getPersonalProfile() != null) {
-                blocked_profile_condition_value = BLOCKED_PROFILE_QUERY_CONDITION.replaceAll("__profile_id__", profileDao.getProfileId()+"");
                 query.append("SELECT social.* FROM (");
                 query.append("SELECT ts.* FROM t_social ts WHERE ts.profile_id="+profileDao.getProfileId());
                 query.append("\nUNION ");

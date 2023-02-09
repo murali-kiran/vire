@@ -1,8 +1,6 @@
 package com.vire.service;
 
-import com.vire.dao.ExperienceFileDao;
 import com.vire.dto.NotificationType;
-import com.vire.dto.ProfileFollowersDto;
 import com.vire.dto.ProfileNotificationType;
 import com.vire.model.request.ProfileFollowersRequest;
 import com.vire.model.response.ProfileFollowersResponse;

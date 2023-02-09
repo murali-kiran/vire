@@ -2,14 +2,12 @@ package com.vire.service;
 
 import com.vire.model.request.ProfileBlockRequest;
 import com.vire.model.request.ProfileFollowersRequest;
-import com.vire.model.response.CommentResponse;
 import com.vire.model.response.ProfileBlockResponse;
 import com.vire.repository.ProfileBlockRepository;
 import com.vire.utils.Snowflake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

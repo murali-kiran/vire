@@ -32,14 +32,14 @@ public class FeedPostRetrievalRepository {
     @Autowired
     ChannelProfileRepositoryJpa channelProfileRepositoryJpa;
 
-    private static final String BASIC_QUERY = "SELECT s.* FROM t_feeds s " +
+    private static final String BASIC_QUERY = " SELECT s.* FROM t_feeds s " +
             "JOIN t_feeds_send_to sst ON s.feed_id = sst.feed_id __BLOCKED_PROFILE_QUERY_CONDITION__" ;
     private static final String COMMON_WHERE = " ( sst.`type` ='%s' AND sst.value='%s' )";
 
     private static final String BLOCKED_PROFILE_QUERY_CONDITION = " AND s.profile_id not in (select tb.profile_id FROM " +
             "( select blocked_profile_id as profile_id from t_profile_block  where profile_id=__profile_id__\n" +
             "UNION\n" +
-            "select profile_id as profile_id from t_profile_block where blocked_profile_id=__profile_id__ ) as tb)";
+            " select profile_id as profile_id from t_profile_block where blocked_profile_id=__profile_id__ ) as tb)";
     private static final String SEND_TO_TYPE_LOCATION_CITY = "location_city";
     private static final String SEND_TO_TYPE_LOCATION_DIST = "location_district";
     private static final String SEND_TO_TYPE_LOCATION_STATE = "location_state";
@@ -48,10 +48,9 @@ public class FeedPostRetrievalRepository {
 
     public List<FeedsDao> getFeedListBySearch(Long profileId, int pageNumber, int pageSize) {
         ProfileDao profileDao = profileRepositoryJpa.findById(profileId).get();
-//        var channelIdFilters = channelProfileRepositoryJpa.findAllByProfileId(profileId).stream().map(c -> c.getChannelId()+"").collect(Collectors.toList());
-//        var communityIdFilters = communityProfileRepositoryJpa.findAllByProfileId(profileId).stream().map(c -> c.getCommunityId()+"").collect(Collectors.toList());
-
-        //List<String> categoryFiltersToBeApplied = new ArrayList<>();
+        // var channelIdFilters = channelProfileRepositoryJpa.findAllByProfileId(profileId).stream().map(c -> c.getChannelId()+"").collect(Collectors.toList());
+        // var communityIdFilters = communityProfileRepositoryJpa.findAllByProfileId(profileId).stream().map(c -> c.getCommunityId()+"").collect(Collectors.toList());
+        // List<String> categoryFiltersToBeApplied = new ArrayList<>();
         String blocked_profile_condition_value = "";
         StringBuilder query = new StringBuilder();
         if (Objects.nonNull(profileDao)) {
@@ -76,7 +75,6 @@ public class FeedPostRetrievalRepository {
 
     private String communityChannelCode(ProfileDao profileDao, List<String> communityIdFilters, List<String> channelIdFilters) {
 
-
         var communityChannelQuery = new StringBuffer(" ");
         /*var communityChannelQuery = new StringBuffer("SELECT address.* FROM ");
         AddressDao addressDao = profileDao.getFirmProfile()!=null ? profileDao.getFirmProfile().getAddress() : profileDao.getPersonalProfile().getPresentAddress();
@@ -94,12 +92,11 @@ public class FeedPostRetrievalRepository {
             channelProfileList = channelProfiles.stream().map(c -> c.getChannelId() + "").collect(Collectors.toList());
             channelProfileList.add("none");
         }
-
         var communityQuery = frameQuery(SEND_TO_TYPE_COMMUNITY, communityProfileList);
         var channelQuery = frameQuery(SEND_TO_TYPE_CHANNEL, channelProfileList);
-       // communityChannelQuery.append(" JOIN ( ").append(communityQuery).append(" ) as community on address.feed_id = community.feed_id ");
+        // communityChannelQuery.append(" JOIN ( ").append(communityQuery).append(" ) as community on address.feed_id = community.feed_id ");
         communityChannelQuery.append(" ( ").append(communityQuery).append("  ");
-     //   communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on address.feed_id = channel.feed_id ");
+        // communityChannelQuery.append(" JOIN ( ").append(channelQuery).append(" ) as channel on address.feed_id = channel.feed_id ");
         communityChannelQuery.append(") UNION ( ").append(channelQuery).append(") ");
         communityChannelQuery.append( " UNION ( SELECT s.* FROM t_feeds s WHERE s.deleted_time IS NULL AND " +
                 " ( s.send_to_followers=1 AND ( s.profile_id in (select pf.profile_id from profile_followers pf where pf.follower_id = __profile_id__  AND pf.status='Accepted')))" +

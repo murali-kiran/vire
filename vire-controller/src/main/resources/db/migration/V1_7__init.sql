@@ -120,3 +120,4 @@ CREATE TABLE t_profile_block (
     PRIMARY KEY (t_profile_block_id)
 );
 ALTER TABLE t_profile_block ADD UNIQUE t_profile_block_unique_index(profile_id, blocked_profile_id);
+ALTER TABLE t_admin_message ADD COLUMN send_to_id BIGINT NOT NULL AFTER message;

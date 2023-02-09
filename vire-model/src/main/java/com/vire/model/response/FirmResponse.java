@@ -27,6 +27,7 @@ public class FirmResponse {
     private Integer starsCount = 0;
     private Boolean isPrivateAccount;
     private Boolean showFriends;
+    private String blockStatus;
     private List<ProfileSettingResponse> profileSettingTypes;
     private List<RequesterProfileSettingResponse> requesterProfileSettingTypes;
     private FirmProfileResponse firmProfile;

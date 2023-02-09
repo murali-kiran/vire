@@ -10,6 +10,7 @@ import com.vire.model.request.UpdateEmailRequest;
 import com.vire.model.request.UpdatePasswordRequest;
 import com.vire.model.response.*;
 import com.vire.repository.MasterRepository;
+import com.vire.repository.ProfileBlockRepository;
 import com.vire.repository.ProfileRepository;
 import com.vire.repository.RequesterProfileSettingRepository;
 import com.vire.utils.Snowflake;
@@ -47,8 +48,12 @@ public class ProfileService {
 
   @Autowired
   AuthenticationManager authenticationManager;
+
   @Autowired
   RequesterProfileSettingRepository requesterProfileSettingRepository;
+
+  @Autowired
+  ProfileBlockRepository profileBlockRepository;
 
   public FirmResponse createFirmProfile(final FirmRequest request) {
 
@@ -178,8 +183,22 @@ public class ProfileService {
                             .map(dto -> RequesterProfileSettingResponse.fromDto(dto))
                             .collect(Collectors.toList());
             profile.get().setRequesterProfileSettingTypes(requesterProfileSettingResponses);
+            profile.get().setBlockStatus(getBlockStatus(profileId, loginProfileId));
             return profile;
         }
+    }
+
+    private String getBlockStatus(Long profileId, Long loginProfileId){
+        String blockStatus = "none";
+        var blockedProfile = profileBlockRepository.search("profileId:"+loginProfileId+ " AND blockedProfileId:"+profileId);
+        if(!blockedProfile.isEmpty()){
+            blockStatus = "profileBlocked";
+        }
+        var blockedProfile1 = profileBlockRepository.search("profileId:"+profileId+ " AND blockedProfileId:"+loginProfileId);
+        if(!blockedProfile1.isEmpty()){
+            blockStatus = "loginUserBlocked";
+        }
+        return blockStatus;
     }
   public Optional<FirmResponse> retrieveFirmProfileById(final Long profileId) {
     if (!profileRepository.isFirmProfileExists(profileId)) {
@@ -198,6 +217,7 @@ public class ProfileService {
                     .map(dto -> RequesterProfileSettingResponse.fromDto(dto))
                     .collect(Collectors.toList());
             profile.get().setRequesterProfileSettingTypes(requesterProfileSettingResponses);
+            profile.get().setBlockStatus(getBlockStatus(profileId, loginProfileId));
             return profile;
         }
     }
