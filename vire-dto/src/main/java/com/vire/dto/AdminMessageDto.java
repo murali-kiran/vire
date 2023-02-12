@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class AdminMessageDto {
     private Long adminMessageId;
     private String messageType;
+    private Long sendTo;
     private String message;
     public Long createdTime;
     public Long updatedTime;
