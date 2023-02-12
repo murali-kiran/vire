@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class AdminMessageResponse {
 
     private String adminMessageId;
-    
+    private String sendTo;
     private String messageType;
     private String message;
     private Long createdTime;
@@ -22,6 +22,7 @@ public class AdminMessageResponse {
         adminMessage.setAdminMessageId(String.valueOf(dto.getAdminMessageId()));
         adminMessage.setMessageType(dto.getMessageType());
         adminMessage.setMessage(dto.getMessage());
+        adminMessage.setSendTo(String.valueOf(dto.getSendTo()));
         adminMessage.setCreatedTime(dto.getCreatedTime());
         adminMessage.setUpdatedTime(dto.getUpdatedTime());
 
