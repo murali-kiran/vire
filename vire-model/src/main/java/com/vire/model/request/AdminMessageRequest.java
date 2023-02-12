@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class AdminMessageRequest {
 
     private String adminMessageId;
-    
+    private String sendTo;
     private String messageType;
     private String message;
 
@@ -27,6 +27,7 @@ public class AdminMessageRequest {
         
         dto.setMessageType(this.getMessageType());
         dto.setMessage(this.getMessage());
+        dto.setSendTo(Long.valueOf(this.getSendTo()));
 
         return dto;
     }
