@@ -24,6 +24,9 @@ public class AdminMessageDao {
     @Column(name = "message", nullable = false)
     private String message;
 
+    @Column(name = "send_to_id", nullable = false)
+    private Long sendTo;
+
     @Column(name = "created_time", nullable = false , updatable = false)
     public Long createdTime;
 
@@ -46,7 +49,7 @@ public class AdminMessageDao {
         var dto = new AdminMessageDto();
 
         dto.setAdminMessageId(this.getAdminMessageId());
-        
+        dto.setSendTo(this.getSendTo());
         dto.setMessageType(this.getMessageType());
         dto.setMessage(this.getMessage());
 
@@ -61,7 +64,7 @@ public class AdminMessageDao {
         var adminMessage = new AdminMessageDao();
 
         adminMessage.setAdminMessageId(dto.getAdminMessageId());
-        
+        adminMessage.setSendTo(dto.getSendTo());
         adminMessage.setMessageType(dto.getMessageType());
         adminMessage.setMessage(dto.getMessage());
 
